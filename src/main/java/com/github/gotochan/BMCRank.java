@@ -10,35 +10,19 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
-public class BMCRank
-	implements CommandExecutor {
-
-
+public class BMCRank implements CommandExecutor {
 	@SuppressWarnings({ "deprecation" })
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
+	if(!(sender instanceof Player)) {
+			sender.sendMessage(BMC.prefix + "ゲーム内から実行して下さい。");
+			return true;
+		}
 	if(command.getName().equalsIgnoreCase("rank")) {
-		if( sender instanceof Player ) {
-
-	Player player = (Player) sender;
-	Scoreboard board = player.getScoreboard();
-	Objective rankobject = board.getObjective("rank");
-	Score MyStats = rankobject.getScore(player);
-	Score BStats = rankobject.getScore(args[1]);
-	Player other = Bukkit.getServer().getPlayer(args[1]);
-	String[] array = new String[] {null,ChatColor.RED + "Red" , ChatColor.GOLD + "Orange",
-			ChatColor.YELLOW + "Yellow", ChatColor.GREEN + "Green", ChatColor.BLUE + "Blue",
-			ChatColor.DARK_BLUE + "Indigo", ChatColor.DARK_PURPLE + "Violet",
-			ChatColor.WHITE + "UltraViolet"};
-	int NowRank = MyStats.getScore();
-	int NextRank = MyStats.getScore() + 1;
-	int BNowRank = BStats.getScore();
-	int BNextRank = BStats.getScore() + 1;
-
-			if ( args.length == 1 ) {
-				sender.sendMessage(BMC.prefix + ChatColor.GOLD + "/rank show" + ChatColor.GRAY + " ランク一覧を表示します");
-				sender.sendMessage(BMC.prefix + ChatColor.GOLD + "/rank stats <プレイヤー名>" + ChatColor.GRAY + " ランクの状態を表示します。");
-				sender.sendMessage(BMC.prefix + ChatColor.GOLD + "/rank recipe" + ChatColor.GRAY + " ランクアイテムのレシピを確認します。");
+			if ( args.length < 1) {
+				sender.sendMessage(BMC.prefix + ChatColor.GOLD + "/rank show" + ChatColor.GRAY + "ランク一覧を表示します。");
+				sender.sendMessage(BMC.prefix + ChatColor.GOLD + "/rank stats <プレイヤー名>" + ChatColor.GRAY + "ランクの状態を表示します。");
+				sender.sendMessage(BMC.prefix + ChatColor.GOLD + "/rank recipe" + ChatColor.GRAY + "ランクレシピを確認します。");
 			}
 			else if ( args[0].equals("show")) { //jobs browseみたいな役割。ランク一覧を表示する。
 				sender.sendMessage(BMC.prefix + ChatColor.RED + "[Red] " + ChatColor.WHITE + "一般人");
@@ -49,31 +33,52 @@ public class BMCRank
 				sender.sendMessage(BMC.prefix + ChatColor.DARK_BLUE + "[Indigo]" + ChatColor.WHITE + "プロクラフター");
 				sender.sendMessage(BMC.prefix + ChatColor.DARK_PURPLE + "[Violet] " + ChatColor.WHITE + "神がかったクラフター");
 				sender.sendMessage(BMC.prefix + ChatColor.WHITE + "[UltraViolet] " + "よくわからない何か");
-				}
-			else if ( args[0].equals("recipe") ) {
-				sender.sendMessage(BMC.prefix + "未実装");
 			}
 			else if ( args[0].equals("stats")) { //jobs statsみたいな役割。argsがあるかで処理を分岐する。
-				if ( args.length == 1 ) {
+				Player player = (Player) sender;
+				Scoreboard board = player.getScoreboard();
+				Objective rankobject = board.getObjective("rank");
+				Score MyStats = rankobject.getScore(player);
+				Score BStats = rankobject.getScore(args[1]);
+				Player other = Bukkit.getServer().getPlayer(args[1]);
+
+
+				String[] array = new String[] {null,ChatColor.RED + "Red" , ChatColor.GOLD + "Orange",
+						ChatColor.YELLOW + "Yellow", ChatColor.GREEN + "Green", ChatColor.BLUE + "Blue",
+						ChatColor.DARK_BLUE + "Indigo", ChatColor.DARK_PURPLE + "Violet",
+						ChatColor.WHITE + "UltraViolet"};
+				int NowRank = MyStats.getScore();
+				int NextRank = MyStats.getScore() + 1;
+				int BNowRank = BStats.getScore();
+				int BNextRank = BStats.getScore() + 1;
+
+				if ( args[1] == null ) {
 				sender.sendMessage(ChatColor.YELLOW + "========BMCサーバー ランクシステム========");
 				sender.sendMessage("名前: " + player);
 				sender.sendMessage("現在のランク: " + array[NowRank]);
 				sender.sendMessage("次のランク: " + array[NextRank]);
+				return true;
 				}
+
 				else if (other == null) {
 					sender.sendMessage(BMC.prefix + ChatColor.RED + "そのプレイヤーは存在しません。");
+					return false;
+
 				}
 				else {
-					sender.sendMessage(ChatColor.YELLOW + "========BMCサーバー ランクシステム========");
-					sender.sendMessage("名前: " + args[1]);
-					sender.sendMessage("現在のランク: " + array[BNowRank]);
-					sender.sendMessage("次のランク: " + array[BNextRank]);
+						sender.sendMessage(ChatColor.YELLOW + "========BMCサーバー ランクシステム========");
+						sender.sendMessage("名前: " + args[1]);
+						sender.sendMessage("現在のランク: " + array[BNowRank]);
+						sender.sendMessage("次のランク: " + array[BNextRank]);
+						return false;
 				}
+
 			}
+			else if ( args[0].equals("recipe") ) {
+				sender.sendMessage(BMC.prefix + "未実装");
 			}
-		else
-			sender.sendMessage(BMC.prefix + "ゲーム内から実行して下さい。");
-		}
+	return false;
+	}
 	return false;
 }
 }
