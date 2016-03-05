@@ -1,16 +1,16 @@
 name: BMCPlugin
 main: com.github.gotochan.BMC
-version: 2.1
-author: Attaka_Gohan
-description: BMC
+version: 3.0
+author: Hinyari_Gohan
+description: BMC'sPlugin - koshihikari
 commands:
   koshihikari:
-    description: コシヒカリ交換チケット数を参照するコマンドです。
+    description: コシヒカリに関するコマンドです。
     permission: bmc.kome
     permission-message: このコマンドを実行する権限がありません。
     aliases: [koshi, kome]
   rank:
-    description: rank
-    permission: bmc.rank
+    description: ランクに関するコマンドです。
+    permission: bmc.kome
     permission-message: このコマンドを実行する権限がありません。
-    aliases: [ranks, ranksystem]
+    aliases: [ranks,koshihikarirank,bmcrank]

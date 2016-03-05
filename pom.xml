@@ -24,6 +24,6 @@
             <scope>provided</scope>
     </dependency>
 </dependencies>
-	<version>2.1</version>
+	<version>3.0</version>
 	<artifactId>BMCPlugin</artifactId>
 </project>
