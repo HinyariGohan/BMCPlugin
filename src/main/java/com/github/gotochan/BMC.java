@@ -22,6 +22,7 @@ public class BMC
 		Bukkit.getServer().getScoreboardManager().getMainScoreboard();
 		getCommand("koshihikari").setExecutor( new KoshihikariCommand() );
 		getCommand("rank").setExecutor( new BMCRankCommand() );
+		getCommand("nannte").setExecutor( new KusoCommand() );
 		getServer().getPluginManager().registerEvents(new KoshihikariEvent(), this);
 	}
 

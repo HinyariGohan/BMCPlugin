@@ -1,78 +1,49 @@
 package com.github.gotochan.Koshihikari;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
+import com.github.gotochan.BMC;
 
 public class KoshihikariEvent
 	implements Listener {
 
 /**
  * イベントからのコシヒカリを食べるモーション
- * @author Attaka_Gohan
+ * @author Hinyari_Gohan
  * @param e
  * @param ItemStack
  * @param String
  */
 
+
+
 	@EventHandler
-	public void onEat(PlayerInteractEvent e) {
+	public void onEat(PlayerItemConsumeEvent e) {
 		Player player = e.getPlayer();
+		String playername = player.getDisplayName();
 		ItemStack is = player.getItemInHand();
-		String isname = player.getDisplayName();
-
-		if(!(player.isSneaking())) {
-			return; //スニークしてなかったらreturnをする。
-		}
-		if(!(e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
-			return; //右クリックイベントでなければreturnをする。
-		}
-
-		if(!(is.getType().equals(Material.MUSHROOM_SOUP) //マッシュルームスープで
-				|| isname == "コシヒカリ")) { //名前がコシヒカリの場合
-			return; //コシヒカリじゃなかったらreturnをする。
-		}
-
+		if(is.getType().equals(Material.MUSHROOM_SOUP)) { //耐久力1
 		e.setCancelled(true);
-		player.sendMessage("You eat " + ChatColor.GOLD + "コシヒカリ " + ChatColor.RESET + ",");
-
-		int heal = 0;
-		if(is.getType().equals(Material.MUSHROOM_SOUP) //マッシュルームスープで
-				|| isname == "コシヒカリ") {
-			heal = 6;
-		}
-
-		if (player.getHealth() + heal >= player.getMaxHealth()) {
-            player.setHealth(player.getMaxHealth());
-        } else {
-            player.setHealth(player.getHealth() + heal);
-        }
-
-        if (player.getFoodLevel() + heal >= 20) {
-            player.setFoodLevel(20);
-        } else {
-            player.setFoodLevel(player.getFoodLevel() + heal);
-        }
-
-        if (player.getExhaustion() + heal >= 20) {
-        	player.setExhaustion(20);
-        } else {
-        	player.setExhaustion(player.getExhaustion() + heal);
-        }
-
-
+		player.setFoodLevel(40);
+		player.setExhaustion(40);
+		player.setHealth(20);
+		Bukkit.broadcastMessage(BMC.prefix + playername + "さんが コシヒカリ を食べました。");
+		player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 1200 ,4));
+		player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 1200 ,1));
+		player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 1200 ,1));
+		player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 1200 ,2));
         player.getWorld().playSound(player.getLocation(), Sound.EAT, 1, 1);
         player.getInventory().remove(new ItemStack(Material.MUSHROOM_SOUP, 1));
         player.updateInventory();
-        Bukkit.broadcastMessage("COMING REMOVE!");
-	}
-
-
+				}
+			}
 }
