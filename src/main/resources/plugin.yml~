@@ -1,0 +1,21 @@
+name: BMCPlugin
+main: com.github.gotochan.BMC
+version: 3.1
+author: Hinyari_Gohan
+description: BMCPlugin
+commands:
+  koshihikari:
+    description: コシヒカリに関するコマンドです。
+    permission: bmc.kome
+    permission-message: このコマンドを実行する権限がありません。
+    aliases: [koshi, kome]
+  rank:
+    description: ランクに関するコマンドです。
+    permission: bmc.rank
+    permission-message: このコマンドを実行する権限がありません。
+    aliases: [ranks,koshihikarirank,bmcrank]
+  nannte:
+    description: なんてこった。
+    permission: bmc.nannte
+    permission-message: このコマンドを実行出来ないだと！？なんてこった！
+    aliases: [nante]
