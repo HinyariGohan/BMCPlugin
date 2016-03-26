@@ -1,10 +1,14 @@
 package com.github.gotochan;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
@@ -67,16 +71,23 @@ public class BMCRankCommand
 						String TimeS = Integer.toString(Time.getScore());
 						Integer TimeI = Time.getScore();
 						String TimeAll = ChatColor.GOLD + TimeS + "時間" + ChatColor.RESET;
-						if ( TimeI == 1 ) {
-							player.sendMessage(BMC.prefix  + "あなたはまだ初期ランクのためランク有効時間はありません。");
+						if ( TimeI == 0 ) {
+							player.sendMessage(BMC.prefix  + "ランク有効時間が0です。");
 							player.sendMessage(BMC.prefix  + "現在のランク: " + array[NowRank]);
 						}
-						else if ( TimeI < 1) {
+						else {
 							player.sendMessage(BMC.prefix + "ランク有効時間: " + TimeAll );
 						}
 
 					}
-				}
+					else if ( args[0].equalsIgnoreCase("menu")) {
+							Inventory inv;
+							inv = Bukkit.createInventory(null, 9, "GUITest");
+							inv.setItem(4, new ItemStack(Material.STONE));
+							player.openInventory(inv);
+						}
+					}
+
 		return false;
 	}
 }

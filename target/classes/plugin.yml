@@ -19,3 +19,8 @@ commands:
     permission: bmc.nannte
     permission-message: このコマンドを実行出来ないだと！？なんてこった！
     aliases: [nante]
+　　bmc:
+    description: BMCコマンド
+    permission: bmc.bmc
+    permission-message: このコマンドを実行する権限がありません。
+    aliases: []

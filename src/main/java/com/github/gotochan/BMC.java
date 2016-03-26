@@ -7,6 +7,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.github.gotochan.Koshihikari.KoshihikariCommand;
 import com.github.gotochan.Koshihikari.KoshihikariEvent;
 
+
+
+
 public class BMC
 	extends JavaPlugin {
 
@@ -17,6 +20,7 @@ public class BMC
 
 	public static String prefix = ChatColor.GREEN + "[BMCPlugin]" + ChatColor.WHITE;
 
+	@Override
 	public void onEnable() {
 		this.getLogger().info("BMCプラグインを開始しています。");
 		Bukkit.getServer().getScoreboardManager().getMainScoreboard();
@@ -24,12 +28,15 @@ public class BMC
 		getCommand("rank").setExecutor( new BMCRankCommand() );
 		getCommand("nannte").setExecutor( new KusoCommand() );
 		getServer().getPluginManager().registerEvents(new KoshihikariEvent(), this);
+		getServer().getPluginManager().registerEvents(new BMCEvent(), this);
 	}
 
+	@Override
 	public void onDisable() {
 		this.getLogger().info("BMCプラグインを終了しています。");
 	}
 
+	@Override
 	public void onLoad() {
 		this.getLogger().info("BMCプラグインを読み込んでいます。");
 	}
