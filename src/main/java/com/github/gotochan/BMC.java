@@ -6,6 +6,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.gotochan.Koshihikari.KoshihikariCommand;
 import com.github.gotochan.Koshihikari.KoshihikariEvent;
+import com.github.gotochan.Rank.BMCRankCommand;
+import com.github.gotochan.Rank.BMCRankUpCommand;
 
 
 
@@ -27,6 +29,7 @@ public class BMC
 		getCommand("koshihikari").setExecutor( new KoshihikariCommand() );
 		getCommand("rank").setExecutor( new BMCRankCommand() );
 		getCommand("nannte").setExecutor( new KusoCommand() );
+		getCommand("rankup").setExecutor( new BMCRankUpCommand() );
 		getServer().getPluginManager().registerEvents(new KoshihikariEvent(), this);
 		getServer().getPluginManager().registerEvents(new BMCEvent(), this);
 	}

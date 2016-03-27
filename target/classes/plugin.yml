@@ -6,21 +6,21 @@ description: BMCPlugin
 commands:
   koshihikari:
     description: コシヒカリに関するコマンドです。
-    permission: bmc.kome
     permission-message: このコマンドを実行する権限がありません。
     aliases: [koshi, kome]
   rank:
     description: ランクに関するコマンドです。
-    permission: bmc.rank
     permission-message: このコマンドを実行する権限がありません。
     aliases: [ranks,koshihikarirank,bmcrank]
   nannte:
     description: なんてこった。
-    permission: bmc.nannte
     permission-message: このコマンドを実行出来ないだと！？なんてこった！
     aliases: [nante]
-　　bmc:
+  bmc:
     description: BMCコマンド
-    permission: bmc.bmc
+    permission-message: このコマンドを実行する権限がありません。
+    aliases: []
+  rankup:
+    description: ランクアップが可能になります。
     permission-message: このコマンドを実行する権限がありません。
     aliases: []
