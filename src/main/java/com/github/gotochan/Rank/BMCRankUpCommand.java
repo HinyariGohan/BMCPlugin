@@ -14,83 +14,105 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
+import com.github.gotochan.BMC;
+
 public class BMCRankUpCommand
 	implements CommandExecutor {
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({ "deprecation" })
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if ( sender instanceof Player ){
 			if ( cmd.getName().equalsIgnoreCase("rankup") ){
-				if ( args.length < 1 ) {
+				if ( args.length == 0 ) {
 					Player p = (Player) sender;
 					ItemStack i = p.getItemInHand();
-					ItemMeta im = i.getItemMeta();
-					int level = im.getEnchantLevel(Enchantment.DURABILITY);
 					Scoreboard b = p.getScoreboard();
 					Objective o = b.getObjective("rank");
+					if ( o == null ) {
+						o = b.registerNewObjective("rank", "");
+					}
 					Score score = o.getScore(p);
 					int rank = score.getScore();
 					String name = p.getName();
-					String[] array = new String[] {ChatColor.GRAY + "Visitor", ChatColor.RED + "Red" , ChatColor.GOLD + "Orange",
+					String[] array = new String[] {ChatColor.RED + "Red" , ChatColor.GOLD + "Orange",
 							ChatColor.YELLOW + "Yellow", ChatColor.GREEN + "Green", ChatColor.BLUE + "Blue",
 							ChatColor.DARK_BLUE + "Indigo", ChatColor.DARK_PURPLE + "Violet",
 							ChatColor.WHITE + "UltraViolet"};
-					String wrong = "不正なアイテムです。";
-					if ( p.getItemInHand() != null )
-					if ( i.getType() == Material.INK_SACK ){
-						if ( rank == 1 ){
-							if ( level == 2 ){
-								Bukkit.broadcastMessage(name + "さんが" + array[rank] + "にランクアップしました!");
+					String wrong = BMC.prefix + "違うランクアイテムを持っています。正しいランクアイテムを持つ必要があります。";
+					if ( i != null && i.getTypeId() != 0 ) {
+						if ( i.getType() == Material.INK_SACK ){
+							ItemMeta im = i.getItemMeta();
+							int level = im.getEnchantLevel(Enchantment.DURABILITY);
+							if ( rank <= 7 ) {
+								if ( level == (rank + 1) ) {
+									score.setScore(rank + 1);
+									Bukkit.broadcastMessage(BMC.prefix + name + " さんが " + array[rank] +
+											ChatColor.RESET + " ランクにランクアップしました!");
+								}
+								else {
+									p.sendMessage(wrong);
+								}
+							}
+						else {
+							if ( rank == 8 ){
+								p.sendMessage(ChatColor.LIGHT_PURPLE + "あなたは最高ランクへ達しています。");
 							}
 							else {
-								p.sendMessage(wrong);
+								p.sendMessage(BMC.prefix + "ランクアイテムを持つ必要があります。");
 							}
 						}
-						if ( rank == 2 ){
-							if ( level == 3 ){
-								Bukkit.broadcastMessage(name + "さんが" + array[rank] + "にランクアップしました!");
-							}
-							else {
-								p.sendMessage(wrong);
+					}
+						else {
+							p.sendMessage(BMC.prefix + "ランクアイテムを持つ必要があります。");
+						}
+				}
+					else {
+						p.sendMessage(BMC.prefix + "アイテムを持っていません。");
+					}
+				}
+				else if ( args.length >= 1 ) {
+					Player p = (Player) sender;
+					if ( args[0].equalsIgnoreCase("debug") ) {
+						if( args.length == 1 ) {
+							String example = BMC.prefix + ChatColor.GOLD + "";
+							String reset = ChatColor.RESET + " - ";
+							p.sendMessage(example + "itemhand" + reset + "手に持っているアイテムを返します。");
+							p.sendMessage(example + "reset" + reset  + "ランクのスコアをリセットします。");
+						}
+						else if ( args.length > 1 ){
+							if ( args[1].equalsIgnoreCase("itemhand") ) {
+								ItemStack i = p.getItemInHand();
+								if (i.getType() == Material.AIR ) { //AIRだった場合]
+									p.sendMessage("あなたは手に何も持っていません。");
+								}
+								else {
+									if ( i.getItemMeta().getDisplayName() == null ) {
+									if ( !(i.getDurability() == 0) ) {
+										p.sendMessage(i.getType().toString() +
+												", " + i.getDurability());
+									}
+									else {
+										p.sendMessage(i.getType().toString() +
+												", " + "0");
+									}
+								}
+									else {
+										String displayname = i.getItemMeta().getDisplayName();
+										if ( !(p.getItemInHand().getDurability() == 0) ) {
+											p.sendMessage(p.getItemInHand().getType().toString() +
+													", " + p.getItemInHand().getDurability() +
+													", " + displayname);
+										}
+										else {
+											p.sendMessage(p.getItemInHand().getType().toString() +
+													", " + "0" +
+													", " + displayname);
+										}
+									}
 							}
 						}
-						if ( rank == 3 ){
-							if ( level == 4 ){
-								Bukkit.broadcastMessage(name + "さんが" + array[rank] + "にランクアップしました!");
-							}
-							else {
-								p.sendMessage(wrong);
-							}
-						}
-						if ( rank == 4 ){
-							if ( level == 5 ){
-								Bukkit.broadcastMessage(name + "さんが" + array[rank] + "にランクアップしました!");
-							}
-							else {
-								p.sendMessage(wrong);
-							}
-						}
-						if ( rank == 5 ){
-							if ( level == 6 ){
-								Bukkit.broadcastMessage(name + "さんが" + array[rank] + "にランクアップしました!");
-							}
-							else {
-								p.sendMessage(wrong);
-							}
-						}
-						if ( rank == 6 ){
-							if ( level == 7 ){
-								Bukkit.broadcastMessage(name + "さんが" + array[rank] + "にランクアップしました!");
-							}
-							else {
-								p.sendMessage(wrong);
-							}
-						}
-						if ( rank == 7 ){
-							if ( level == 8 ){
-								Bukkit.broadcastMessage(name + "さんが" + array[rank] + "にランクアップしました!");
-							}
-							else {
-								p.sendMessage(wrong);
+							else if ( args[1].equalsIgnoreCase("reset") ) {
+								p.sendMessage("スコアをリセットしました。");
+								p.getScoreboard().getObjective("rank").getScore(p).setScore(1);
 							}
 						}
 					}

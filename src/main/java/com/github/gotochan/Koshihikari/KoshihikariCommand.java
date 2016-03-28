@@ -52,7 +52,7 @@ public class KoshihikariCommand
 					}
 					else if ( args.length == 2) {
 						if ( args[1].equalsIgnoreCase("hunger")) {
-							player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 100, 100));
+							player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 60, 100));
 						}
 						else if ( args[1].equalsIgnoreCase("get")) {
 							player.setItemInHand(new ItemStack(Material.MUSHROOM_SOUP));

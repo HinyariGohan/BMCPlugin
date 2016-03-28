@@ -42,7 +42,7 @@ public class KoshihikariEvent
 		player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 1200 ,1));
 		player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 1200 ,2));
         player.getWorld().playSound(player.getLocation(), Sound.EAT, 1, 1);
-        player.getInventory().remove(new ItemStack(Material.MUSHROOM_SOUP, 1));
+        player.setItemInHand(null);
         player.updateInventory();
 				}
 			}

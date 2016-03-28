@@ -2,6 +2,7 @@ package com.github.gotochan;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.gotochan.Koshihikari.KoshihikariCommand;
@@ -13,14 +14,15 @@ import com.github.gotochan.Rank.BMCRankUpCommand;
 
 
 public class BMC
-	extends JavaPlugin {
+	extends JavaPlugin implements Listener {
 
 /**
  * BMCオリジナルプラグイン メインクラス
  * @author Hinyari_Gohan
  */
 
-	public static String prefix = ChatColor.GREEN + "[BMCPlugin]" + ChatColor.WHITE;
+	public static String prefix = ChatColor.GREEN + "[BMCPlugin] " + ChatColor.WHITE;
+
 
 	@Override
 	public void onEnable() {
@@ -43,6 +45,7 @@ public class BMC
 	public void onLoad() {
 		this.getLogger().info("BMCプラグインを読み込んでいます。");
 	}
+
 
 	public static String inthegame = "ゲーム内で実行して下さい。";
 	public static String lotargs = prefix + "引数は必要ありません。";
