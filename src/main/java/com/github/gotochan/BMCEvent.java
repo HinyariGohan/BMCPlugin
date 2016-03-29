@@ -9,7 +9,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityCreatePortalEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-
+/**
+ * BMCサーバー メインイベントキャッチクラス
+ * @author Hinyari_Gohan
+ *
+ */
 
 public class BMCEvent implements Listener {
 	@EventHandler(priority=EventPriority.HIGH)
@@ -19,14 +23,15 @@ public class BMCEvent implements Listener {
 
     @SuppressWarnings("unused")
 	@EventHandler
-    public void onPlayerMoveEvent(PlayerMoveEvent e) {
+    public void onPlayerMoveEvent(PlayerMoveEvent e)
+    {
     	Player p = e.getPlayer();
     	double locx = p.getLocation().getX();
     	double locy = p.getLocation().getY() + 3;
     	double locz = p.getLocation().getZ();
     	Location loc = new Location(p.getWorld(), locx, locy, locz);
     	Location ploc = p.getLocation();
-    	if ( p.hasPermission("bmc.effect")) {
+    	if ( p.hasPermission("bmc.effect"))	{
     		p.getWorld().playEffect(ploc, Effect.LAVA_POP, 0);
     	}
     }

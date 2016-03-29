@@ -13,18 +13,14 @@ import org.bukkit.potion.PotionEffectType;
 
 import com.github.gotochan.BMC;
 
-public class KoshihikariEvent
-	implements Listener {
-
 /**
- * イベントからのコシヒカリを食べるモーション
+ *
  * @author Hinyari_Gohan
- * @param e
- * @param ItemStack
- * @param String
+ *
  */
 
-
+public class KoshihikariEvent
+	implements Listener {
 
 	@EventHandler
 	public void onEat(PlayerItemConsumeEvent e) {

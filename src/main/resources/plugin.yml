@@ -1,6 +1,6 @@
 name: BMCPlugin
 main: com.github.gotochan.BMC
-version: 3.1
+version: 4.0
 author: Hinyari_Gohan
 description: BMCPlugin
 commands:
@@ -24,3 +24,17 @@ commands:
     description: ランクアップが可能になります。
     permission-message: このコマンドを実行する権限がありません。
     aliases: []
+  lpreload:
+permissions:
+  lp.reload:
+    description: Reload
+    default: op
+  launch.pads:
+    description: Launch
+    default: op
+  ppl.place:
+    description: Place a ppl
+    default: op
+  ppl.perms:
+    description: get perms
+    default: op

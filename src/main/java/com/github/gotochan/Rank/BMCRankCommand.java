@@ -33,18 +33,29 @@ public class BMCRankCommand
 				Objective rankobject = board.getObjective("rank");
 				Score MyStats = rankobject.getScore(player);
 				String myname = sender.getName();
+				String cmdname = "/" + cmd.getName();
 
-				String[] array = new String[] {ChatColor.GRAY + "Visitor", ChatColor.RED + "Red" , ChatColor.GOLD + "Orange",
-						ChatColor.YELLOW + "Yellow", ChatColor.GREEN + "Green", ChatColor.BLUE + "Blue",
-						ChatColor.DARK_BLUE + "Indigo", ChatColor.DARK_PURPLE + "Violet",
-						ChatColor.WHITE + "UltraViolet", ChatColor.LIGHT_PURPLE + "あなたは最高ランクに達しました。"};
+				String[] RankList = new String[] {
+						null,
+						ChatColor.GRAY + "Visitor",
+						ChatColor.RED + "Red" ,
+						ChatColor.GOLD + "Orange",
+						ChatColor.YELLOW + "Yellow",
+						ChatColor.GREEN + "Green",
+						ChatColor.BLUE + "Blue",
+						ChatColor.DARK_BLUE + "Indigo",
+						ChatColor.DARK_PURPLE + "Violet",
+						ChatColor.WHITE + "UltraViolet",
+						ChatColor.LIGHT_PURPLE + "あなたは最高ランクに達しました。"
+						};
 				int NowRank = MyStats.getScore();
 				int NextRank = MyStats.getScore() + 1;
 				if( args.length < 1 ) {
-					player.sendMessage(BMC.prefix + ChatColor.GOLD  + "---[ランクシステム]---");
-					player.sendMessage(BMC.prefix + ChatColor.GOLD + "/rank show");
-					player.sendMessage(BMC.prefix + ChatColor.GOLD + "/rank stats");
-					player.sendMessage(BMC.prefix + ChatColor.GOLD + "/rank time");
+					String content = "BMCランクシステム";
+					player.sendMessage(BMC.equal(sender, content));
+					player.sendMessage(ChatColor.GOLD + cmdname + " show");
+					player.sendMessage(ChatColor.GOLD + cmdname + " stats");
+					player.sendMessage(ChatColor.GOLD + cmdname + " time");
 				}
 				else if( args[0].equalsIgnoreCase("show")) {
 						sender.sendMessage(ChatColor.RED + "[Red] " + ChatColor.WHITE + "一般人");
@@ -60,8 +71,8 @@ public class BMCRankCommand
 						if ( args.length == 1 ) {
 						sender.sendMessage(ChatColor.YELLOW + "========BMCサーバー ランクシステム========");
 						sender.sendMessage("名前: " + myname);
-						sender.sendMessage("現在のランク: " + array[NowRank]);
-						sender.sendMessage("次のランク: " + array[NextRank]);
+						sender.sendMessage("現在のランク: " + RankList[NowRank]);
+						sender.sendMessage("次のランク: " + RankList[NextRank]);
 						return false;
 						}
 					else if ( args.length == 2 ) {
@@ -76,8 +87,8 @@ public class BMCRankCommand
 						else {
 							sender.sendMessage(ChatColor.YELLOW + "========BMCサーバー ランクシステム========");
 							sender.sendMessage("名前: " + args[1]);
-							sender.sendMessage("現在のランク: " + array[OtherNowRank]);
-							sender.sendMessage("次のランク: " + array[OtherNextRank]);
+							sender.sendMessage("現在のランク: " + RankList[OtherNowRank]);
+							sender.sendMessage("次のランク: " + RankList[OtherNextRank]);
 						}
 					}
 					else if ( args[0].equalsIgnoreCase("time")) {
@@ -88,7 +99,7 @@ public class BMCRankCommand
 						String TimeAll = ChatColor.GOLD + TimeS + "カウント" + ChatColor.RESET;
 						if ( TimeI == 0 ) {
 							player.sendMessage(BMC.prefix  + "ランク有効時間が0です。");
-							player.sendMessage(BMC.prefix  + "現在のランク: " + array[NowRank]);
+							player.sendMessage(BMC.prefix  + "現在のランク: " + RankList[NowRank]);
 						}
 						else {
 							player.sendMessage(BMC.prefix + "ランク有効時間: " + TimeAll );

@@ -16,6 +16,12 @@ import org.bukkit.scoreboard.Scoreboard;
 
 import com.github.gotochan.BMC;
 
+/**
+ * BMCサーバー ランクアップコマンド実装クラス
+ * @author Hinyari_Gohan
+ *
+ */
+
 public class BMCRankUpCommand
 	implements CommandExecutor {
 	@SuppressWarnings({ "deprecation" })

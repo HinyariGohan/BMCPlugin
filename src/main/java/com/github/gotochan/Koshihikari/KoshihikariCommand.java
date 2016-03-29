@@ -16,13 +16,14 @@ import org.bukkit.scoreboard.Scoreboard;
 
 import com.github.gotochan.BMC;
 
+/**
+ *
+ * @author Hinyari_Gohan
+ *
+ */
+
 public class KoshihikariCommand
 	implements CommandExecutor {
-	String crlf = System.getProperty("line.separator");
-/**
- * @author Hinyari_Gohan
- * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
- */
 
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command cmd,
@@ -34,10 +35,8 @@ public class KoshihikariCommand
 				Objective objective = board.getObjective("koshihikari");
 				if ( args.length < 1 ) {
 					player.sendMessage(BMC.prefix + ChatColor.GOLD  + "---[コシヒカリコマンド一覧]---");
-					player.sendMessage(BMC.prefix + ChatColor.GOLD + "/koshihikari --" + crlf +
-							"  ヘルプを参照します。");
-					player.sendMessage(BMC.prefix + ChatColor.GOLD + "/koshihikari ticket --" + crlf +
-							"  コシヒカリ交換チケット数を参照します。");
+					player.sendMessage(BMC.prefix + ChatColor.GOLD + "/" + cmd + "--" + "  ヘルプを参照します。");
+					player.sendMessage(BMC.prefix + ChatColor.GOLD + "/" + cmd + " ticket --" + "  コシヒカリ交換チケット数を参照します。");
 					player.sendMessage(BMC.prefix + ChatColor.GRAY + "koshihikariはkomeに省略することが出来ます。");
 				}
 				else if ( args[0].equalsIgnoreCase("ticket")) {
@@ -65,7 +64,7 @@ public class KoshihikariCommand
 }
 
 	public Boolean err (CommandSender sender){
-		sender.sendMessage(BMC.prefix + " ゲーム内から実行して下さい。");
+		sender.sendMessage(BMC.prefix + "ゲーム内から実行して下さい。");
 		return Boolean.valueOf(true);
 	}
 	public boolean hasEnchantedItem(Player p, ItemStack i, Enchantment e, int enchantmentLevel){
