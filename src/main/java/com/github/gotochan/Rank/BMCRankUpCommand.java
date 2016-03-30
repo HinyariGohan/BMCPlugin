@@ -3,8 +3,6 @@ package com.github.gotochan.Rank;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -17,114 +15,80 @@ import org.bukkit.scoreboard.Scoreboard;
 import com.github.gotochan.BMC;
 
 /**
- * BMCサーバー ランクアップコマンド実装クラス
+ * BMCサーバー ランクコマンド ランクアップ実装クラス
  * @author Hinyari_Gohan
- *
  */
 
-public class BMCRankUpCommand
-	implements CommandExecutor {
+public class BMCRankUpCommand {
 	@SuppressWarnings({ "deprecation" })
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if ( sender instanceof Player ){
-			if ( cmd.getName().equalsIgnoreCase("rankup") ){
-				if ( args.length == 0 ) {
-					Player p = (Player) sender;
-					ItemStack i = p.getItemInHand();
-					Scoreboard b = p.getScoreboard();
-					Objective o = b.getObjective("rank");
-					if ( o == null ) {
-						o = b.registerNewObjective("rank", "");
+	public boolean runCommand(
+		CommandSender sender, String label, String[] args) {
+		/*
+		 * args[0] rank
+		 * args[1] rankup
+		 * args.length == 2
+		 */
+		Player p = (Player) sender;
+		ItemStack i = p.getItemInHand();
+		Scoreboard b = p.getScoreboard();
+		Objective o = b.getObjective("rank");
+		Objective rt = b.getObjective("ranktime");
+		if ( o == null ) {
+			o = b.registerNewObjective("rank", "");
+		}
+		if ( rt == null ) {
+			rt = b.registerNewObjective("ranktime", "");
+		}
+		Score score = o.getScore(p);
+		Score rtscore = rt.getScore(p);
+		int rank = score.getScore();
+		String name = p.getName();
+		String wrong = BMC.prefix + "違うランクアイテムを持っています。正しいランクアイテムを持つ必要があります。";
+		if ( args.length == 2 ) {
+			if ( i != null && i.getTypeId() != 0 ) {
+				if ( i.getType() == Material.INK_SACK ){
+					ItemMeta im = i.getItemMeta();
+					int level = im.getEnchantLevel(Enchantment.DURABILITY);
+					if ( rank == 0 ) {
+						p.sendMessage("あなたは" + BMCRankCommand.RankList[rank] + "ランクです。");
+						p.sendMessage(ChatColor.RED + "通常ワールドにスポーンしていてこのランクの場合は管理者に連絡してください。");
 					}
-					Score score = o.getScore(p);
-					int rank = score.getScore();
-					String name = p.getName();
-					String[] array = new String[] {ChatColor.RED + "Red" , ChatColor.GOLD + "Orange",
-							ChatColor.YELLOW + "Yellow", ChatColor.GREEN + "Green", ChatColor.BLUE + "Blue",
-							ChatColor.DARK_BLUE + "Indigo", ChatColor.DARK_PURPLE + "Violet",
-							ChatColor.WHITE + "UltraViolet"};
-					String wrong = BMC.prefix + "違うランクアイテムを持っています。正しいランクアイテムを持つ必要があります。";
-					if ( i != null && i.getTypeId() != 0 ) {
-						if ( i.getType() == Material.INK_SACK ){
-							ItemMeta im = i.getItemMeta();
-							int level = im.getEnchantLevel(Enchantment.DURABILITY);
-							if ( rank <= 7 ) {
-								if ( level == (rank + 1) ) {
-									score.setScore(rank + 1);
-									Bukkit.broadcastMessage(BMC.prefix + name + " さんが " + array[rank] +
-											ChatColor.RESET + " ランクにランクアップしました!");
-								}
-								else {
-									p.sendMessage(wrong);
-								}
-							}
+					else if ( rank <= 8 ) {
+						if ( level == (rank + 1) ) {
+							score.setScore(rank + 1);
+							rtscore.setScore(2);
+							Bukkit.broadcastMessage(BMC.prefix + name + " さんが " + BMCRankCommand.RankList[rank] +
+									ChatColor.RESET + " ランクにランクアップしました!");
+							p.sendMessage("ランク有効時間がリセットされました。ランクに応じたカラー米粉を作成してください。");
+						}
 						else {
-							if ( rank == 8 ){
-								p.sendMessage(ChatColor.LIGHT_PURPLE + "あなたは最高ランクへ達しています。");
-							}
-							else {
-								p.sendMessage(BMC.prefix + "ランクアイテムを持つ必要があります。");
-							}
+							p.sendMessage(wrong);
 						}
 					}
-						else {
-							p.sendMessage(BMC.prefix + "ランクアイテムを持つ必要があります。");
-						}
-				}
+				else {
+					if ( rank == 9 ){
+						p.sendMessage(ChatColor.LIGHT_PURPLE + "あなたは最高ランクへ達しています。");
+					}
 					else {
-						p.sendMessage(BMC.prefix + "アイテムを持っていません。");
-					}
-				}
-				else if ( args.length >= 1 ) {
-					Player p = (Player) sender;
-					if ( args[0].equalsIgnoreCase("debug") ) {
-						if( args.length == 1 ) {
-							String example = BMC.prefix + ChatColor.GOLD + "";
-							String reset = ChatColor.RESET + " - ";
-							p.sendMessage(example + "itemhand" + reset + "手に持っているアイテムを返します。");
-							p.sendMessage(example + "reset" + reset  + "ランクのスコアをリセットします。");
-						}
-						else if ( args.length > 1 ){
-							if ( args[1].equalsIgnoreCase("itemhand") ) {
-								ItemStack i = p.getItemInHand();
-								if (i.getType() == Material.AIR ) { //AIRだった場合]
-									p.sendMessage("あなたは手に何も持っていません。");
-								}
-								else {
-									if ( i.getItemMeta().getDisplayName() == null ) {
-									if ( !(i.getDurability() == 0) ) {
-										p.sendMessage(i.getType().toString() +
-												", " + i.getDurability());
-									}
-									else {
-										p.sendMessage(i.getType().toString() +
-												", " + "0");
-									}
-								}
-									else {
-										String displayname = i.getItemMeta().getDisplayName();
-										if ( !(p.getItemInHand().getDurability() == 0) ) {
-											p.sendMessage(p.getItemInHand().getType().toString() +
-													", " + p.getItemInHand().getDurability() +
-													", " + displayname);
-										}
-										else {
-											p.sendMessage(p.getItemInHand().getType().toString() +
-													", " + "0" +
-													", " + displayname);
-										}
-									}
-							}
-						}
-							else if ( args[1].equalsIgnoreCase("reset") ) {
-								p.sendMessage("スコアをリセットしました。");
-								p.getScoreboard().getObjective("rank").getScore(p).setScore(1);
-							}
-						}
+						p.sendMessage(BMC.prefix + "ランクアイテムを持つ必要があります。");
 					}
 				}
 			}
+				else {
+					p.sendMessage(BMC.prefix + "ランクアイテムを持つ必要があります。");
+				}
 		}
-		return false;
+			else {
+				p.sendMessage(BMC.prefix + "アイテムを持っていません。");
+				p.sendMessage("ランクアップの方法を確認するには" + BMC.g + " /bmc rank rankup help " + BMC.r +
+						"コマンドを使用します。");
+			}
+		}
+		else if ( args.length >= 3 ) {
+			if ( args[2].equalsIgnoreCase("help") ) {
+				return BMC.RankupProcessInfo(sender);
+			}
+		}
+		return true;
 	}
 }

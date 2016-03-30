@@ -4,37 +4,11 @@ version: 4.0
 author: Hinyari_Gohan
 description: BMCPlugin
 commands:
-  koshihikari:
-    description: コシヒカリに関するコマンドです。
-    permission-message: このコマンドを実行する権限がありません。
-    aliases: [koshi, kome]
-  rank:
-    description: ランクに関するコマンドです。
-    permission-message: このコマンドを実行する権限がありません。
-    aliases: [ranks,koshihikarirank,bmcrank]
-  nannte:
-    description: なんてこった。
-    permission-message: このコマンドを実行出来ないだと！？なんてこった！
-    aliases: [nante]
   bmc:
-    description: BMCコマンド
-    permission-message: このコマンドを実行する権限がありません。
+    description: bmcコマンドです。
     aliases: []
-  rankup:
-    description: ランクアップが可能になります。
-    permission-message: このコマンドを実行する権限がありません。
-    aliases: []
-  lpreload:
 permissions:
-  lp.reload:
-    description: Reload
+  bmc.debug:
+    description: デバッグ用のコマンドの使用権限
     default: op
-  launch.pads:
-    description: Launch
-    default: op
-  ppl.place:
-    description: Place a ppl
-    default: op
-  ppl.perms:
-    description: get perms
-    default: op
+    permissions-message: You don''t have permission to access this command!

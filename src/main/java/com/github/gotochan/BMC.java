@@ -1,30 +1,15 @@
 package com.github.gotochan;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.github.gotochan.Koshihikari.KoshihikariCommand;
 import com.github.gotochan.Koshihikari.KoshihikariEvent;
-import com.github.gotochan.Rank.BMCRankCommand;
-import com.github.gotochan.Rank.BMCRankUpCommand;
 
 /**
  * BMCオリジナルプラグイン メインクラス
@@ -35,25 +20,29 @@ import com.github.gotochan.Rank.BMCRankUpCommand;
 public class BMC
 	extends JavaPlugin implements Listener {
 
+	/**
+	 * 共有String変数
+	 */
+	public static String g = ChatColor.GOLD + "";
+	public static String r = ChatColor.RESET + "";
+	public static String y = ChatColor.YELLOW + "";
+	public static String h = r + " - ";
+
 	public static String prefix = ChatColor.GREEN + "[BMCPlugin] " + ChatColor.WHITE;
 	public static String inthegame = "ゲーム内で実行して下さい。";
 	public static String lotargs = prefix + "引数は必要ありません。";
 	public static String example = prefix + ChatColor.GOLD + "Example: ";
 
+	private BMCCommand bmcCommand;
 
 	@Override
 	public void onEnable() {
 		this.getLogger().info("BMCプラグインを開始しています。");
 		Bukkit.getServer().getScoreboardManager().getMainScoreboard();
-		getCommand("koshihikari").setExecutor( new KoshihikariCommand() );
-		getCommand("rank").setExecutor( new BMCRankCommand() );
-		getCommand("nannte").setExecutor( new KusoCommand() );
-		getCommand("rankup").setExecutor( new BMCRankUpCommand() );
 		getServer().getPluginManager().registerEvents(new KoshihikariEvent(), this);
 		getServer().getPluginManager().registerEvents(new BMCEvent(), this);
-		getServer().getPluginManager().registerEvents(this, this);
-		getConfig().options().copyDefaults(true);
-		saveConfig();
+		getServer().getPluginManager().registerEvents(new BMCLaunchPad(), this);
+		bmcCommand = new BMCCommand();
 	}
 
 	@Override
@@ -66,111 +55,158 @@ public class BMC
 		this.getLogger().info("BMCプラグインを読み込んでいます。");
 	}
 
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
+	@Override
+	public boolean onCommand(
+			CommandSender sender, Command cmd, String label, String[] args)
 	  {
-		if ( cmd.getName().equalsIgnoreCase("bmc")) {
+		if ( !( sender instanceof Player ) ) {
+			return inGame(sender);
+		}
+
+		if ( cmd.getName().equalsIgnoreCase("bmc") ) {
 			if ( args.length == 0 ) {
-				sender.sendMessage(BMC.prefix + "");
+				return BMChelp(sender);
+			}
+			else if ( args.length >= 1 ) {
+				if ( args[0].equalsIgnoreCase("rank") ) {
+					return bmcCommand.onCommand(sender, cmd, label, args);
+				} else if ( args[0].equalsIgnoreCase("kome")) {
+					return bmcCommand.onCommand(sender, cmd, label, args);
+				} else if ( args[0].equalsIgnoreCase("info")) {
+					return info(sender);
+				} else if ( args[0].equalsIgnoreCase("debug")) {
+					return bmcCommand.onCommand(sender, cmd, label, args);
+				} else {
+					return BMChelp(sender);
+				}
 			}
 		}
-	    if ((cmd.getName().equalsIgnoreCase("lpreload")) && (sender.hasPermission("lp.reload")))
-	    {
-	      getServer().reload();
-	      reloadConfig();
-	      sender.sendMessage(ChatColor.GREEN + "Plugin reloaded!");
-	    }
-	    if ((cmd.getName().equalsIgnoreCase("lpreloadcf")) && (sender.hasPermission("lpcf.reload"))) {
-	      reloadConfig();
-	    }
-	    /* if (cmd.getName().equalsIgnoreCase("lpinfo")) {
-	      if (sender.hasPermission("ppl.info"))
-	      {
-	        PluginDescriptionFile p = getDescription();
-	        sender.sendMessage(ChatColor.GREEN + "Title: " + p.getName());
-	        sender.sendMessage(ChatColor.GREEN + "Version: " + p.getVersion());
-	        sender.sendMessage(ChatColor.GREEN + "Author: " + p.getAuthors());
-	      }
-	      else
-	      {
-	        sender.sendMessage(ChatColor.RED + "Invalid permissions!");
-	      }
-	    }
-	    **/
-	    return true;
-	  }
-
-	  static long LIMIT = 3000L;
-	  @SuppressWarnings({ "unchecked", "rawtypes" })
-	Map<String, Long> launchTimes = new HashMap();
-
-	  @EventHandler
-	  public void onPlayerStep(PlayerInteractEvent e)
-	  {
-	    if (e.getAction().equals(Action.PHYSICAL))
-	    {
-	      Player p = e.getPlayer();
-	      if ((e.getClickedBlock().getType().equals(Material.STONE_PLATE)) || (e.getClickedBlock().getType().equals(Material.IRON_PLATE)))
-	      {
-	        Block b = e.getClickedBlock().getLocation().subtract(0.0D, 1.0D, 0.0D).getBlock();
-	        FileConfiguration config = getConfig();
-	        if (((config.getString("launchpads").equals("true")) || ((config.getString("launchpads").equals("true")) && (config.getString("permissions").equals("true")) && (p.hasPermission("launch.pads")))) &&
-	          (b != null) &&
-	          (b.getType().equals(Material.REDSTONE_BLOCK)))
-	        {
-	          Location l = p.getLocation().add(0.0D, 1.0D, 0.0D);
-	          p.teleport(l);
-	          p.setVelocity(p.getVelocity().add(p.getLocation().getDirection().multiply(config.getInt("multiply"))).setY(config.getInt("yaxis")));
-	          this.launchTimes.put(p.getName(), Long.valueOf(System.currentTimeMillis()));
-	          if (!config.getString("sound").equalsIgnoreCase("false"))
-	          {
-	        	  p.playSound(p.getLocation(), Sound.WITHER_SHOOT, (float)LIMIT, (float) 2.0);
-	          }
-	        }
-	      }
-	    }
-	  }
-
-	  @EventHandler
-	  public void onBlock(BlockPlaceEvent e)
-	  {
-	    FileConfiguration config = getConfig();
-	    if ((!config.getString("anyonecanmake").equals("false")) &&
-	      (!e.getPlayer().hasPermission("ppl.place")))
-	    {
-	      Block b = e.getBlockPlaced().getLocation().subtract(0.0D, 1.0D, 0.0D).getBlock();
-	      if ((e.getBlockPlaced().getType().equals(Material.STONE_PLATE)) && (b.getType().equals(Material.REDSTONE_BLOCK)))
-	      {
-	        e.getBlockPlaced().setType(Material.AIR);
-	        e.getPlayer().sendMessage(ChatColor.RED + "You do not have permission to create ppl's!");
-	      }
-	    }
-	  }
-
-	  @EventHandler
-	  public void anotherEvent(EntityDamageEvent event)
-	  {
-	    if ((event.getEntity() instanceof Player))
-	    {
-	      Player player = (Player)event.getEntity();
-	      Long time = (Long)this.launchTimes.get(player.getName());
-	      if (time != null) {
-	        if (System.currentTimeMillis() - time.longValue() < LIMIT) {
-	          event.setCancelled(true);
-	        } else {
-	          this.launchTimes.remove(player.getName());
-	        }
-	      }
-	    }
-	  }
-
-	  public boolean Rankhelp(CommandSender sender) {
-		sender.sendMessage(ChatColor.GOLD + "");
 		return false;
 	  }
 
+	/**
+	 * rankコマンドのヘルプです。
+	 * @param sender
+	 * @return rankコマンドのヘルプ
+	 */
+	public static boolean Rankhelp(CommandSender sender) {
+		String content = "ランクコマンド ヘルプ";
+		String cmdname = g + "/bmc rank ";
+		sender.sendMessage(equal(sender, content));
+		sender.sendMessage(cmdname + "show" + h + "ランクの一覧を表示します。");
+		sender.sendMessage(cmdname + "stats <プレイヤー名>" + h + "ランクのスタッツを表示します。");
+		sender.sendMessage(cmdname + "time" + h + "ランクの有効時間を表示します。");
+		sender.sendMessage(cmdname + "rankup" + h + "ランクアップをすることが出来ます。");
+		return false;
+	}
+
+	/**
+	 * komeコマンドのヘルプです。
+	 * @param sender
+	 * @return komeコマンドのヘルプ
+	 */
+	public static boolean Komehelp(CommandSender sender) {
+		String content = "コシヒカリコマンド ヘルプ";
+		String cmdname = g + "/bmc kome ";
+		sender.sendMessage(equal(sender, content));
+		sender.sendMessage(cmdname + "ticket <プレイヤー名>" + h +
+				"コシヒカリ交換可能チケット数を表示します。");
+		return false;
+	}
+
+	/**
+	 * ランクコマンドのランクアップのヘルプです。
+	 * @param sender
+	 * @return ランクコマンドのランクアップ
+	 */
+	public static boolean RankUphelp(CommandSender sender) {
+		String content = "ランクアップコマンド ヘルプ";
+		String cmdname = g + "/bmc rank rankup ";
+		sender.sendMessage(equal(sender, content));
+		sender.sendMessage(cmdname + h + "ランクアップをします。");
+		sender.sendMessage(cmdname + "help" + h + "ランクアップの手順を確認します。");
+		return false;
+	}
+
+	/**
+	 * デバッグコマンドのヘルプです。
+	 * @param sender
+	 * @return デバッグコマンドのヘルプ
+	 */
+	public static boolean Debughelp(CommandSender sender) {
+		String content = "BMCデバッグコマンド ヘルプ";
+		String cmdname = "/bmc debug";
+		sender.sendMessage(equal(sender, content));
+		sender.sendMessage(cmdname + "itemhand" + h + "手に持っているアイテムのデータを返します。");
+		sender.sendMessage(cmdname + "rank reset" + h + "ランクをリセットします。");
+		sender.sendMessage(cmdname + "kome hunger" + h + "空腹状態にします。");
+		sender.sendMessage(cmdname + "kome get" + h + "コシヒカリをインベントリに追加します。");
+		return false;
+	}
+
+	/**
+	 * bmcコマンドのヘルプです。
+	 * @param sender
+	 * @return BMCコマンドのヘルプです。
+	 */
+	public static boolean BMChelp(CommandSender sender) {
+		String content = "BMCコマンド ヘルプ";
+		sender.sendMessage(equal(sender, content));
+		sender.sendMessage(g + "/bmc rank" + h + "ランクコマンドのヘルプを参照します。");
+		sender.sendMessage(g + "/bmc kome" + h + "コシヒカリコマンドのヘルプを参照します。");
+		return false;
+	}
+
+	  /**
+	   * contentに入ってきたデータをイコールで挟んで目次のタイトルを作る
+	   * @param sender 送信者
+	   * @param content String コンテンツ
+	   * @return 目次のタイトル
+	   */
+
 	  public static String equal(CommandSender sender, String content) {
 		  String equals = ChatColor.YELLOW + "========" + content + "========";
-		return equals;
-
+		  return equals;
 	  }
+
+
+	  /**
+	   * プラグインの情報(CMD: /bmc info)を返します。
+	   * @param sender
+	   * @return プラグインの情報
+	   */
+	  public boolean info(CommandSender sender) {
+		  PluginDescriptionFile p = getDescription();
+		  sender.sendMessage(g + "Title: " + r + p.getName());
+		  sender.sendMessage(g + "Author: " + r + p.getAuthors().toString());
+		  sender.sendMessage(g + "Version: " + r + p.getVersion());
+		  sender.sendMessage(g + "WikiURL: " + r + "http://seesaawiki.jp/bmc/");
+		return false;
+	  }
+
+	  /**
+	   * ゲーム内で実行可能です。
+	   * @param sender
+	   * @return inGame
+	   */
+	public static boolean inGame(CommandSender sender) {
+		sender.sendMessage("ゲーム内で実行してください。");
+		return false;
+	}
+
+	/**
+	 * ランクアップの手順
+	 * @param sender
+	 * @return ランクアップの手順
+	 */
+	public static boolean RankupProcessInfo(CommandSender sender) {
+		String content = "ランクアップの手順";
+		String n = System.getProperty("line.separator");
+		sender.sendMessage(equal(sender, content));
+		sender.sendMessage("1. " + "/bmc rank stats で表示された次のランクのアイテムをクラフトします。");
+		sender.sendMessage("2. " + "1. で作成したランクアイテムを手に持ち、" +
+				" /bmc rank rankup " + n +"コマンドを実行します。");
+		sender.sendMessage("3. " + "ランクアップに成功すると成功メッセージが表示されます。" + n);
+		return false;
+	}
 }
