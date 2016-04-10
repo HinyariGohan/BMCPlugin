@@ -1,8 +1,8 @@
-package com.github.gotochan;
+package com.github.gotochan.command;
 
 import org.bukkit.command.CommandSender;
 
-public abstract class BMCSubCommandAbst {
+public abstract class SubCommandAbst {
 
 	/**
 	 * コマンドを取得します。
@@ -19,5 +19,6 @@ public abstract class BMCSubCommandAbst {
 	 */
 	public abstract boolean runCommand(
 			CommandSender sender, String label, String[] args);
+
 
 }
