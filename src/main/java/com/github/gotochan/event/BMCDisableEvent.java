@@ -1,5 +1,8 @@
 package com.github.gotochan.event;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -11,6 +14,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class BMCDisableEvent implements Listener
 {
+	
+	public static List<String> blocks = new ArrayList<String>();
+	
 	@EventHandler
 	public void BlockPlaceBlocker(BlockPlaceEvent event)
 	{

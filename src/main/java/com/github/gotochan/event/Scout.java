@@ -1,6 +1,5 @@
 package com.github.gotochan.event;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -87,18 +86,6 @@ public class Scout implements Listener
 		v.setY(v_y);
 		v.setZ(v_z);
 		e.setVelocity(v);
-	}
-	
-	private Player getPlayer(String name)
-	{
-		for ( Player player : Bukkit.getOnlinePlayers() )
-		{
-			if ( player.getName().equals(name) )
-			{
-				return player;
-			}
-		}
-		return null;
 	}
 }
 

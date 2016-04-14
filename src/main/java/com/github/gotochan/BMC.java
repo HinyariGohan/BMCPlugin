@@ -67,6 +67,7 @@ extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(new Graceful(), this);
 		getServer().getPluginManager().registerEvents(new BMCDisableEvent(), this);
 		bmcCommand = new BMCCommand();
+		this.saveDefaultConfig();
 	}
 	
 	@Override
