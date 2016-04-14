@@ -1,7 +1,6 @@
 package com.github.gotochan.event;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -16,7 +15,6 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityCreatePortalEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
@@ -24,7 +22,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import com.github.gotochan.BMC;
-import com.github.gotochan.ability.Acrobat;
 import com.github.gotochan.ntp.KickCommand;
 import com.github.gotochan.resource.BMCBoolean;
 
@@ -134,22 +131,6 @@ public class BMCEvent implements Listener {
 	}
 	
 	@EventHandler
-	public void onGamemodeChange(PlayerGameModeChangeEvent event)
-	{
-		Player player = event.getPlayer();
-		/* HashMapの値を変更して、ゲームモードがサバイバルモードになったらallowないしbooleanをtrueにする。
-		 * *メモ*
-		 */
-		if( event.getNewGameMode() == GameMode.SURVIVAL )
-		{
-			if ( Acrobat.canAcrobating.get(player) == "true" )
-			{
-				player.setAllowFlight(true);
-			}
-		}
-	}
-	
-	@EventHandler
 	public void onCommandProsess(PlayerCommandPreprocessEvent event)
 	{
 		Player player = event.getPlayer();
@@ -161,8 +142,11 @@ public class BMCEvent implements Listener {
 						+ event.getMessage());
 				if ( event.getMessage().contains("/op") )
 				{
-					player2.sendMessage("§c[BMC] " + player.getName() +
-							" さんがOPコマンドを試行しています！");
+					if ( !(player.isOp() ))
+					{
+						player2.sendMessage("§c[BMC] " + player.getName() +
+								" さんがOPコマンドを試行しています！");
+					}
 				}
 			}
 		}

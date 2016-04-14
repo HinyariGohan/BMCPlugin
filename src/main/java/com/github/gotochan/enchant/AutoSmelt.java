@@ -15,7 +15,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -44,7 +43,6 @@ public class AutoSmelt implements Listener
 					Material.GOLD_ORE,
 					Material.SAND,
 					Material.COBBLESTONE,
-					Material.COBBLESTONE,
 					Material.NETHERRACK,
 					Material.CACTUS,
 					Material.LOG,
@@ -52,43 +50,87 @@ public class AutoSmelt implements Listener
 					Material.SPONGE
 			};
 	
-	public static ItemStack dropitem;
-	
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event)
 	{
 		Player player = event.getPlayer();
 		Block block = event.getBlock();
 		ItemStack item = player.getItemInHand();
-		World world = player.getWorld();
+		World world = block.getWorld();
 		
-		int drops = block.getDrops().size();
-		
-		
-		if ( item != null )
+		if ( item == null )
 		{
-			if( isTool(item.getType()))
+			return;
+		}
+		
+		if ( !(item.hasItemMeta()) )
+		{
+			return;
+		}
+		
+		ItemMeta meta = item.getItemMeta();
+		
+		if ( !(meta.hasLore()) )
+		{
+			return;
+		}
+		
+		if ( !(isTool(item.getType())) )
+		{
+			return;
+		}
+		
+		if ( meta.getLore().contains("§4Auto Smelt") )
+		{
+			if ( isBlock(block.getType()))
 			{
-				ItemMeta meta = item.getItemMeta();
-				if ( meta.getLore().get(0) == "§4Auto Smelt" )
+				Location loc = block.getLocation();
+				Material type = block.getType();
+				event.setCancelled(true);
+				block.setType(Material.AIR);
+				
+				if ( type == Material.IRON_ORE )
 				{
-					if( item.containsEnchantment(Enchantment.LOOT_BONUS_BLOCKS) )
-					{
-						enchlvl = meta.getEnchantLevel(Enchantment.LOOT_BONUS_BLOCKS);
-					}
+					ItemStack dropitem = new ItemStack( (Material.IRON_INGOT), enchlvl + 1);
+					world.dropItemNaturally(loc, dropitem);
+				}
+				else if (type == Material.GOLD_ORE )
+				{
+					ItemStack dropitem = new ItemStack (( Material.GOLD_INGOT), enchlvl + 1);
+					world.dropItemNaturally(loc, dropitem);
+				}
+				else if (type == Material.SAND)
+				{
+					ItemStack dropitem = new ItemStack(( Material.GLASS));
+					world.dropItemNaturally(loc, dropitem);
+				}
+				else if (type == Material.COBBLESTONE) {
+					ItemStack dropitem = new ItemStack((Material.STONE));
+					world.dropItemNaturally(loc, dropitem);
+				}
+				else if (type == Material.NETHERRACK) {
+					ItemStack dropitem = new ItemStack((Material.NETHER_BRICK_ITEM), enchlvl + 1);
+					world.dropItemNaturally(loc, dropitem);
 					
-					Location loc = block.getLocation();
-					event.setCancelled(true);
-					block.setType(Material.AIR);
-					Inventory inventory = player.getInventory();
-					Material type = block.getType();
-					
-					if ( type == Material.IRON_ORE )
-					{
-						//こっから記載
-					}
+				}
+				else if (type == Material.LOG || type == Material.LOG_2) {
+					ItemStack dropitem = new ItemStack((Material.COAL), enchlvl + 1, (byte)1);
+					world.dropItemNaturally(loc, dropitem);
+				}
+				else if (type == Material.SPONGE && block.getData() == (byte)1) {
+					ItemStack dropitem = new ItemStack((Material.SPONGE), enchlvl + 1);
+					world.dropItemNaturally(loc, dropitem);
+				}
+				else if (type == Material.CACTUS) {
+					ItemStack dropitem = new ItemStack((Material.INK_SACK), enchlvl + 1, (byte)2);
+					world.dropItemNaturally(loc, dropitem);
 				}
 			}
+		}
+		if( item.containsEnchantment(Enchantment.LOOT_BONUS_BLOCKS) )
+		{
+			enchlvl = meta.getEnchantLevel(Enchantment.LOOT_BONUS_BLOCKS);
 		}
 	}
 	
@@ -131,7 +173,7 @@ public class AutoSmelt implements Listener
 		}
 	}
 	
-	public boolean isTool(Material item)
+	public static boolean isTool(Material item)
 	{
 		if ( item == Material.WOOD_PICKAXE ||
 				item == Material.WOOD_SPADE ||

@@ -12,15 +12,15 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 
-import com.github.gotochan.ability.Ability;
-import com.github.gotochan.ability.Acrobat;
-import com.github.gotochan.ability.Scout;
 import com.github.gotochan.command.KoshihikariCommand;
 import com.github.gotochan.command.RankCommand;
 import com.github.gotochan.command.RankUpCommand;
 import com.github.gotochan.enchant.AutoSmelt;
+import com.github.gotochan.enchant.Graceful;
+import com.github.gotochan.event.BMCDisableEvent;
 import com.github.gotochan.event.BMCEvent;
 import com.github.gotochan.event.BMCLaunchPad;
+import com.github.gotochan.event.Scout;
 import com.github.gotochan.resource.BMCHelp;
 
 /**
@@ -62,12 +62,11 @@ extends JavaPlugin implements Listener {
 		scoreboard.registerNewObjective("koshihikari", "dummy");
 		getServer().getPluginManager().registerEvents(new BMCEvent(), this);
 		getServer().getPluginManager().registerEvents(new BMCLaunchPad(), this);
-		getServer().getPluginManager().registerEvents(new Acrobat(), this);
 		getServer().getPluginManager().registerEvents(new Scout(), this);
 		getServer().getPluginManager().registerEvents(new AutoSmelt(), this);
+		getServer().getPluginManager().registerEvents(new Graceful(), this);
+		getServer().getPluginManager().registerEvents(new BMCDisableEvent(), this);
 		bmcCommand = new BMCCommand();
-		Ability.kitlist();
-		
 	}
 	
 	@Override
@@ -104,10 +103,6 @@ extends JavaPlugin implements Listener {
 			if ( args.length == 0 )
 			{
 				return BMCHelp.BMChelp(sender);
-			}
-			else if ( args[0].equalsIgnoreCase("kit") )
-			{
-				return bmcCommand.onCommand(sender, cmd, label, args);
 			}
 			else if ( args[0].equalsIgnoreCase("debug") )
 			{

@@ -7,7 +7,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import com.github.gotochan.command.DebugCommand;
-import com.github.gotochan.command.KitCommand;
 import com.github.gotochan.command.MenuCommand;
 import com.github.gotochan.command.SubCommandAbst;
 import com.github.gotochan.ntp.KickCommand;
@@ -22,7 +21,6 @@ public class BMCCommand implements CommandExecutor {
 		commands.add(new DebugCommand());
 		commands.add(new KickCommand());
 		commands.add(new MenuCommand());
-		commands.add(new KitCommand());
 	}
 	
 	@Override
