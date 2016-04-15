@@ -13,6 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class MaceratorItem implements Listener
 {
+	
 	@EventHandler
 	public void onRightClick(PlayerInteractEvent event)
 	{
@@ -48,17 +49,29 @@ public class MaceratorItem implements Listener
 	
 	public void openMacerator(Player player)
 	{
-		Inventory macerator = Bukkit.createInventory(player, 45);
+		Inventory macerator = Bukkit.createInventory(player, 54, "粉砕メニュー");
 		
 		ItemStack bluepanel = new ItemStack((Material.STAINED_GLASS_PANE), 1, (byte)3);
+		ItemStack okButton = new ItemStack((Material.STAINED_CLAY), 1, (byte)5);
+		
+		ItemMeta _OK_ = okButton.getItemMeta();
+		_OK_.setDisplayName("§a§lOK");
+		
+		okButton.setItemMeta(_OK_);
+		
+		macerator.setItem(10, bluepanel);
 		macerator.setItem(11, bluepanel);
 		macerator.setItem(12, bluepanel);
-		macerator.setItem(13, bluepanel);
-		macerator.setItem(20, bluepanel);
-		macerator.setItem(22, bluepanel);
+		macerator.setItem(19, bluepanel);
+		macerator.setItem(21, bluepanel);
+		macerator.setItem(28, bluepanel);
 		macerator.setItem(29, bluepanel);
 		macerator.setItem(30, bluepanel);
-		macerator.setItem(31, bluepanel);
+		
+		//48
+		
+		macerator.setItem(48, okButton);
+		
 		player.openInventory(macerator);
 	}
 }
