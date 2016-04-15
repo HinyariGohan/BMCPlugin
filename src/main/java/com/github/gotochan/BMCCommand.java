@@ -21,6 +21,7 @@ public class BMCCommand implements CommandExecutor {
 		commands.add(new DebugCommand());
 		commands.add(new KickCommand());
 		commands.add(new MenuCommand());
+		commands.add(new FreezeCommand());
 	}
 	
 	@Override

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -77,6 +78,11 @@ public class AutoSmelt implements Listener
 		}
 		
 		if ( !(isTool(item.getType())) )
+		{
+			return;
+		}
+		
+		if ( player.getGameMode() != GameMode.SURVIVAL )
 		{
 			return;
 		}

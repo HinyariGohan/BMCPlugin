@@ -20,6 +20,7 @@ import com.github.gotochan.enchant.Graceful;
 import com.github.gotochan.event.BMCDisableEvent;
 import com.github.gotochan.event.BMCEvent;
 import com.github.gotochan.event.BMCLaunchPad;
+import com.github.gotochan.event.MaceratorItem;
 import com.github.gotochan.event.Scout;
 import com.github.gotochan.resource.BMCHelp;
 
@@ -66,6 +67,7 @@ extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(new AutoSmelt(), this);
 		getServer().getPluginManager().registerEvents(new Graceful(), this);
 		getServer().getPluginManager().registerEvents(new BMCDisableEvent(), this);
+		getServer().getPluginManager().registerEvents(new MaceratorItem(), this);
 		bmcCommand = new BMCCommand();
 		this.saveDefaultConfig();
 	}

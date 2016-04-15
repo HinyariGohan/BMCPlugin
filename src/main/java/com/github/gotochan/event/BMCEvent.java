@@ -17,11 +17,13 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import com.github.gotochan.BMC;
+import com.github.gotochan.FreezeCommand;
 import com.github.gotochan.ntp.KickCommand;
 import com.github.gotochan.resource.BMCBoolean;
 
@@ -48,7 +50,7 @@ public class BMCEvent implements Listener {
 				player.kickPlayer("NTPキックモードが有効になっているため、サーバーにログインする事は出来ません。");
 				event.setJoinMessage(null);
 			} else {
-				return;
+				FreezeCommand.isFreeze = true;
 			}
 		}
 	}
@@ -96,20 +98,28 @@ public class BMCEvent implements Listener {
 	public void onCreatureSpawnEvent(CreatureSpawnEvent event) {
 		LivingEntity entity = event.getEntity();
 		String name = entity.getCustomName();
-		if( entity instanceof EnderDragon ) {
-			if ( name != null ) {
-				if ( name == "§b中級§rドラゴン" ) {
-					entity.setMaxHealth(500);
-					entity.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, LIMIT, 1));
-					entity.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, LIMIT, 2));
-				} else if ( name == "§c上級§rドラゴン" ) {
-					entity.setMaxHealth(800);
-					entity.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, LIMIT, 3));
-					entity.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, LIMIT, 3));
-				}
+		if( event.getEntityType() == EntityType.ENDER_DRAGON  ) {
+			if ( name == null ) {
+				return;
+			}
+			
+			else if ( name == "§b中級§rドラゴン" ) {
+				entity.setMaxHealth(500);
+				entity.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, LIMIT, 1));
+				entity.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, LIMIT, 2));
+			} else if ( name == "§c上級§rドラゴン" ) {
+				entity.setMaxHealth(800);
+				entity.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, LIMIT, 3));
+				entity.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, LIMIT, 3));
 			}
 		} else if ( event.getEntityType() == EntityType.WITHER && (!(event.getLocation().getWorld().equals("world_the_end")))) {
+			ItemStack item1 = new ItemStack((Material.SKULL_ITEM), 3, (byte)1 );
+			ItemStack item2 = new ItemStack((Material.SOUL_SAND), 4);
+			
 			event.setCancelled(true);
+			
+			event.getLocation().getWorld().dropItem(event.getLocation(), item1);
+			event.getLocation().getWorld().dropItem(event.getLocation(), item2);
 			return;
 		}
 	}
@@ -150,5 +160,21 @@ public class BMCEvent implements Listener {
 				}
 			}
 		}
+	}
+	
+	@EventHandler
+	public void onPlayerMoveEvent(PlayerMoveEvent event)
+	{
+		if ( event.getPlayer().getName() != "Taisuke_n")
+		{
+			return;
+		}
+		
+		if ( FreezeCommand.isFreeze == false )
+		{
+			return;
+		}
+		
+		event.setCancelled(true);
 	}
 }

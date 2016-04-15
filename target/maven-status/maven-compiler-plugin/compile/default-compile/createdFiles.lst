@@ -6,6 +6,8 @@ com\github\gotochan\event\BMCDisableEvent.class
 com\github\gotochan\resource\BMCHelp.class
 com\github\gotochan\command\MenuCommand.class
 com\github\gotochan\command\RankUpCommand.class
+com\github\gotochan\event\MaceratorItem.class
+com\github\gotochan\FreezeCommand.class
 com\github\gotochan\event\Scout.class
 com\github\gotochan\command\RankCommand.class
 com\github\gotochan\ntp\KickCommand.class
