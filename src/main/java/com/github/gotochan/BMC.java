@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 
@@ -61,15 +62,18 @@ extends JavaPlugin implements Listener {
 		Bukkit.getServer().getScoreboardManager().getMainScoreboard();
 		scoreboard.registerNewObjective("rank", "dummy");
 		scoreboard.registerNewObjective("koshihikari", "dummy");
-		getServer().getPluginManager().registerEvents(new BMCEvent(), this);
-		getServer().getPluginManager().registerEvents(new BMCLaunchPad(), this);
-		getServer().getPluginManager().registerEvents(new Scout(), this);
-		getServer().getPluginManager().registerEvents(new AutoSmelt(), this);
-		getServer().getPluginManager().registerEvents(new Graceful(), this);
-		getServer().getPluginManager().registerEvents(new BMCDisableEvent(), this);
-		getServer().getPluginManager().registerEvents(new MaceratorItem(), this);
+		
+		PluginManager pm = getServer().getPluginManager();
+		pm.registerEvents(new BMCEvent(), this);
+		pm.registerEvents(new BMCLaunchPad(), this);
+		pm.registerEvents(new Scout(), this);
+		pm.registerEvents(new AutoSmelt(), this);
+		pm.registerEvents(new Graceful(), this);
+		pm.registerEvents(new BMCDisableEvent(), this);
+		pm.registerEvents(new MaceratorItem(), this);
 		bmcCommand = new BMCCommand();
 		this.saveDefaultConfig();
+		
 	}
 	
 	@Override

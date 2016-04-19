@@ -62,14 +62,17 @@ public class BMCEvent implements Listener {
 		ItemStack zombeef = new ItemStack(Material.ROTTEN_FLESH);
 		
 		if ( EatItem.getType() == zombeef.getType()) {
-			if( EatItem.getAmount() >= 4) {
-				event.setCancelled(true);
-				player.getItemInHand().setAmount(EatItem.getAmount() - 4);
-				player.setFoodLevel(40);
-				player.setExhaustion(40);
-				player.sendMessage(BMC.prefix + "ゾンビーフを4つ消費して全回復したぞ!");
-			} else {
-				player.sendMessage(BMC.prefix + "ゾンビーフを4つ以上用意してくれ!");
+			if ( player.isSneaking() )
+			{
+				if( EatItem.getAmount() >= 4) {
+					event.setCancelled(true);
+					player.getItemInHand().setAmount(EatItem.getAmount() - 4);
+					player.setFoodLevel(40);
+					player.setExhaustion(40);
+					player.sendMessage(BMC.prefix + "ゾンビーフを4つ消費して全回復したぞ!");
+				} else {
+					player.sendMessage(BMC.prefix + "ゾンビーフを4つ以上用意してくれ!");
+				}
 			}
 		} else {
 			String playername = player.getDisplayName();

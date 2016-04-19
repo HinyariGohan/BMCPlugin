@@ -14,6 +14,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import com.github.gotochan.enchant.AutoSmelt;
+import com.github.gotochan.event.Scout;
 import com.github.gotochan.resource.BMCHelp;
 
 public class DebugCommand extends SubCommandAbst {
@@ -193,8 +194,13 @@ public class DebugCommand extends SubCommandAbst {
 					player.sendMessage("エンチャントしたいアイテムを手に持つ必要があります。");
 				}
 			}
+			else if ( args[1].equalsIgnoreCase("grapple") ) {
+				Scout.im.setDisplayName(Scout.GRAPPLE_NAME);
+				Scout.grappleItem.setItemMeta(Scout.im);
+				player.getInventory().addItem(Scout.grappleItem);
+			}
 			else {
-				return DebugEnchCommandHelp(sender);
+				return BMCHelp.Debughelp(sender);
 			}
 		}
 		return false;

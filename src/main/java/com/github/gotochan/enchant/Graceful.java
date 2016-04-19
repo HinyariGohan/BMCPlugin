@@ -27,7 +27,6 @@ public class Graceful implements Listener
 		
 		if ( armor == null )
 		{
-			player.sendMessage("armor null");
 			return;
 		}
 		
@@ -37,13 +36,11 @@ public class Graceful implements Listener
 		{
 			if ( armor.getChestplate() == null)
 			{
-				player.sendMessage("chestplate null");
 				return;
 			}
 			
 			if ( !(armor.getChestplate().hasItemMeta()) )
 			{
-				player.sendMessage("dont hasitemmeta");
 				return;
 			}
 			
@@ -54,6 +51,9 @@ public class Graceful implements Listener
 				if ( level == 10 )
 				{
 					event.setCancelled(true);
+					
+					short d = (short) (armor.getChestplate().getDurability() - 1);
+					armor.getChestplate().setDurability(d);
 				}
 			}
 		}
@@ -77,6 +77,7 @@ public class Graceful implements Listener
 					event.setCancelled(true);
 					player.sendMessage("§6Landing success!");
 					player.playSound(player.getLocation(), Sound.BAT_TAKEOFF, 1L, (float) 1.5);
+					armor.getBoots().setDurability((short) (armor.getBoots().getDurability() + 1));
 				}
 			}
 		}

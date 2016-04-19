@@ -21,12 +21,14 @@ public class Scout implements Listener
 	
 	public static final String GRAPPLE_NAME = "§6Grapple";
 	
+	public static ItemStack grappleItem = new ItemStack(Material.FISHING_ROD);
+	public static ItemMeta im = grappleItem.getItemMeta();
+	
 	public ItemStack Grapple() {
 		ItemStack grappleItem = new ItemStack(Material.FISHING_ROD);
 		return grappleItem;
 	}
-	ItemStack grappleItem = new ItemStack(Material.FISHING_ROD);
-	ItemMeta im = grappleItem.getItemMeta();
+	
 	
 	@EventHandler
 	public void onGrapplingEvent(PlayerFishEvent event) {

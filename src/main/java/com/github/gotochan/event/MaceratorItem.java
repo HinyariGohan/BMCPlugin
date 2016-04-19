@@ -53,11 +53,23 @@ public class MaceratorItem implements Listener
 		
 		ItemStack bluepanel = new ItemStack((Material.STAINED_GLASS_PANE), 1, (byte)3);
 		ItemStack okButton = new ItemStack((Material.STAINED_CLAY), 1, (byte)5);
+		ItemStack cancelButton = new ItemStack((Material.STAINED_CLAY), 1, (byte)14);
+		ItemStack yellowpanel = new ItemStack((Material.STAINED_GLASS_PANE), 1, (byte)4);
 		
-		ItemMeta _OK_ = okButton.getItemMeta();
-		_OK_.setDisplayName("§a§lOK");
+		ItemMeta OKB = okButton.getItemMeta();
+		ItemMeta CANCELB = cancelButton.getItemMeta();
+		ItemMeta bluepanelmeta = bluepanel.getItemMeta();
+		ItemMeta yellowpanelmeta = yellowpanel.getItemMeta();
 		
-		okButton.setItemMeta(_OK_);
+		bluepanelmeta.setDisplayName(" ");
+		CANCELB.setDisplayName("§c§lCANCEL");
+		OKB.setDisplayName("§a§lOK");
+		yellowpanelmeta.setDisplayName(" ");
+		
+		bluepanel.setItemMeta(bluepanelmeta);
+		okButton.setItemMeta(OKB);
+		cancelButton.setItemMeta(CANCELB);
+		yellowpanel.setItemMeta(yellowpanelmeta);
 		
 		macerator.setItem(10, bluepanel);
 		macerator.setItem(11, bluepanel);
@@ -70,7 +82,18 @@ public class MaceratorItem implements Listener
 		
 		//48
 		
+		macerator.setItem(14, yellowpanel);
+		macerator.setItem(15, yellowpanel);
+		macerator.setItem(16, yellowpanel);
+		macerator.setItem(23, yellowpanel);
+		macerator.setItem(25, yellowpanel);
+		macerator.setItem(32, yellowpanel);
+		macerator.setItem(33, yellowpanel);
+		macerator.setItem(34, yellowpanel);
+		
 		macerator.setItem(48, okButton);
+		
+		macerator.setItem(50, cancelButton);
 		
 		player.openInventory(macerator);
 	}
