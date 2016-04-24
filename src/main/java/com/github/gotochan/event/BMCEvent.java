@@ -11,6 +11,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityCreatePortalEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -19,11 +20,12 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import com.github.gotochan.BMC;
-import com.github.gotochan.FreezeCommand;
+import com.github.gotochan.ntp.FreezeCommand;
 import com.github.gotochan.ntp.KickCommand;
 import com.github.gotochan.resource.BMCBoolean;
 
@@ -179,5 +181,31 @@ public class BMCEvent implements Listener {
 		}
 		
 		event.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void BlockPlaceBlocker(BlockPlaceEvent event)
+	{
+		Player player = event.getPlayer();
+		ItemStack item = player.getItemInHand();
+		
+		if ( !(item.hasItemMeta()) )
+		{
+			return;
+		}
+		
+		ItemMeta meta = item.getItemMeta();
+		String name = meta.getDisplayName();
+		
+		if ( name.contains("炭素の塊")
+				|| name.contains("採掘の結晶")
+				|| name.contains("Water")
+				|| name.contains("Crushed")
+				|| name.contains("Cleaned"))
+		{
+			event.setCancelled(true);
+			player.sendMessage("§c[Error] " + "特殊ブロックを設置することは出来ません。");
+			player.playSound(player.getLocation(), Sound.NOTE_STICKS, 10L, 1L);
+		}
 	}
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
@@ -16,6 +17,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -65,6 +67,11 @@ public class AutoSmelt implements Listener
 			return;
 		}
 		
+		if ( !(isBlock(block.getType())) )
+		{
+			return;
+		}
+		
 		if ( !(item.hasItemMeta()) )
 		{
 			return;
@@ -87,56 +94,83 @@ public class AutoSmelt implements Listener
 			return;
 		}
 		
+		if ( player.getInventory().firstEmpty() == -1 )
+		{
+			player.sendMessage("§c[Error] インベントリに空きが無いためAutoSmeltは実行されません!");
+			playsound(player, Sound.ANVIL_LAND, 2);
+			return;
+		}
+		
 		if ( meta.getLore().contains("§4Auto Smelt") )
 		{
-			if ( isBlock(block.getType()))
+			int durability = item.getDurability();
+			int maxdurability = item.getType().getMaxDurability();
+			
+			if ( durability != maxdurability )
 			{
-				Location loc = block.getLocation();
-				Material type = block.getType();
-				event.setCancelled(true);
-				block.setType(Material.AIR);
+				int nextdurability = item.getDurability() + 1;
+				item.setDurability((short) nextdurability);
+			}
+			else {
+				item.setType(Material.AIR);
+			}
+			
+			Location loc = block.getLocation();
+			Material type = block.getType();
+			event.setCancelled(true);
+			block.setType(Material.AIR);
+			
+			ItemStack dropitem = null;
+			Inventory inventory = player.getInventory();
+			
+			if ( type == Material.IRON_ORE )
+			{
+				dropitem = new ItemStack( (Material.IRON_INGOT), enchlvl + 1);
+				inventory.addItem(dropitem);
+				playsound(player, Sound.ORB_PICKUP, 2);
+			}
+			else if (type == Material.GOLD_ORE )
+			{
+				dropitem = new ItemStack (( Material.GOLD_INGOT), enchlvl + 1);
+				inventory.addItem(dropitem);
+				playsound(player, Sound.ORB_PICKUP, 2);
+			}
+			else if (type == Material.SAND)
+			{
+				dropitem = new ItemStack(( Material.GLASS));
+				inventory.addItem(dropitem);
+				playsound(player, Sound.ORB_PICKUP, 2);
+			}
+			else if (type == Material.COBBLESTONE) {
+				dropitem = new ItemStack((Material.STONE));
+				inventory.addItem(dropitem);
+				playsound(player, Sound.ORB_PICKUP, 2);
+			}
+			else if (type == Material.NETHERRACK) {
+				dropitem = new ItemStack((Material.NETHER_BRICK_ITEM), enchlvl + 1);
+				inventory.addItem(dropitem);
+				playsound(player, Sound.ORB_PICKUP, 2);
 				
-				if ( type == Material.IRON_ORE )
-				{
-					ItemStack dropitem = new ItemStack( (Material.IRON_INGOT), enchlvl + 1);
-					world.dropItemNaturally(loc, dropitem);
-				}
-				else if (type == Material.GOLD_ORE )
-				{
-					ItemStack dropitem = new ItemStack (( Material.GOLD_INGOT), enchlvl + 1);
-					world.dropItemNaturally(loc, dropitem);
-				}
-				else if (type == Material.SAND)
-				{
-					ItemStack dropitem = new ItemStack(( Material.GLASS));
-					world.dropItemNaturally(loc, dropitem);
-				}
-				else if (type == Material.COBBLESTONE) {
-					ItemStack dropitem = new ItemStack((Material.STONE));
-					world.dropItemNaturally(loc, dropitem);
-				}
-				else if (type == Material.NETHERRACK) {
-					ItemStack dropitem = new ItemStack((Material.NETHER_BRICK_ITEM), enchlvl + 1);
-					world.dropItemNaturally(loc, dropitem);
-					
-				}
-				else if (type == Material.LOG || type == Material.LOG_2) {
-					ItemStack dropitem = new ItemStack((Material.COAL), enchlvl + 1, (byte)1);
-					world.dropItemNaturally(loc, dropitem);
-				}
-				else if (type == Material.SPONGE && block.getData() == (byte)1) {
-					ItemStack dropitem = new ItemStack((Material.SPONGE), enchlvl + 1);
-					world.dropItemNaturally(loc, dropitem);
-				}
-				else if (type == Material.CACTUS) {
-					ItemStack dropitem = new ItemStack((Material.INK_SACK), enchlvl + 1, (byte)2);
-					world.dropItemNaturally(loc, dropitem);
-				}
+			}
+			else if (type == Material.LOG || type == Material.LOG_2) {
+				dropitem = new ItemStack((Material.COAL), enchlvl + 1, (byte)1);
+				inventory.addItem(dropitem);
+				playsound(player, Sound.ORB_PICKUP, 2);
+			}
+			else if (type == Material.SPONGE && block.getData() == (byte)1) {
+				dropitem = new ItemStack((Material.SPONGE), enchlvl + 1);
+				inventory.addItem(dropitem);
+				playsound(player, Sound.ORB_PICKUP, 2);
+			}
+			else if (type == Material.CACTUS) {
+				dropitem = new ItemStack((Material.INK_SACK), enchlvl + 1, (byte)2);
+				inventory.addItem(dropitem);
+				playsound(player, Sound.ORB_PICKUP, 2);
 			}
 		}
 		if( item.containsEnchantment(Enchantment.LOOT_BONUS_BLOCKS) )
 		{
-			enchlvl = meta.getEnchantLevel(Enchantment.LOOT_BONUS_BLOCKS);
+			enchlvl = meta.getEnchantLevel(Enchantment.LOOT_BONUS_BLOCKS) - 1;
 		}
 	}
 	
@@ -217,5 +251,10 @@ public class AutoSmelt implements Listener
 			return true;
 		}
 		return false;
+	}
+	
+	private void playsound(Player player, Sound sound, float pitch)
+	{
+		player.playSound(player.getLocation(), sound, 10L, pitch);
 	}
 }

@@ -17,12 +17,11 @@ import com.github.gotochan.command.KoshihikariCommand;
 import com.github.gotochan.command.RankCommand;
 import com.github.gotochan.command.RankUpCommand;
 import com.github.gotochan.enchant.AutoSmelt;
-import com.github.gotochan.enchant.Graceful;
-import com.github.gotochan.event.BMCDisableEvent;
+import com.github.gotochan.enchant.SpecialArmor;
 import com.github.gotochan.event.BMCEvent;
 import com.github.gotochan.event.BMCLaunchPad;
-import com.github.gotochan.event.MaceratorItem;
 import com.github.gotochan.event.Scout;
+import com.github.gotochan.original.BMCMacerator;
 import com.github.gotochan.resource.BMCHelp;
 
 /**
@@ -68,9 +67,8 @@ extends JavaPlugin implements Listener {
 		pm.registerEvents(new BMCLaunchPad(), this);
 		pm.registerEvents(new Scout(), this);
 		pm.registerEvents(new AutoSmelt(), this);
-		pm.registerEvents(new Graceful(), this);
-		pm.registerEvents(new BMCDisableEvent(), this);
-		pm.registerEvents(new MaceratorItem(), this);
+		pm.registerEvents(new SpecialArmor(), this);
+		pm.registerEvents(new BMCMacerator(), this);
 		bmcCommand = new BMCCommand();
 		this.saveDefaultConfig();
 		

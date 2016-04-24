@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import com.github.gotochan.command.DebugCommand;
 import com.github.gotochan.command.MenuCommand;
 import com.github.gotochan.command.SubCommandAbst;
+import com.github.gotochan.ntp.FreezeCommand;
 import com.github.gotochan.ntp.KickCommand;
 
 public class BMCCommand implements CommandExecutor {

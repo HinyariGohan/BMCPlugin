@@ -3,7 +3,6 @@ package com.github.gotochan.event;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -54,19 +53,25 @@ public class Scout implements Listener
 	
 	private void pullPlayerSlightly(Player p, Location loc)
 	{
+		int locx = loc.getBlockX();
+		int locy = loc.getBlockY() - 1;
+		int locz = loc.getBlockZ();
+		Location bloc = new Location(loc.getWorld(), locx, locy, locz);
+		if (bloc.getBlock().getType().equals(Material.WATER)) {
+			return;
+		}
 		if (loc.getY() > p.getLocation().getY())
 		{
 			p.setVelocity(new Vector(0.0D, 0.25D, 0.0D));
 			return;
 		}
-		
 		Location playerLoc = p.getLocation();
 		
 		Vector vector = loc.toVector().subtract(playerLoc.toVector());
 		p.setVelocity(vector);
 	}
 	
-	private void pullEntityToLocation(Entity e, Location loc)
+	private void pullEntityToLocation(Player e, Location loc)
 	{
 		Location entityLoc = e.getLocation();
 		
@@ -76,12 +81,11 @@ public class Scout implements Listener
 		double g = -0.08D;
 		double d = loc.distance(entityLoc);
 		double t = d;
-		double v_x = (1.0D + 0.07000000000000001D * t)
-				* (loc.getX() - entityLoc.getX()) / t;
-		double v_y = (1.0D + 0.03D * t) * (loc.getY() - entityLoc.getY()) / t
-				- 0.5D * g * t;
-		double v_z = (1.0D + 0.07000000000000001D * t)
-				* (loc.getZ() - entityLoc.getZ()) / t;
+		
+		double v_x = (1.0D + 0.07D * t) * (loc.getX() - entityLoc.getX()) / t;
+		double v_y = (1.0D + 0.03D * t) * (loc.getY() - entityLoc.getY()) / t - 0.5D * g * t;
+		
+		double v_z = (1.0D + 0.07D * t) * (loc.getZ() - entityLoc.getZ()) / t;
 		
 		Vector v = e.getVelocity();
 		v.setX(v_x);

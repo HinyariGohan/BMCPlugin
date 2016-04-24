@@ -1,4 +1,4 @@
-package com.github.gotochan;
+package com.github.gotochan.ntp;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
