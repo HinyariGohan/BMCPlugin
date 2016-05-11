@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.github.gotochan.BMC;
 import com.github.gotochan.command.SubCommandAbst;
 
 public class FreezeCommand extends SubCommandAbst
@@ -25,18 +26,18 @@ public class FreezeCommand extends SubCommandAbst
 		Player player = (Player) sender;
 		if ( Bukkit.getPlayer("Taisuke_n") == null )
 		{
-			sender.sendMessage("たいすけはこのサーバーにいません。");
+			sender.sendMessage(BMC.ntp + "たいすけはこのサーバーにいません。");
 			return false;
 		}
 		
 		if ( isFreeze == true )
 		{
 			isFreeze = false;
-			player.sendMessage("フリーズモードを" + isFreeze + "に変更しました。");
+			player.sendMessage(BMC.ntp + "フリーズモードを " + isFreeze + " に変更しました。");
 		}
 		else {
 			isFreeze = true;
-			player.sendMessage("フリーズモードを" + isFreeze + "に変更しました。");
+			player.sendMessage(BMC.ntp + "フリーズモードを " + isFreeze + " に変更しました。");
 		}
 		return false;
 	}

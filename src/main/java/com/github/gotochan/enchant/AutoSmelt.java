@@ -253,6 +253,12 @@ public class AutoSmelt implements Listener
 		return false;
 	}
 	
+	/**
+	 * サウンドを再生します。
+	 * @param player プレイヤー名
+	 * @param sound サウンド名(Sound.example)
+	 * @param pitch float ピッチ
+	 */
 	private void playsound(Player player, Sound sound, float pitch)
 	{
 		player.playSound(player.getLocation(), sound, 10L, pitch);

@@ -52,7 +52,7 @@ public class BMCEvent implements Listener {
 				player.kickPlayer("NTPキックモードが有効になっているため、サーバーにログインする事は出来ません。");
 				event.setJoinMessage(null);
 			} else {
-				FreezeCommand.isFreeze = true;
+				FreezeCommand.isFreeze = false;
 			}
 		}
 	}
@@ -194,7 +194,14 @@ public class BMCEvent implements Listener {
 			return;
 		}
 		
+		
 		ItemMeta meta = item.getItemMeta();
+		
+		if ( !(meta.hasDisplayName()))
+		{
+			return;
+		}
+		
 		String name = meta.getDisplayName();
 		
 		if ( name.contains("炭素の塊")
@@ -208,4 +215,23 @@ public class BMCEvent implements Listener {
 			player.playSound(player.getLocation(), Sound.NOTE_STICKS, 10L, 1L);
 		}
 	}
+	
+	@EventHandler
+	public void onMove(PlayerMoveEvent event)
+	{
+		Player player = event.getPlayer();
+		
+		if ( !(player.getName().equalsIgnoreCase("Taisuke_n")))
+		{
+			return;
+		}
+		
+		if ( FreezeCommand.isFreeze == false )
+		{
+			return;
+		}
+		
+		event.setCancelled(true);
+	}
+	
 }

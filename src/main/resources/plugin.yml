@@ -13,6 +13,7 @@ commands:
   ntp:
     description: NoTaisukePlusのコマンドです。
     aliases: [notaisukeplus]
+  cop:
 permissions:
   bmc.debug:
     description: デバッグ用のコマンドの使用権限

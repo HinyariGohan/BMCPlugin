@@ -256,6 +256,13 @@ public class BMCMacerator implements Listener
 		}
 	}
 	
+	/**
+	 * 処理結果スロットに違うアイテムが入ってないかを確認する。
+	 * @param player プレイヤー名
+	 * @param out ItemStack 結果スロットに入れたいもの
+	 * @param result ItemStack 結果スロットに今入っているもの
+	 * @return
+	 */
 	private boolean cantMacerator(Player player, ItemStack out, ItemStack result)
 	{
 		if ( out != null && out.getType() != result.getType() )
@@ -292,6 +299,12 @@ public class BMCMacerator implements Listener
 					inventory.setItem(24, result);
 	 */
 	
+	/**
+	 * 材料スロットの処理
+	 * @param inventory 粉砕具インベントリの取得
+	 * @param origin
+	 * @param result
+	 */
 	private void RED_Process(Inventory inventory, Material origin, ItemStack result)
 	{
 		ItemStack slot = inventory.getItem(20); //20番（左）のItemStackを取得する。
@@ -306,6 +319,14 @@ public class BMCMacerator implements Listener
 		inventory.setItem(24, result);
 	}
 	
+	/**
+	 * 結果に特殊効果をつける処理
+	 * @param name アイテム名
+	 * @param result ItemStack 結果
+	 * @param ench エンチャント効果
+	 * @param enchlvl エンチャントレベル
+	 * @param flag ItemFlag アイテムフラグ
+	 */
 	private void addResult(String name, ItemStack result, Enchantment ench,
 			int enchlvl, ItemFlag flag)
 	{
