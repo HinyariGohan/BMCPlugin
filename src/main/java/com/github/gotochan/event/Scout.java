@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 
-import com.github.gotochan.resource.BMCBoolean;
+import com.github.gotochan.Utils.BMCBoolean;
 
 public class Scout implements Listener
 {

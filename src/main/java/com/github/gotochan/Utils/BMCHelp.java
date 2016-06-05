@@ -1,4 +1,4 @@
-package com.github.gotochan.resource;
+package com.github.gotochan.Utils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

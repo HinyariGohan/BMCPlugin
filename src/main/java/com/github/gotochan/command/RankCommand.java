@@ -4,12 +4,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
 
 import com.github.gotochan.BMC;
-import com.github.gotochan.resource.BMCHelp;
+import com.github.gotochan.BMCPlayer;
+import com.github.gotochan.Utils.BMCHelp;
 
 /**
  *
@@ -19,31 +17,15 @@ import com.github.gotochan.resource.BMCHelp;
 
 public class RankCommand {
 	
-	public static String[] RankList = new String[]
-			{
-					ChatColor.GRAY + "Visitor",
-					ChatColor.RED + "Red" ,
-					ChatColor.GOLD + "Orange",
-					ChatColor.YELLOW + "Yellow",
-					ChatColor.GREEN + "Green",
-					ChatColor.BLUE + "Blue",
-					ChatColor.DARK_BLUE + "Indigo",
-					ChatColor.DARK_PURPLE + "Violet",
-					ChatColor.WHITE + "UltraViolet",
-					ChatColor.LIGHT_PURPLE + "あなたは最高ランクに達しました。"
-			};
 	
 	
-	@SuppressWarnings({ "deprecation" })
+	
 	public static boolean runCommand(CommandSender sender, String label, String[] args)
 	{
 		Player player = (Player) sender;
-		Scoreboard board = player.getScoreboard();
-		Objective rankobject = board.getObjective("rank");
-		Score MyStats = rankobject.getScore(player);
+		BMCPlayer bPlayer = BMCPlayer.getPlayer(player.getUniqueId());
 		String myname = sender.getName();
-		int NowRank = MyStats.getScore();
-		int NextRank = MyStats.getScore() + 1;
+		
 		if( args.length == 0 )
 		{
 			BMCHelp.Rankhelp(sender);
@@ -67,27 +49,27 @@ public class RankCommand {
 			{
 				if ( args.length == 1 )
 				{
+					int nowRank = bPlayer.getRankID();
 					sender.sendMessage(ChatColor.YELLOW + "========BMCサーバー ランクシステム========");
 					sender.sendMessage("名前: " + myname);
-					sender.sendMessage("現在のランク: " + RankList[NowRank]);
-					sender.sendMessage("次のランク: " + RankList[NextRank]);
+					sender.sendMessage("現在のランク: " + getRankName(nowRank));
+					sender.sendMessage("次のランク: " + getRankName(nowRank) + 1);
 				}
 				else if ( args.length == 2 )
 				{
 					Player other = getPlayer(args[1]);
-					Score otherscore = rankobject.getScore(args[1]);
-					int OtherNowRank = otherscore.getScore();
-					int OtherNextRank = otherscore.getScore() + 1;
 					if ( other == null )
 					{
 						sender.sendMessage(BMC.prefix + "そのプレイヤーはオフラインです。");
 					}
 					else
 					{
+						BMCPlayer bOther = BMCPlayer.getPlayer(other.getUniqueId());
+						int nowRank = bOther.getRankID();
 						sender.sendMessage(ChatColor.YELLOW + "========BMCサーバー ランクシステム========");
 						sender.sendMessage("名前: " + args[1]);
-						sender.sendMessage("現在のランク: " + RankList[OtherNowRank]);
-						sender.sendMessage("次のランク: " + RankList[OtherNextRank]);
+						sender.sendMessage("現在のランク: " + getRankName(nowRank));
+						sender.sendMessage("次のランク: " + getRankName(nowRank + 1));
 					}
 				}
 			}
@@ -108,5 +90,26 @@ public class RankCommand {
 			}
 		}
 		return null;
+	}
+	
+	public static String getRankName(int nowRank)
+	{
+		final String[] RankList = new String[]
+				{
+						ChatColor.GRAY + "Visitor",
+						ChatColor.RED + "Red" ,
+						ChatColor.GOLD + "Orange",
+						ChatColor.YELLOW + "Yellow",
+						ChatColor.GREEN + "Green",
+						ChatColor.BLUE + "Blue",
+						ChatColor.DARK_BLUE + "Indigo",
+						ChatColor.DARK_PURPLE + "Violet",
+						ChatColor.WHITE + "UltraViolet",
+						ChatColor.LIGHT_PURPLE + "あなたは最高ランクに達しました。"
+				};
+		
+		String rankName = RankList[nowRank];
+		
+		return rankName;
 	}
 }

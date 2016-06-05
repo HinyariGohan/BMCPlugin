@@ -6,13 +6,18 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
+import com.github.gotochan.Utils.BMCHelp;
 import com.github.gotochan.command.KoshihikariCommand;
 import com.github.gotochan.command.RankCommand;
 import com.github.gotochan.command.RankUpCommand;
@@ -22,7 +27,6 @@ import com.github.gotochan.event.BMCEvent;
 import com.github.gotochan.event.BMCLaunchPad;
 import com.github.gotochan.event.Scout;
 import com.github.gotochan.original.BMCMacerator;
-import com.github.gotochan.resource.BMCHelp;
 
 /**
  * BMCオリジナルプラグイン メインクラス
@@ -70,6 +74,7 @@ extends JavaPlugin implements Listener {
 		pm.registerEvents(new AutoSmelt(), this);
 		pm.registerEvents(new SpecialArmor(), this);
 		pm.registerEvents(new BMCMacerator(), this);
+		pm.registerEvents(this, this);
 		bmcCommand = new BMCCommand();
 		this.saveDefaultConfig();
 		
@@ -226,5 +231,23 @@ extends JavaPlugin implements Listener {
 			instance = (BMC)Bukkit.getPluginManager().getPlugin("BMCPlugin");
 		}
 		return instance;
+	}
+	
+	@SuppressWarnings("deprecation")
+	@EventHandler
+	public void loadPlayer(PlayerLoginEvent event)
+	{
+		Player p = event.getPlayer();
+		BMCPlayer player = new BMCPlayer(p.getUniqueId(), p.getName());
+		
+		Scoreboard scoreboard = p.getScoreboard();
+		Objective rank_obj = scoreboard.getObjective("rank");
+		Score rank_score = rank_obj.getScore(p);
+		int rank_int = rank_score.getScore();
+		
+		BMCPlayer.players.put(p.getUniqueId(), player);
+		
+		BMCPlayer.rankScore = rank_score;
+		BMCPlayer.rankID = rank_int;
 	}
 }

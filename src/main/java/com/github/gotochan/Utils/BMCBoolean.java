@@ -1,7 +1,8 @@
-package com.github.gotochan.resource;
+package com.github.gotochan.Utils;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -49,6 +50,15 @@ public class BMCBoolean {
 			{
 				return true;
 			}
+		}
+		return false;
+	}
+	
+	public static boolean hasItem(Player player)
+	{
+		if ( player.getItemInHand() != null )
+		{
+			return true;
 		}
 		return false;
 	}

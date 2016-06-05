@@ -5,10 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -60,7 +58,6 @@ public class AutoSmelt implements Listener
 		Player player = event.getPlayer();
 		Block block = event.getBlock();
 		ItemStack item = player.getItemInHand();
-		World world = block.getWorld();
 		
 		if ( item == null )
 		{
@@ -115,7 +112,6 @@ public class AutoSmelt implements Listener
 				item.setType(Material.AIR);
 			}
 			
-			Location loc = block.getLocation();
 			Material type = block.getType();
 			event.setCancelled(true);
 			block.setType(Material.AIR);

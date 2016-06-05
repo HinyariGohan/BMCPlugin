@@ -13,9 +13,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import com.github.gotochan.Utils.BMCHelp;
 import com.github.gotochan.enchant.AutoSmelt;
 import com.github.gotochan.event.Scout;
-import com.github.gotochan.resource.BMCHelp;
 
 public class DebugCommand extends SubCommandAbst {
 	
@@ -184,6 +184,25 @@ public class DebugCommand extends SubCommandAbst {
 							meta.setLore(AutoSmelt.lore);
 							item.setItemMeta(meta);
 							player.sendMessage("正常にエンチャントメントが実行されました。");
+						}
+					}
+					else if ( args[2].equalsIgnoreCase("unbreaking") )
+					{
+						if ( args.length == 3 )
+						{
+							player.sendMessage("§c[BMC] 引数を指定してください。");
+						}
+						else if ( args.length == 4 )
+						{
+							item.getItemMeta().addEnchant(
+									Enchantment.DURABILITY,
+									Integer.valueOf(args[3]),
+									true);
+							player.updateInventory();
+						}
+						else {
+							player.sendMessage("§c[BMC] 引数指定が間違っています。");
+							return true;
 						}
 					}
 					else {

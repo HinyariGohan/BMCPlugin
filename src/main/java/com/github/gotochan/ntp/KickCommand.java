@@ -4,8 +4,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.gotochan.BMC;
+import com.github.gotochan.Utils.BMCHelp;
 import com.github.gotochan.command.SubCommandAbst;
-import com.github.gotochan.resource.BMCHelp;
 
 /**
  * NoTaisukePlus(NTP) Kick コマンドクラス

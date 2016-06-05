@@ -8,12 +8,11 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
 
 import com.github.gotochan.BMC;
-import com.github.gotochan.resource.BMCHelp;
+import com.github.gotochan.BMCPlayer;
+import com.github.gotochan.Utils.BMCHelp;
 
 /**
  * BMCサーバー ランクコマンド ランクアップ実装クラス
@@ -23,18 +22,16 @@ import com.github.gotochan.resource.BMCHelp;
 public class RankUpCommand
 {
 	
-	@SuppressWarnings({ "deprecation" })
-	
 	public static boolean runCommand(
 			CommandSender sender, String label, String[] args)
 	{
 		
 		Player player = (Player) sender;
+		BMCPlayer bmcPlayer = BMCPlayer.getPlayer(player.getUniqueId());
 		ItemStack item = player.getItemInHand();
-		Scoreboard board = player.getScoreboard();
-		Objective objective = board.getObjective("rank");
-		Score score = objective.getScore(player);
-		int rank = score.getScore();
+		int nowRank = bmcPlayer.getRankID();
+		Score score = bmcPlayer.getRankScore();
+		String nowRankName = bmcPlayer.getRankName();
 		String name = player.getName();
 		
 		if ( args.length == 0 ) {
@@ -45,17 +42,17 @@ public class RankUpCommand
 				{
 					ItemMeta im = item.getItemMeta();
 					int level = im.getEnchantLevel(Enchantment.DURABILITY);
-					if ( rank == 0 )
+					if ( nowRank == 0 )
 					{
-						player.sendMessage("あなたは" + RankCommand.RankList[rank] + "ランクです。");
+						player.sendMessage("あなたは" + nowRankName + "ランクです。");
 						player.sendMessage(ChatColor.RED + "通常ワールドにスポーンしていてこのランクの場合は管理者に連絡してください。");
 					}
-					else if ( rank <= 8 )
+					else if ( nowRank <= 8 )
 					{
-						if ( level == (rank + 1) )
+						if ( level == (nowRank + 1) )
 						{
-							score.setScore(rank + 1);
-							Bukkit.broadcastMessage(BMC.prefix + name + " さんが " + RankCommand.RankList[rank] +
+							score.setScore(nowRank + 1);
+							Bukkit.broadcastMessage(BMC.prefix + name + " さんが " + nowRankName +
 									ChatColor.RESET + " ランクにランクアップしました!");
 						}
 						else
@@ -63,7 +60,7 @@ public class RankUpCommand
 							player.sendMessage(BMC.prefix + "違うランクアイテムを持っています。正しいランクアイテムを持つ必要があります。");
 						}
 					}
-					else if ( rank == 9 )
+					else if ( nowRank == 9 )
 					{
 						player.sendMessage(ChatColor.LIGHT_PURPLE + "あなたは最高ランクへ達しています。");
 					}

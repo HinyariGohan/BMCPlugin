@@ -8,7 +8,7 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
 import com.github.gotochan.BMC;
-import com.github.gotochan.resource.BMCHelp;
+import com.github.gotochan.Utils.BMCHelp;
 
 /**
  *

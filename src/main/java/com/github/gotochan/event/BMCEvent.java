@@ -25,9 +25,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import com.github.gotochan.BMC;
+import com.github.gotochan.Utils.BMCBoolean;
 import com.github.gotochan.ntp.FreezeCommand;
 import com.github.gotochan.ntp.KickCommand;
-import com.github.gotochan.resource.BMCBoolean;
 
 /**
  * BMCサーバー メインイベントキャッチクラス
@@ -46,8 +46,8 @@ public class BMCEvent implements Listener {
 	@EventHandler
 	public void onPlayerJoinEvent(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		String pn = player.getName();
-		if ( pn.equalsIgnoreCase("Taisuke_n") ) {
+		
+		if ( player.getName().equalsIgnoreCase("Taisuke_n") ) {
 			if ( KickCommand.value == "true" ) {
 				player.kickPlayer("NTPキックモードが有効になっているため、サーバーにログインする事は出来ません。");
 				event.setJoinMessage(null);
