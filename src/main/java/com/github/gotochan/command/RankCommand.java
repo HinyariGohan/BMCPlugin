@@ -53,7 +53,7 @@ public class RankCommand {
 					sender.sendMessage(ChatColor.YELLOW + "========BMCサーバー ランクシステム========");
 					sender.sendMessage("名前: " + myname);
 					sender.sendMessage("現在のランク: " + getRankName(nowRank));
-					sender.sendMessage("次のランク: " + getRankName(nowRank) + 1);
+					sender.sendMessage("次のランク: " + getRankName(nowRank + 1));
 				}
 				else if ( args.length == 2 )
 				{

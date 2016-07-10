@@ -16,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
 
 import com.github.gotochan.Utils.BMCHelp;
 import com.github.gotochan.command.KoshihikariCommand;
@@ -61,11 +62,7 @@ extends JavaPlugin implements Listener {
 	
 	@Override
 	public void onEnable() {
-		Scoreboard scoreboard = Bukkit.getServer().getScoreboardManager().getNewScoreboard();
 		this.getLogger().info("BMCプラグインを開始しています。");
-		Bukkit.getServer().getScoreboardManager().getMainScoreboard();
-		scoreboard.registerNewObjective("rank", "dummy");
-		scoreboard.registerNewObjective("koshihikari", "dummy");
 		
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(new BMCEvent(), this);
@@ -237,6 +234,20 @@ extends JavaPlugin implements Listener {
 	@EventHandler
 	public void loadPlayer(PlayerLoginEvent event)
 	{
+		ScoreboardManager manager = Bukkit.getServer().getScoreboardManager();
+		Scoreboard bukkit_scoreboard = manager.getMainScoreboard();
+		Objective rankObj = bukkit_scoreboard.getObjective("rank");
+		Objective koshihikariObj = bukkit_scoreboard.getObjective("koshihikari");
+		if ( rankObj == null )
+		{
+			bukkit_scoreboard.registerNewObjective("rank", "dummy");
+			Bukkit.broadcastMessage("rankObjective create");
+		}
+		if ( koshihikariObj == null )
+		{
+			bukkit_scoreboard.registerNewObjective("koshihikari", "dummy");
+			Bukkit.broadcastMessage("koshihikariObjective create");
+		}
 		Player p = event.getPlayer();
 		BMCPlayer player = new BMCPlayer(p.getUniqueId(), p.getName());
 		
