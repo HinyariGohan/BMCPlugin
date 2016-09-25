@@ -4,12 +4,18 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import com.github.gotochan.BMCPlugin;
 import com.github.gotochan.kit.BMCKit;
 import com.github.gotochan.kit.IconPackage;
 import com.github.gotochan.kit.KitUtils;
 
 public class Libralyan extends BMCKit
 {
+	
+	public Libralyan(BMCPlugin bmc)
+	{
+		super(bmc);
+	}
 	
 	private static final ItemStack Book = KitUtils.addSoulBound(new ItemStack(Material.BOOK));
 	

@@ -1,6 +1,6 @@
 package com.github.gotochan.command;
 
-import org.bukkit.command.CommandSender;
+import com.github.gotochan.BMCPlayer;
 
 public abstract class SubCommandAbst {
 
@@ -12,13 +12,13 @@ public abstract class SubCommandAbst {
 
 	/**
 	 * コマンドを実行します。
-	 * @param sender コマンド実行者
+	 * @param sender コマンド実行者(BMCPlayer)
 	 * @param label ラベル
 	 * @param args 引数
 	 * @return コマンドが実行されたか(boolean)
 	 */
 	public abstract boolean runCommand(
-			CommandSender sender, String label, String[] args);
+			BMCPlayer player, String label, String[] args);
 
 
 }

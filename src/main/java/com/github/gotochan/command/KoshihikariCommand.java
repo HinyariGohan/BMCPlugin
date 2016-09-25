@@ -1,13 +1,10 @@
 package com.github.gotochan.command;
 
+import com.github.gotochan.BMCPlayer;
+import com.github.gotochan.BMCPlugin;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
 
-import com.github.gotochan.BMC;
 import com.github.gotochan.Utils.BMCHelp;
 
 /**
@@ -18,51 +15,35 @@ import com.github.gotochan.Utils.BMCHelp;
 
 public class KoshihikariCommand
 {
-	@SuppressWarnings("deprecation")
-	public static boolean runCommand(CommandSender sender, String label, String[] args) {
-		Player player = (Player) sender;
-		Scoreboard board = player.getScoreboard();
-		Objective objective = board.getObjective("koshihikari");
-		
-		if ( args.length == 0 )
-		{
-			BMCHelp.Komehelp(sender);
-		}
-		else if ( args[0].equalsIgnoreCase("ticket"))
-		{
-			if ( args.length == 1 )
-			{
-				Score KScore = objective.getScore(player);
-				player.sendMessage(BMC.prefix  + "あなたのコシヒカリ交換チケット数は" +
-						Integer.toString(KScore.getScore()) + "枚です。");
-			}
-			else if ( args.length == 2 )
-			{
-				Player other = getPlayer(args[1]);
-				if ( other == null )
-				{
-					sender.sendMessage(BMC.prefix + "そのプレイヤーはオフラインです。");
+	private BMCPlugin plugin;
+	private BMCHelp bmcHelp;
+	
+	public KoshihikariCommand(BMCPlugin plugin)
+	{
+		this.plugin = plugin;
+		this.bmcHelp = plugin.bmcHelp;
+	}
+
+	public boolean runCommand(BMCPlayer bmcPlayer, String label, String[] args) {
+		if (args.length == 0 ||  args.length >= 3) { return bmcHelp.Komehelp(bmcPlayer); }
+		else {
+			if (args[0].equalsIgnoreCase("point")) {
+				BMCPlayer target = bmcPlayer;
+				if (args.length == 2) {
+					if (getPlayer(args[1]) == null) { bmcPlayer.errmsg("そのプレイヤーはオンラインではありません。"); return true; }
+					else { target = plugin.getBMCPlayer(getPlayer(args[1])); }
 				}
-				else
-				{
-					Score OScore = objective.getScore(other);
-					player.sendMessage(BMC.prefix + args[1] + " さんのコシヒカリ交換チケット数は" +
-							Integer.toString(OScore.getScore()) + "枚です。");
-				}
-			}
+				bmcPlayer.msg(target.getName() + "さんのコシヒカリ交換可能ポイントは &6" +
+						target.getScoreboard().getKomePoint() + "ポイント&r です。");
+			} else return bmcHelp.Komehelp(bmcPlayer);
 		}
-		else
-		{
-			return BMCHelp.Komehelp(sender);
-		}
-		return true;
+		return false;
 	}
 	
-	private static Player getPlayer(String name) {
+	private Player getPlayer(String name) {
 		for ( Player player : Bukkit.getOnlinePlayers() ) {
-			if ( player.getName().equals(name) ) {
+			if ( player.getName().equals(name) )
 				return player;
-			}
 		}
 		return null;
 	}

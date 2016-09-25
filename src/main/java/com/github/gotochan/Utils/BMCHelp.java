@@ -1,102 +1,133 @@
 package com.github.gotochan.Utils;
 
+import com.github.gotochan.BMCPlayer;
+import com.github.gotochan.BMCPlugin;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-
-import com.github.gotochan.BMC;
 
 public class BMCHelp {
-	
-	public static String g = ChatColor.GOLD + "";
-	public static String r = ChatColor.RESET + "";
-	public static String y = ChatColor.YELLOW + "";
-	public static String h = r + " - ";
-	
+
+	private BMCPlugin bmc;
+
+	public BMCHelp(BMCPlugin bmc)
+	{
+		this.bmc = bmc;
+	}
+
+	public String g = ChatColor.GOLD + "";
+	public String r = ChatColor.RESET + "";
+	public String y = ChatColor.YELLOW + "";
+	public String h = r + " - ";
+
 	/**
 	 * rankコマンドのヘルプです。
-	 * @param sender
+	 * @param player
 	 * @return rankコマンドのヘルプ
 	 */
-	public static boolean Rankhelp(CommandSender sender) {
+	public boolean Rankhelp(BMCPlayer player) {
 		String content = "ランクコマンド ヘルプ";
 		String cmdname = g + "/rank ";
-		sender.sendMessage(BMC.equal(sender, content));
-		sender.sendMessage(cmdname + "stats <プレイヤー名>" + h + "ランクのスタッツを表示します。");
+		player.msg(bmc.equalMessage(content));
+		player.msg(cmdname + "stats <プレイヤー名>" + h + "ランクの状況を表示します。");
 		return false;
 	}
-	
+
 	/**
 	 * komeコマンドのヘルプです。
-	 * @param sender
+	 * @param player
 	 * @return komeコマンドのヘルプ
 	 */
-	public static boolean Komehelp(CommandSender sender) {
+	public boolean Komehelp(BMCPlayer player) {
 		String content = "コシヒカリコマンド ヘルプ";
 		String cmdname = g + "/kome ";
-		sender.sendMessage(BMC.equal(sender, content));
-		sender.sendMessage(cmdname + "ticket <プレイヤー名>" + h +
+		player.msg(bmc.equalMessage(content));
+		player.msg(cmdname + "point <プレイヤー名>" + h +
 				"コシヒカリ交換可能チケット数を表示します。");
 		return false;
 	}
-	
+
 	/**
 	 * ランクコマンドのランクアップのヘルプです。
-	 * @param sender
+	 * @param player
 	 * @return ランクコマンドのランクアップ
 	 */
-	public static boolean RankUphelp(CommandSender sender) {
+	public boolean RankUphelp(BMCPlayer player) {
 		String content = "ランクアップコマンド ヘルプ";
 		String cmdname = g + "/rankup ";
-		sender.sendMessage(BMC.equal(sender, content));
-		sender.sendMessage(cmdname + h + "ランクアップをします。");
-		sender.sendMessage(cmdname + "help" + h + "ランクアップの手順を確認します。");
+		player.msg(bmc.equalMessage(content));
+		player.msg(cmdname + h + "ランクアップをします。");
+		player.msg(cmdname + "help" + h + "ランクアップの手順を確認します。");
 		return false;
 	}
-	
+
 	/**
 	 * デバッグコマンドのヘルプです。
-	 * @param sender
+	 * @param player
 	 * @return デバッグコマンドのヘルプ
 	 */
-	public static boolean Debughelp(CommandSender sender) {
+	public boolean Debughelp(BMCPlayer player) {
 		String content = "BMCデバッグコマンド ヘルプ";
 		String cmdname = "/bmc debug ";
-		sender.sendMessage(BMC.equal(sender, content));
-		sender.sendMessage(g + cmdname + "itemhand" + h + "手に持っているアイテムのデータを返します。");
-		sender.sendMessage(g + cmdname + "rank reset" + h + "ランクをリセットします。");
-		sender.sendMessage(g + cmdname + "kome hunger" + h + "空腹状態にします。");
-		sender.sendMessage(g + cmdname + "kome get" + h + "コシヒカリをインベントリに追加します。");
+		player.msg(bmc.equalMessage(content));
+		player.msg(g + cmdname + "itemhand" + h + "手に持っているアイテムのデータを返します。");
+		player.msg(g + cmdname + "rank reset" + h + "ランクをリセットします。");
+		player.msg(g + cmdname + "kome hunger" + h + "空腹状態にします。");
+		player.msg(g + cmdname + "kome get" + h + "コシヒカリをインベントリに追加します。");
+		player.msg(g + cmdname + "ench <fire/fall/smelt>" + h + "エンチャントメントを実行します。");
+		player.msg(g + cmdname + "grapple" + h + "grappleを取得します。");
+		player.msg(g + cmdname + "namereset" + h + "ディスプレイネームをリセットします。");
 		return false;
 	}
-	
+
 	/**
 	 * bmcコマンドのヘルプです。
-	 * @param sender
+	 * @param player
 	 * @return BMCコマンドのヘルプです。
 	 */
-	public static boolean BMChelp(CommandSender sender) {
+	public boolean BMChelp(BMCPlayer player) {
 		String content = "BMCコマンド ヘルプ";
-		sender.sendMessage(BMC.equal(sender, content));
-		sender.sendMessage(g + "/bmc kit" + h + "キットコマンドのヘルプを参照します。");
-		sender.sendMessage(g + "/bmc info" + h + "プラグインの情報を参照します。");
+		player.msg(bmc.equalMessage(content));
+		player.msg(g + "/bmc kit" + h + "キットコマンドのヘルプを参照します。");
+		player.msg(g + "/bmc info" + h + "プラグインの情報を参照します。");
+		player.msg(g + "/bmc menu" + h + "メニューを表示します。");
+		player.msg(g + "/bmc debug" + h + "デバッグ操作を行います。&4(管理者専用)&r");
 		return false;
 	}
-	
-	public static boolean KitHelp(CommandSender sender) {
+
+	/**
+	 * Kitコマンドのヘルプです。
+	 * @param player
+	 * @return
+	 */
+	public boolean KitHelp(BMCPlayer player) {
 		String content = "Kitコマンド ヘルプ";
 		String cmdname = "/bmc kit ";
-		sender.sendMessage(BMC.equal(sender, content));
-		sender.sendMessage(g + cmdname + "list" + h + "キットの一覧を表示します。");
-		sender.sendMessage(g + cmdname + "acrobat mode" + h + "Acrobatのモードを切り替えます");
+		player.msg(bmc.equalMessage(content));
+		player.msg(g + cmdname + "list" + h + "キットの一覧を表示します。");
+		player.msg(g + cmdname + "acrobat mode" + h + "Acrobatのモードを切り替えます");
 		return false;
 	}
-	
-	public static boolean NTPhelp(CommandSender sender) {
+
+	public boolean NTPhelp(BMCPlayer player) {
 		String content = "NoTaisukePlusコマンド ヘルプ";
 		String cmdname = g + "/ntp ";
-		sender.sendMessage(BMC.equal(sender, content));
-		sender.sendMessage(cmdname + "kick <on/off>" + h + "NTPキックモードのオンオフを切り替えます。");
-		sender.sendMessage(cmdname + "kick status" + h + "NTPキックモードのステータスを確認します。");
+		player.msg(bmc.equalMessage(content));
+		player.msg(cmdname + "kick <on/off>" + h + "NTPキックモードのオンオフを切り替えます。");
+		player.msg(cmdname + "kick status" + h + "NTPキックモードのステータスを確認します。");
 		return false;
+	}
+
+	/**
+	 * ランクアップの手順
+	 * @param bmcPlayer
+	 * @return ランクアップの手順
+	 */
+	public boolean RankupProcessInfo(BMCPlayer bmcPlayer) {
+		String content = "ランクアップの手順";
+		bmcPlayer.msg(bmc.equalMessage(content));
+		bmcPlayer.msg("1. " + "/rank stats で表示された次のランクのアイテムをクラフトします。");
+		bmcPlayer.msg("2. " + "1. で作成したランクアイテムを手に持ち、" +
+				" /rankup コマンドを実行します。");
+		bmcPlayer.msg("3. " + "ランクアップに成功すると成功メッセージが表示されます。");
+		return true;
 	}
 }

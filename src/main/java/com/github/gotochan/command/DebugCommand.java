@@ -3,6 +3,9 @@ package com.github.gotochan.command;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.gotochan.BMCPlayer;
+import com.github.gotochan.BMCPlugin;
+import com.github.gotochan.Rank;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
@@ -13,76 +16,81 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import com.github.gotochan.Utils.BMCBoolean;
 import com.github.gotochan.Utils.BMCHelp;
-import com.github.gotochan.enchant.AutoSmelt;
-import com.github.gotochan.event.Scout;
+import com.github.gotochan.Utils.BMCUtils;
+import com.github.gotochan.event.ScoutEvent;
 
 public class DebugCommand extends SubCommandAbst {
-	
+
 	public static final String COMMAND_NAME = "debug";
-	
+
+	private BMCPlugin bmc;
+	private BMCHelp bmcHelp;
+	private BMCBoolean bmcBoolean;
+	private BMCUtils utils;
+
+	public DebugCommand(BMCPlugin bmc)
+	{
+		this.bmc = bmc;
+		this.bmcBoolean = bmc.bmcBoolean;
+		this.bmcHelp = bmc.bmcHelp;
+		this.utils = bmc.utils;
+	}
+
 	@Override
 	public String getCommandName() {
 		return COMMAND_NAME;
 	}
-	
-	@SuppressWarnings("deprecation")
+
 	@Override
-	public boolean runCommand(CommandSender sender, String label, String[] args) {
-		Player player = (Player) sender;
-		if ( !(player.hasPermission("bmc.debug")) )
-		{
-			player.sendMessage("§4You don't have permission!");
+	public boolean runCommand(BMCPlayer bmcPlayer, String label, String[] args)  {
+		ItemStack item = bmcPlayer.getItemInMainHand();
+		Player player = bmcPlayer.getPlayer();
+		if ( !(bmcPlayer.hasPermission("bmc.debug")) )	{
+			return bmcPlayer.noperm();
 		}
-		
+
 		if( args.length == 1 )
-		{
-			return BMCHelp.Debughelp(sender);
-		}
-		
+			return bmcHelp.Debughelp(bmcPlayer);
 		else if ( args.length >= 2 )
 		{
-			if ( args[1].equalsIgnoreCase("itemhand") )
-			{
-				ItemStack i = player.getItemInHand();
-				
-				if ( i.getType() != null && i.getTypeId() != 0 )
-				{
-					
-					if ( i.getItemMeta().getDisplayName() == null ) {
-						if ( !(i.getDurability() == 0) ) {
-							player.sendMessage(i.getType().toString() +
-									", " + i.getDurability());
+			if ( args[1].equalsIgnoreCase("itemhand") ) {
+				if ( item.getType() != null && item.getTypeId() != 0 ) {
+					if ( item.getItemMeta().getDisplayName() == null ) {
+						if ( !(item.getDurability() == 0) ) {
+							bmcPlayer.msg(item.getType().toString() +
+									", " + item.getDurability());
 						}
 						else {
-							player.sendMessage(i.getType().toString() +
+							bmcPlayer.msg(item.getType().toString() +
 									", " + "0");
 						}
 					}
 					else {
-						String displayname = i.getItemMeta().getDisplayName();
-						if ( !(player.getItemInHand().getDurability() == 0) ) {
-							player.sendMessage(player.getItemInHand().getType().toString() +
-									", " + player.getItemInHand().getDurability() +
+						String displayname = item.getItemMeta().getDisplayName();
+						if ( !(item.getDurability() == 0) ) {
+							bmcPlayer.msg(item.getType().toString() +
+									", " + item.getDurability() +
 									", " + displayname);
 						}
 						else {
-							player.sendMessage(player.getItemInHand().getType().toString() +
+							bmcPlayer.msg(item.getType().toString() +
 									", " + "0" +
 									", " + displayname);
 						}
 					}
 				}
 				else {
-					player.sendMessage("手に何も持っていません。");
+					bmcPlayer.msg("手に何も持っていません。");
 				}
 			}
-			
+
 			else if ( args[1].equalsIgnoreCase("rank") ) {
 				if ( args[2].equalsIgnoreCase("reset")) {
-					player.sendMessage("スコアをリセットしました。");
-					player.getScoreboard().getObjective("rank").getScore(player).setScore(1);
-				}
+					bmcPlayer.msg("スコアをリセットしました。");
+					bmcPlayer.getScoreboard().setRank(Rank.RED);
+				} else { return bmcHelp.Debughelp(bmcPlayer); }
 			}
 			else if ( args[1].equalsIgnoreCase("kome")) {
 				if ( args[2].equalsIgnoreCase("hunger")) {
@@ -91,7 +99,7 @@ public class DebugCommand extends SubCommandAbst {
 				else if ( args[2].equalsIgnoreCase("get")) {
 					ItemStack is = new ItemStack(Material.MUSHROOM_SOUP);
 					ItemMeta im = is.getItemMeta();
-					List<String> lore = new ArrayList<String>();
+					List<String> lore = new ArrayList<>();
 					lore.add( "§a***中間素材***" );
 					im.addEnchant(Enchantment.DURABILITY, 1, false);
 					im.setLore(lore);
@@ -99,23 +107,21 @@ public class DebugCommand extends SubCommandAbst {
 					im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 					is.setItemMeta(im);
 					player.getInventory().addItem(is);
+					return true;
 				}
 			}
 			else if ( args[1].equalsIgnoreCase("namereset"))
 			{
 				player.setDisplayName(player.getName());
 			}
-			
+
 			else if ( args[1].equalsIgnoreCase("ench"))
 			{
 				if ( args.length == 2 )
-				{
-					return DebugEnchCommandHelp(sender);
-				}
-				
-				ItemStack item = player.getItemInHand();
+					return DebugEnchCommandHelp(bmcPlayer);
+
 				ItemMeta meta = item.getItemMeta();
-				
+
 				if ( item.getType() != null && item.getTypeId() != 0 )
 				{
 					if ( args[2].equalsIgnoreCase("fall") ) {
@@ -124,15 +130,15 @@ public class DebugCommand extends SubCommandAbst {
 							Enchantment ench = Enchantment.PROTECTION_FALL;
 							if ( item.containsEnchantment(ench) )
 							{
-								player.sendMessage("Already item has " + ench.getName() + " Enchant!");
+								bmcPlayer.msg("Already item has " + ench.getName() + " Enchant!");
 								return false;
 							}
-							
+
 							item.addUnsafeEnchantment(ench, 10);
-							player.sendMessage("正常にエンチャントメントが実行されました。");
+							bmcPlayer.msg("正常にエンチャントメントが実行されました。");
 						}
 						else {
-							player.sendMessage("ダイヤモンドのブーツである必要があります。");
+							bmcPlayer.msg("ダイヤモンドのブーツである必要があります。");
 						}
 					}
 					else if ( args[2].equalsIgnoreCase("fire") ) {
@@ -142,55 +148,51 @@ public class DebugCommand extends SubCommandAbst {
 							Enchantment ench = Enchantment.PROTECTION_FIRE;
 							if ( item.containsEnchantment(ench) )
 							{
-								player.sendMessage("Already item has " + ench.getName() + " Enchant!");
+								bmcPlayer.msg("Already item has " + ench.getName() + " Enchant!");
 								return false;
 							}
-							
+
 							item.addUnsafeEnchantment(ench, 10);
-							player.sendMessage("正常にエンチャントメントが実行されました。");
+							bmcPlayer.msg("正常にエンチャントメントが実行されました。");
 						}
 						else {
-							player.sendMessage("ダイヤ・鉄のチェストプレートである必要があります。");
+							bmcPlayer.msg("ダイヤ・鉄のチェストプレートである必要があります。");
 						}
 					}
 					else if ( args[2].equalsIgnoreCase("smelt")) {
-						if ( meta.hasLore() )
-						{
-							player.sendMessage("このアイテムにエンチャントをつけることは出来ません。");
+						if ( meta.hasLore() ) {
+							bmcPlayer.msg("このアイテムにエンチャントをつけることは出来ません。");
 							return false;
 						}
-						
-						if ( !(AutoSmelt.isTool(item.getType())) )
-						{
-							player.sendMessage("このアイテムにエンチャントをつけることは出来ません。");
+
+						if ( !(bmcBoolean.isTool(item.getType())) ) {
+							bmcPlayer.msg("このアイテムにエンチャントをつけることは出来ません。");
 							return false;
 						}
-						
+
 						Enchantment ench = Enchantment.SILK_TOUCH;
-						if ( item.containsEnchantment(ench) )
-						{
-							player.sendMessage("シルクタッチと一緒にすることは出来ません。");
+						if ( item.containsEnchantment(ench) ) {
+							bmcPlayer.msg("シルクタッチと一緒にすることは出来ません。");
 							return false;
 						}
-						
-						if ( AutoSmelt.lore.isEmpty() )
-						{
-							AutoSmelt.lore.add(0, "§4Auto Smelt");
-							meta.setLore(AutoSmelt.lore);
+
+						if ( bmc.autoSmelt.lore.isEmpty() )	{
+							bmc.autoSmelt.lore.add(0, "§4Auto Smelt");
+							meta.setLore(bmc.autoSmelt.lore);
 							item.setItemMeta(meta);
-							player.sendMessage("正常にエンチャントメントが実行されました。");
+							bmcPlayer.msg("正常にエンチャントメントが実行されました。");
 						}
 						else {
-							meta.setLore(AutoSmelt.lore);
+							meta.setLore(bmc.autoSmelt.lore);
 							item.setItemMeta(meta);
-							player.sendMessage("正常にエンチャントメントが実行されました。");
+							bmcPlayer.msg("正常にエンチャントメントが実行されました。");
 						}
 					}
 					else if ( args[2].equalsIgnoreCase("unbreaking") )
 					{
 						if ( args.length == 3 )
 						{
-							player.sendMessage("§c[BMC] 引数を指定してください。");
+							bmcPlayer.msg("§c[BMCPlugin] 引数を指定してください。");
 						}
 						else if ( args.length == 4 )
 						{
@@ -201,34 +203,29 @@ public class DebugCommand extends SubCommandAbst {
 							player.updateInventory();
 						}
 						else {
-							player.sendMessage("§c[BMC] 引数指定が間違っています。");
+							bmcPlayer.msg("§c[ BMCPlugin ] 引数指定が間違っています。");
 							return true;
 						}
-					}
-					else {
-						return DebugEnchCommandHelp(sender);
-					}
+					} else
+						return DebugEnchCommandHelp(bmcPlayer);
 				}
 				else {
-					player.sendMessage("エンチャントしたいアイテムを手に持つ必要があります。");
+					bmcPlayer.msg("エンチャントしたいアイテムを手に持つ必要があります。");
 				}
 			}
 			else if ( args[1].equalsIgnoreCase("grapple") ) {
-				Scout.im.setDisplayName(Scout.GRAPPLE_NAME);
-				Scout.grappleItem.setItemMeta(Scout.im);
-				player.getInventory().addItem(Scout.grappleItem);
-			}
-			else {
-				return BMCHelp.Debughelp(sender);
-			}
+				ScoutEvent.im.setDisplayName(ScoutEvent.GRAPPLE_NAME);
+				ScoutEvent.grappleItem.setItemMeta(ScoutEvent.im);
+				player.getInventory().addItem(ScoutEvent.grappleItem);
+			} else
+				return bmcHelp.Debughelp(bmcPlayer);
 		}
 		return false;
 	}
-	
-	private boolean DebugEnchCommandHelp(CommandSender sender)
+
+	private boolean DebugEnchCommandHelp(BMCPlayer bmcPlayer)
 	{
-		Player player = (Player) sender;
-		player.sendMessage("Useful: " + "/bmc debug ench <fall/fire/smelt>");
+		bmcPlayer.msg("Useful: " + "/bmc debug ench <fall/fire/smelt>");
 		return false;
 	}
 }

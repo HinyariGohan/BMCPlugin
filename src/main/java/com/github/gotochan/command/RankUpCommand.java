@@ -1,16 +1,13 @@
 package com.github.gotochan.command;
 
-import org.bukkit.Bukkit;
+import com.github.gotochan.BMCPlugin;
+import com.github.gotochan.Rank;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scoreboard.Score;
 
-import com.github.gotochan.BMC;
 import com.github.gotochan.BMCPlayer;
 import com.github.gotochan.Utils.BMCHelp;
 
@@ -21,18 +18,24 @@ import com.github.gotochan.Utils.BMCHelp;
 
 public class RankUpCommand
 {
+	private BMCPlugin plugin;
+	private BMCHelp bmcHelp;
 	
-	public static boolean runCommand(
-			CommandSender sender, String label, String[] args)
+	public RankUpCommand(BMCPlugin bmc)
+	{
+		this.plugin = bmc;
+		this.bmcHelp = bmc.bmcHelp;
+	}
+	
+	public boolean runCommand(
+			BMCPlayer bmcPlayer, String label, String[] args)
 	{
 		
-		Player player = (Player) sender;
-		BMCPlayer bmcPlayer = BMCPlayer.getPlayer(player.getUniqueId());
-		ItemStack item = player.getItemInHand();
-		int nowRank = bmcPlayer.getRankID();
-		Score score = bmcPlayer.getRankScore();
-		String nowRankName = bmcPlayer.getRankName();
-		String name = player.getName();
+		//Player player = bmcPlayer.getPlayer();
+		ItemStack item = bmcPlayer.getItemInMainHand();
+		Rank rank = bmcPlayer.getScoreboard().getRank();
+		String nowRankName = bmcPlayer.getScoreboard().getRank().getName(bmcPlayer.getScoreboard().getRank());
+		String name = bmcPlayer.getName();
 		
 		if ( args.length == 0 ) {
 			
@@ -42,53 +45,37 @@ public class RankUpCommand
 				{
 					ItemMeta im = item.getItemMeta();
 					int level = im.getEnchantLevel(Enchantment.DURABILITY);
-					if ( nowRank == 0 )
-					{
-						player.sendMessage("あなたは" + nowRankName + "ランクです。");
-						player.sendMessage(ChatColor.RED + "通常ワールドにスポーンしていてこのランクの場合は管理者に連絡してください。");
-					}
-					else if ( nowRank <= 8 )
-					{
-						if ( level == (nowRank + 1) )
-						{
-							score.setScore(nowRank + 1);
-							Bukkit.broadcastMessage(BMC.prefix + name + " さんが " + nowRankName +
-									ChatColor.RESET + " ランクにランクアップしました!");
+					if ( rank == Rank.VISITOR ) { //VISITOR
+						bmcPlayer.msg("あなたは" + nowRankName + "ランクです。");
+						bmcPlayer.msg(ChatColor.RED + "通常ワールドにスポーンしていてこのランクの場合は管理者に連絡してください。");
+					} else if ( rank == Rank.INFRARED ) { //INFRARED
+						bmcPlayer.msg(ChatColor.LIGHT_PURPLE + "あなたは最高ランクへ達しています。");
+					} else { // それ以外
+						if ( level == (rank.getInt() + 1)) {
+							bmcPlayer.msg("&a* " + Rank.getLabelOfName(rank.getInt() + 1) + " ランクに昇格しました！" );
+							plugin.broadcast("【ランクアップ】 " + bmcPlayer.getName() + "さんが " + Rank.getLabelOfName(rank.getInt() + 1)
+									+ "ランクになりました！おめでとうございます！");
+							bmcPlayer.getScoreboard().rankUP();
+						} else {
+							bmcPlayer.msg(plugin.ERROR + "クリアランス違反です。");
 						}
-						else
-						{
-							player.sendMessage(BMC.prefix + "違うランクアイテムを持っています。正しいランクアイテムを持つ必要があります。");
-						}
-					}
-					else if ( nowRank == 9 )
-					{
-						player.sendMessage(ChatColor.LIGHT_PURPLE + "あなたは最高ランクへ達しています。");
-					}
-					else
-					{
-						player.sendMessage(BMC.prefix + "クリアランス違反です。");
 					}
 				}
 				else
 				{
-					player.sendMessage(BMC.prefix + "ランクアイテムを持って下さい。");
+					bmcPlayer.msg("ランクアイテムを持って下さい。");
 				}
 			}
 			else
 			{
-				player.sendMessage(BMC.prefix + "手にアイテムを持っていません！");
-				player.sendMessage("ランクアップの方法を確認するには" + BMC.g + " /rankup help " + BMC.r +
-						"コマンドを使用します。");
+				bmcPlayer.msg("手にアイテムを持っていません！");
+				bmcPlayer.msg("ランクアップの方法を確認するには &6/rankup help&r コマンドを使用します。");
 			}
 		}
 		else if ( args.length == 1 && args[0].equalsIgnoreCase("help") )
-		{
-			return BMC.RankupProcessInfo(sender);
-		}
+			return bmcHelp.RankupProcessInfo(bmcPlayer);
 		else
-		{
-			return BMCHelp.RankUphelp(sender);
-		}
+			return bmcHelp.RankUphelp(bmcPlayer);
 		
 		return true;
 	}

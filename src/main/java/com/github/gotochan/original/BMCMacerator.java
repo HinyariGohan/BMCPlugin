@@ -26,15 +26,13 @@ public class BMCMacerator implements Listener
 	{
 		Inventory inventory = event.getClickedInventory();
 		Player player = (Player) event.getWhoClicked();
-		
+
 		// nullの場合 returnする。
 		if ( inventory == null )
-		{
 			return;
-		}
-		
+
 		ItemStack item = event.getCurrentItem();
-		
+
 		if ( player.getOpenInventory().getTitle().contains("メニュー") )
 		{
 			if ( item != null && item.getType() == Material.FLINT )
@@ -47,76 +45,66 @@ public class BMCMacerator implements Listener
 				}
 			}
 		}
-		
+
 		if ( inventory.getName().contains("メニュー") )
 		{
 			if ( !(event.getSlot() == 20 || event.getSlot() == 24) )
 			{
-				
+
 				event.setCancelled(true);
 			}
 			//if分岐
 			if ( item == null )
-			{
 				return;
-			}
-			
+
 			if ( !(item.hasItemMeta()) )
-			{
 				return;
-			}
-			
-			
+
+
 			ItemMeta meta = item.getItemMeta();
-			
+
 			if ( meta.getDisplayName().contains("OK") )
 			{
 				if ( inventory.getItem(20) == null )
 				{
 					player.sendMessage("§c[Error] " + "粉砕したいアイテムを青いガラスの中央に入れる必要があります。");
-					player.playSound(player.getLocation(), Sound.NOTE_STICKS, 10, 1);
+					player.playSound(player.getLocation(), Sound.BLOCK_NOTE_SNARE, 10, 1);
 					return;
 				}
-				
+
 				ItemStack slot = inventory.getItem(20);
 				ItemStack out = inventory.getItem(24);
-				
+
 				//20番
 				//24番
 				int amount = slot.getAmount();
 				int ramount = 0;
-				
+
 				if ( out != null )
 				{
 					ramount = out.getAmount();
 				}
-				
+
 				if ( ramount == 64 )
-				{
 					return;
-				}
-				
-				player.playSound(player.getLocation(), Sound.ITEM_BREAK, 10L, (float) 1.8);
-				
+
+				player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 10L, (float) 1.8);
+
 				if ( slot.getType() == Material.IRON_ORE )
 				{
 					Material origin = Material.IRON_ORE;
 					ItemStack result = new ItemStack((Material.IRON_INGOT), ramount + 2);
 					if ( cantMacerator(player, out, result) )
-					{
 						return;
-					}
-					
+
 					RED_Process(inventory, origin, result);
 				}
 				else if ( slot.getType() == Material.GOLD_ORE ) {
 					Material origin = Material.GOLD_ORE;
 					ItemStack result = new ItemStack((Material.GOLD_INGOT), ramount + 2);
 					if ( cantMacerator(player, out, result) )
-					{
 						return;
-					}
-					
+
 					RED_Process(inventory, origin, result);
 				}
 				else if ( slot.getType() == Material.MUSHROOM_SOUP ||
@@ -124,17 +112,15 @@ public class BMCMacerator implements Listener
 				{
 					ItemStack result = new ItemStack((Material.SUGAR), ramount + 9);
 					if ( cantMacerator(player, out, result) )
-					{
 						return;
-					}
-					
+
 					if ( slot.containsEnchantment(Enchantment.DURABILITY) )
 					{
 						if ( slot.getItemMeta().getDisplayName().contains("コシヒカリ") )
 						{
 							addResult("§6§n米粉", result, Enchantment.DURABILITY,
 									1, ItemFlag.HIDE_ENCHANTS);
-							
+
 							if ( amount > 1 )
 							{
 								slot.setAmount(amount - 1);
@@ -151,55 +137,45 @@ public class BMCMacerator implements Listener
 					Material origin = Material.SANDSTONE;
 					ItemStack result = new ItemStack((Material.SAND), ramount + 4);
 					if ( cantMacerator(player, out, result) )
-					{
 						return;
-					}
-					
+
 					RED_Process(inventory, origin, result);
 				}
 				else if ( slot.getType() == Material.STONE ) {
 					Material origin = Material.STONE;
 					ItemStack result = new ItemStack((Material.COBBLESTONE), ramount + 1);
 					if ( cantMacerator(player, out, result) )
-					{
 						return;
-					}
-					
+
 					RED_Process(inventory, origin, result);
 				}
 				else if ( slot.getType() == Material.GRAVEL ) {
 					Material origin = Material.FLINT;
 					ItemStack result = new ItemStack((Material.FLINT), ramount + 1);
 					if ( cantMacerator(player, out, result) )
-					{
 						return;
-					}
-					
+
 					RED_Process(inventory, origin, result);
 				}
 				else if ( slot.getType() == Material.DIAMOND ) {
 					Material origin = Material.DIAMOND;
 					ItemStack result = new ItemStack((Material.SUGAR), ramount + 4);
 					if ( cantMacerator(player, out, result) )
-					{
 						return;
-					}
 					addResult("§b§nダイヤモンドの粉", result, Enchantment.DAMAGE_ALL,
 							6, ItemFlag.HIDE_ENCHANTS);
-					
+
 					RED_Process(inventory, origin, result);
 				}
 				else if ( slot.getType() == Material.DIAMOND_BLOCK ) {
 					Material origin = Material.DIAMOND_BLOCK;
 					ItemStack result = new ItemStack((Material.COAL), ramount + 4);
 					if ( cantMacerator(player, out, result) )
-					{
 						return;
-					}
-					
+
 					addResult("§7炭素", result, Enchantment.DURABILITY,
 							6, ItemFlag.HIDE_ENCHANTS);
-					
+
 					RED_Process(inventory, origin, result);
 				}
 				else {
@@ -210,31 +186,30 @@ public class BMCMacerator implements Listener
 			else if ( meta.getDisplayName().contains("CANCEL") )
 			{
 				player.closeInventory();
-				player.playSound(player.getLocation(), Sound.NOTE_PIANO, 100, (float) 1.4);
+				player.playSound(player.getLocation(), Sound.BLOCK_NOTE_PLING, 100, (float) 1.4);
 				return;
 			}
 		}
-		else if ( inventory.getName().contains("BMC") ) {
+		else if ( inventory.getName().contains("BMCPlugin") ) {
 			event.setCancelled(true);
 			if ( item.getType() == Material.LAVA_BUCKET )
 			{
-				player.playSound(player.getLocation(), Sound.NOTE_BASS, 10L, (float) 2.0);
+				player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BASS, 10L, (float) 2.0);
 				player.openInventory(MenuCommand.adminpanel);
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onInventoryDragEvent(InventoryDragEvent event)
 	{
 		Inventory inventory = event.getInventory();
-		
-		if ( inventory.getName().contains("メニュー") )
-		{
+
+		if ( inventory.getName().contains("メニュー") ){
 			event.setCancelled(true);
 		}
 	}
-	
+
 	@EventHandler
 	public void onInventoryClose(InventoryCloseEvent event)
 	{
@@ -247,7 +222,7 @@ public class BMCMacerator implements Listener
 				ItemStack item = inventory.getItem(24);
 				player.getWorld().dropItemNaturally(player.getLocation(), item);
 			}
-			
+
 			if ( inventory.getItem(20) != null )
 			{
 				ItemStack item = inventory.getItem(20);
@@ -255,7 +230,7 @@ public class BMCMacerator implements Listener
 			}
 		}
 	}
-	
+
 	/**
 	 * 処理結果スロットに違うアイテムが入ってないかを確認する。
 	 * @param player プレイヤー名
@@ -272,7 +247,7 @@ public class BMCMacerator implements Listener
 		}
 		return false;
 	}
-	
+
 	/*
 	private void macerating(int amount, ItemStack slot, Inventory inventory,
 			Material origin, ItemStack result)
@@ -298,7 +273,7 @@ public class BMCMacerator implements Listener
 
 					inventory.setItem(24, result);
 	 */
-	
+
 	/**
 	 * 材料スロットの処理
 	 * @param inventory 粉砕具インベントリの取得
@@ -318,7 +293,7 @@ public class BMCMacerator implements Listener
 		}
 		inventory.setItem(24, result);
 	}
-	
+
 	/**
 	 * 結果に特殊効果をつける処理
 	 * @param name アイテム名
@@ -331,71 +306,69 @@ public class BMCMacerator implements Listener
 			int enchlvl, ItemFlag flag)
 	{
 		ItemMeta rmeta = result.getItemMeta();
-		
+
 		rmeta.addEnchant(ench, enchlvl, true);
 		rmeta.setDisplayName(name);
 		rmeta.addItemFlags(flag);
-		
+
 		result.setItemMeta(rmeta);
 	}
-	
+
+	/**
+	 * 粉砕具を右クリック時、インベントリを開く
+	 * @param event
+	 */
 	@EventHandler
 	public void onRightClick(PlayerInteractEvent event)
 	{
 		Player player = event.getPlayer();
-		
+
 		if ( event.getAction() == Action.RIGHT_CLICK_AIR
 				|| event.getAction() == Action.RIGHT_CLICK_BLOCK )
 		{
-			ItemStack item = player.getItemInHand();
+			ItemStack item = player.getInventory().getItemInMainHand();
 			if ( item == null )
-			{
 				return;
-			}
-			
+
 			if ( !(item.hasItemMeta()) )
-			{
 				return;
-			}
-			
+
 			ItemMeta meta = item.getItemMeta();
-			
+
 			if ( item.getType() != Material.FLINT )
-			{
 				return;
-			}
-			
+
 			if ( meta.getDisplayName().contains("粉砕具") )
 			{
 				openMacerator(player);
 			}
 		}
 	}
-	
+
 	public void openMacerator(Player player)
 	{
 		Inventory macerator = Bukkit.createInventory(player, 54, "粉砕メニュー");
-		
+
 		ItemStack bluepanel = new ItemStack((Material.STAINED_GLASS_PANE), 1, (byte)3);
 		ItemStack okButton = new ItemStack((Material.STAINED_CLAY), 1, (byte)5);
 		ItemStack cancelButton = new ItemStack((Material.STAINED_CLAY), 1, (byte)14);
 		ItemStack yellowpanel = new ItemStack((Material.STAINED_GLASS_PANE), 1, (byte)4);
-		
+
 		ItemMeta OKB = okButton.getItemMeta();
 		ItemMeta CANCELB = cancelButton.getItemMeta();
 		ItemMeta bluepanelmeta = bluepanel.getItemMeta();
 		ItemMeta yellowpanelmeta = yellowpanel.getItemMeta();
-		
+
 		bluepanelmeta.setDisplayName(" ");
 		CANCELB.setDisplayName("§c§lCANCEL");
 		OKB.setDisplayName("§a§lOK");
 		yellowpanelmeta.setDisplayName(" ");
-		
+
 		bluepanel.setItemMeta(bluepanelmeta);
 		okButton.setItemMeta(OKB);
 		cancelButton.setItemMeta(CANCELB);
 		yellowpanel.setItemMeta(yellowpanelmeta);
-		
+
 		macerator.setItem(10, bluepanel);
 		macerator.setItem(11, bluepanel);
 		macerator.setItem(12, bluepanel);
@@ -404,9 +377,9 @@ public class BMCMacerator implements Listener
 		macerator.setItem(28, bluepanel);
 		macerator.setItem(29, bluepanel);
 		macerator.setItem(30, bluepanel);
-		
+
 		//48
-		
+
 		macerator.setItem(14, yellowpanel);
 		macerator.setItem(15, yellowpanel);
 		macerator.setItem(16, yellowpanel);
@@ -415,11 +388,11 @@ public class BMCMacerator implements Listener
 		macerator.setItem(32, yellowpanel);
 		macerator.setItem(33, yellowpanel);
 		macerator.setItem(34, yellowpanel);
-		
+
 		macerator.setItem(48, okButton);
-		
+
 		macerator.setItem(50, cancelButton);
-		
+
 		player.openInventory(macerator);
 	}
 }

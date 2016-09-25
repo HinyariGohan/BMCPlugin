@@ -15,11 +15,11 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class BMCLaunchPad implements Listener {
-	
+
 	static long LIMIT = 3000L;
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	Map<String, Long> launchTimes = new HashMap();
-	
+
 	@EventHandler
 	public void onPlayerStep(PlayerInteractEvent e)
 	{
@@ -37,13 +37,13 @@ public class BMCLaunchPad implements Listener {
 					p.teleport(l);
 					p.setVelocity(p.getVelocity().add(p.getLocation().getDirection().multiply(3)).setY(0));
 					this.launchTimes.put(p.getName(), Long.valueOf(System.currentTimeMillis()));
-					p.playSound(p.getLocation(), Sound.WITHER_SHOOT, LIMIT, (float) 2.0);
+					p.playSound(p.getLocation(), Sound.ENTITY_WITHER_SHOOT, LIMIT, (float) 2.0);
 				}
 			}
 		}
 	}
-	
-	
+
+
 	@EventHandler
 	public void anotherEvent(EntityDamageEvent event)
 	{

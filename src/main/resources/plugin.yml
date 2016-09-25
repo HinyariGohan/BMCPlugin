@@ -1,6 +1,6 @@
 name: BMCPlugin
-main: com.github.gotochan.BMC
-version: 4.0
+main: com.github.gotochan.BMCPlugin
+version: 1.0.0
 author: Hinyari_Gohan
 description: BMCPlugin
 commands:
@@ -10,9 +10,6 @@ commands:
   rank:
   rankup:
   kome:
-  ntp:
-    description: NoTaisukePlusのコマンドです。
-    aliases: [notaisukeplus]
   cop:
 permissions:
   bmc.debug:
@@ -27,4 +24,8 @@ permissions:
     default: op
   ntp.kick:
     description: NoTaisukePlusのキックの使用権限
+    default: op
+  bmc.vanish:
+    default: op
+  bmc.vanish.notice:
     default: op

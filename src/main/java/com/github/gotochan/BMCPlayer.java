@@ -1,91 +1,61 @@
 package com.github.gotochan;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Score;
+import org.bukkit.inventory.ItemStack;
 
-import com.github.gotochan.command.RankCommand;
-import com.github.gotochan.kit.BMCKit;
+import java.util.UUID;
 
 public class BMCPlayer
 {
-	protected static final Map<UUID, BMCPlayer> players = new HashMap<>();
-	private final UUID ID;
-	private final String name;
-	private BMCKit kit;
-	protected static int rankID = '1';
-	protected static Score rankScore;
-	
-	public BMCPlayer(UUID ID, String Name)
-	{
-		this.ID = ID;
-		this.name = Name;
-		this.kit = BMCKit.RunnerInstance;
+	private final BMCPlugin bmc;
+	private final Player player;
+	private final BMCScoreBoard rank;
+
+	public BMCPlayer(Player player) {
+		this.player = player;
+		this.bmc = BMCPlugin.getInstance();
+		this.rank = new BMCScoreBoard(this);
 	}
-	
-	
-	public static BMCPlayer getPlayer(UUID id)
-	{
-		return players.get(id);
+
+	private void init() {
 	}
-	
-	public static Map<UUID, BMCPlayer> getPlayers()
-	{
-		return Collections.unmodifiableMap(players);
+
+	public Player getPlayer() {
+		return this.player;
 	}
-	
-	
-	
-	public BMCKit getKit()
-	{
-		return this.kit;
+
+	public BMCPlugin getPlugin() {
+		return this.bmc;
 	}
-	
-	public void setKit(BMCKit kit)
-	{
-		if ( kit != null )
-		{
-			this.kit = kit;
-		}
-	}
-	
-	public Player getPlayer()
-	{
-		return Bukkit.getPlayer(this.ID);
-	}
-	
-	public Score getRankScore()
-	{
-		return BMCPlayer.rankScore;
-	}
-	
-	public void sendMessage(String message)
-	{
-		Player player = Bukkit.getPlayer(this.ID);
-		if ( player != null )
-		{
-			player.sendMessage(message);
-		}
-	}
-	
-	public int getRankID()
-	{
-		return BMCPlayer.rankID;
-	}
-	
-	public String getRankName()
-	{
-		return RankCommand.getRankName(rankID);
-	}
-	
-	public String getName()
-	{
-		return this.name;
-	}
-	
+
+	public BMCScoreBoard getScoreboard() {
+	    return this.rank;
+    }
+
+    public void msg(String message) {
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', (bmc.PREFIX + "&r" + message)));
+    }
+
+    public void noprefix(String message) { player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));}
+
+    public void broadcast(String message) {
+        Bukkit.broadcastMessage(message);
+    }
+
+    public String getName() {
+        return player.getName();
+    }
+
+    public UUID getUUID() { return player.getUniqueId(); }
+
+	public ItemStack getItemInMainHand() { return player.getInventory().getItemInMainHand(); }
+
+	public boolean hasPermission(String permission) { return player.hasPermission(permission); }
+
+	public void errmsg(String message) { player.sendMessage(ChatColor.translateAlternateColorCodes('&', (bmc.ERROR + message))); }
+
+	public boolean noperm() { errmsg("権限がありません。"); return true; }
+
 }

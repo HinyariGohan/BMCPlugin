@@ -2,6 +2,8 @@ package com.github.gotochan.command;
 
 import java.util.ArrayList;
 
+import com.github.gotochan.BMCPlayer;
+import com.github.gotochan.BMCPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -11,8 +13,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.github.gotochan.BMC;
-
 public class MenuCommand extends SubCommandAbst implements Listener
 {
 	
@@ -21,6 +21,13 @@ public class MenuCommand extends SubCommandAbst implements Listener
 	public ArrayList<ItemStack> ItemList = new ArrayList<ItemStack>();
 	public ArrayList<ItemStack> apanel = new ArrayList<ItemStack>();
 	
+	private BMCPlugin bmc;
+	
+	public MenuCommand(BMCPlugin bmc)
+	{
+		this.bmc = bmc;
+	}
+	
 	@Override
 	public String getCommandName()
 	{
@@ -28,22 +35,17 @@ public class MenuCommand extends SubCommandAbst implements Listener
 	}
 	
 	public static final Inventory menu =
-			Bukkit.createInventory(null, 27, "BMC Menu");
+			Bukkit.createInventory(null, 27, "BMCPlugin Menu");
 	public static final Inventory adminpanel =
 			Bukkit.createInventory(null, 27, "Admin Console");
-	
+
 	@Override
-	public boolean runCommand(CommandSender sender, String label, String[] args)
-	{
-		Player player = (Player) sender;
-		openInventoryMenu(sender);
-		player.sendMessage(BMC.prefix + "§6メニューを開きました。");
+	public boolean runCommand(BMCPlayer player, String label, String[] args) {
 		return false;
 	}
-	
-	public void openInventoryMenu(CommandSender sender)
+
+	private void openInventoryMenu(Player player)
 	{
-		Player player = (Player) sender;
 		ItemStack admin = new ItemStack(Material.LAVA_BUCKET);
 		ItemMeta adminmeta = admin.getItemMeta();
 		adminmeta.setDisplayName("§a管理ツール");

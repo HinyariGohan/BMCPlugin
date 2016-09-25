@@ -6,8 +6,15 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import com.github.gotochan.BMCPlugin;
+
 public class RunnerKit extends BMCKit
 {
+	public RunnerKit(BMCPlugin bmc)
+	{
+		super(bmc);
+	}
+	
 	private static final PotionEffect S_EFFECT = new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0);
 	
 	@Override
