@@ -17,6 +17,7 @@ public class BMCTimeManager extends BukkitRunnable {
     private HashMap<UUID, Integer> data = new HashMap<>();
     private final int KOME_VALUE;
     private final int KOME_MINUTES;
+    private final String FILE_NAME = "database.yml";
     private final BMCPlugin plugin;
     public ConfigAccessor configAccessor;
     private FileConfiguration config;
@@ -49,10 +50,12 @@ public class BMCTimeManager extends BukkitRunnable {
     }
 
     public void loadDatabase() {
-        configAccessor = new ConfigAccessor(plugin, "database.yml");
+
+        configAccessor = new ConfigAccessor(plugin, FILE_NAME, plugin);
         configAccessor.saveDefaultConfig();
         config = configAccessor.getConfig();
         data = (HashMap<UUID, Integer>) config.getMapList("kome_time");
+        Number
     }
 
     public void saveDatabase() {

@@ -71,6 +71,7 @@ public class BMCPlugin extends JavaPlugin implements Listener {
 
 	@Override
 	public void onEnable() {
+		instance = this;
 		this.getLogger().info("BMCプラグインを開始しています。");
 		init();
 	}
@@ -101,7 +102,6 @@ public class BMCPlugin extends JavaPlugin implements Listener {
 		this.saveDefaultConfig();
 		new SpecialArmor().runTaskTimer(this, 0L, 20L);
 		bmcTimeManager.runTaskTimer(this, 0L, 20L);
-		instance = this;
 	}
 
 	@Override

@@ -19,6 +19,7 @@ public class ConfigAccessor
 {
     private final String fileName;
     private final JavaPlugin plugin;
+    private final BMCPlugin bmcPlugin;
 
     private File configFile;
     private FileConfiguration fileConfiguration;
@@ -30,7 +31,7 @@ public class ConfigAccessor
      * @param plugin         プラグインクラス
      * @param fileName     　Configファイルネーム
      */
-    public ConfigAccessor(JavaPlugin plugin, String fileName)
+    public ConfigAccessor(JavaPlugin plugin, String fileName, BMCPlugin bmcPlugin)
     {
         if(plugin == null)
         {
@@ -44,6 +45,7 @@ public class ConfigAccessor
 
         this.plugin = plugin;
         this.fileName = fileName;
+        this.bmcPlugin = bmcPlugin;
         File dataFolder = plugin.getDataFolder();
 
         if(dataFolder == null)
@@ -90,7 +92,7 @@ public class ConfigAccessor
 
     public void saveDefaultConfig() {
         if (!configFile.exists()) {
-            copyRawFileFromJar(BMCPlugin.instance.getPluginJarFile(), configFile, fileName);
+            copyRawFileFromJar(bmcPlugin.getPluginJarFile(), configFile, fileName);
         }
     }
 
