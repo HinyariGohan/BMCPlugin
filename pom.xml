@@ -35,6 +35,13 @@
         <artifactId>worldguard</artifactId>
         <version>6.1.1-SNAPSHOT</version>
     </dependency>
+    <dependency>
+        <groupId>craftbukkit.jar</groupId>
+        <artifactId>craftbukkit</artifactId>
+        <version>1.10.2-R0.1-SNAPSHOT</version>
+        <systemPath>${project.basedir}/src/craftbukkit-1.10.2.jar</systemPath>
+        <scope>system</scope>
+    </dependency>
 </dependencies>
 	<artifactId>BMCPlugin</artifactId>
 	    <build>

@@ -1,5 +1,5 @@
 name: BMCPlugin
-main: com.github.gotochan.BMCPlugin
+main: BMCPlugin
 version: 1.0.0
 author: Hinyari_Gohan
 description: BMCPlugin
