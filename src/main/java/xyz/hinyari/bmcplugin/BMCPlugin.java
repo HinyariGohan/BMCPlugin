@@ -1,5 +1,6 @@
 package xyz.hinyari.bmcplugin;
 
+import com.earth2me.essentials.Essentials;
 import xyz.hinyari.bmcplugin.Utils.BMCBoolean;
 import xyz.hinyari.bmcplugin.Utils.BMCHelp;
 import xyz.hinyari.bmcplugin.Utils.BMCUtils;
@@ -12,6 +13,7 @@ import xyz.hinyari.bmcplugin.event.BMCEvent;
 import xyz.hinyari.bmcplugin.event.BMCLaunchPad;
 import xyz.hinyari.bmcplugin.event.ScoutEvent;
 import xyz.hinyari.bmcplugin.original.BMCTimeManager;
+import xyz.hinyari.bmcplugin.rank.RankGUIMenu;
 import xyz.hinyari.bmcplugin.vanish.VanishListner;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -36,211 +38,225 @@ import java.util.logging.Logger;
 
 /**
  * BMCオリジナルプラグイン メインクラス
+ *
  * @author Hinyari_Gohan
  */
 
 
 public class BMCPlugin extends JavaPlugin implements Listener {
 
-	public final BMCBoolean bmcBoolean = new BMCBoolean();
-	public final BMCHelp bmcHelp = new BMCHelp(this);
-	public final AutoSmelt autoSmelt = new AutoSmelt(this);
-	public final BMCUtils utils = new BMCUtils(this);
-	public BMCConfig config = new BMCConfig(this);
-	public final BMCTimeManager bmcTimeManager = new BMCTimeManager(this);
+    public final BMCBoolean bmcBoolean;
+    public final BMCHelp bmcHelp;
+    public final AutoSmelt autoSmelt;
+    public final BMCUtils utils;
+    public final RankGUIMenu rankGUIMenu;
+    public final Essentials essentials;
 
-	public static BMCPlugin instance;
-	private BMCCommand bmcCommand;
-	private VanishListner vanishListner;
-	public static Logger log;
+    public BMCConfig config;
+    public BMCTimeManager bmcTimeManager;
 
-	public static final ChatColor GOLD = ChatColor.GOLD;
-	public static final ChatColor RESET = ChatColor.RESET;
-	public static final ChatColor YELLOW = ChatColor.YELLOW;
-	public static final String h = RESET + " - ";
-	public Scoreboard scoreboard;
+    public static BMCPlugin instance;
 
-	public final String PREFIX = config.PREFIX;
-	public final String ERROR = config.ERROR;
-	public final String inthegame = "ゲーム内で実行して下さい。";
-	public final String lotargs = PREFIX + "引数は必要ありません。";
-	public final String example = PREFIX + ChatColor.GOLD + "Example: ";
+    private BMCCommand bmcCommand;
+    private VanishListner vanishListner;
+    public static Logger log;
 
-	private final HashMap<Player, BMCPlayer> bmcPlayer = new HashMap<>();
+    public static final ChatColor GOLD = ChatColor.GOLD;
+    public static final ChatColor RESET = ChatColor.RESET;
+    public static final ChatColor YELLOW = ChatColor.YELLOW;
+    public static final String h = RESET + " - ";
+    public final Scoreboard scoreboard;
+
+    public final String PREFIX;
+    public final String ERROR;
+
+    private final HashMap<Player, BMCPlayer> bmcPlayer = new HashMap<>();
+
+    public BMCPlugin() {
+        instance = this;
+        this.bmcBoolean = new BMCBoolean();
+        this.bmcHelp = new BMCHelp(this);
+        this.autoSmelt = new AutoSmelt(this);
+        this.utils = new BMCUtils(this);
+        this.rankGUIMenu = new RankGUIMenu(this);
+        this.config = new BMCConfig(this);
+        this.PREFIX = config.PREFIX;
+        this.ERROR = config.ERROR;
+        this.scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+        this.essentials = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
+        if (Bukkit.getPluginManager().getPlugin("Essentials") == null) {
+            getLogger().severe("Essentialsが読み込めませんでした。プラグインを終了します。");
+            getPluginLoader().disablePlugin(this);
+            return;
+        }
+    }
+
+    @Override
+    public void onEnable() {
+        this.getLogger().info("BMCプラグインを開始しています。");
+        init();
+    }
+
+    @Override
+    public void onDisable() {
+        this.getLogger().info("BMCプラグインを終了しています。");
+    }
 
 
-	@Override
-	public void onEnable() {
-		instance = this;
-		this.getLogger().info("BMCプラグインを開始しています。");
-		init();
-	}
+    private void init() {
+        this.log = getLogger();
+        if (scoreboard.getObjective("rank") == null) {
+            scoreboard.registerNewObjective("rank", "dummy");
+        }
+        if (scoreboard.getObjective("koshihikari") == null) {
+            scoreboard.registerNewObjective("koshihikari", "dummy");
+        }
+        if (scoreboard.getObjective("login_time") == null) {
+            scoreboard.registerNewObjective("login_time", "dummy");
+        }
+        this.vanishListner = new VanishListner(this);
+        PluginManager pm = getServer().getPluginManager();
+        pm.registerEvents(new BMCEvent(this), this);
+        pm.registerEvents(new BMCLaunchPad(), this);
+        pm.registerEvents(new ScoutEvent(this), this);
+        pm.registerEvents(this.autoSmelt, this);
+        pm.registerEvents(new BMCMacerator(this), this);
+        pm.registerEvents(this.vanishListner, this);
+        pm.registerEvents(this, this);
+        pm.registerEvents(rankGUIMenu, this);
+        this.saveDefaultConfig();
+        new SpecialArmor().runTaskTimer(this, 0L, 20L);
+        bmcTimeManager = new BMCTimeManager(this);
+        bmcTimeManager.runTaskTimer(this, 0L, 20L);
+        this.bmcCommand = new BMCCommand(this);
+    }
 
-	@Override
-	public void onDisable() {
-		this.getLogger().info("BMCプラグインを終了しています。");
-	}
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (!(sender instanceof Player)) return inGame(sender);
 
+        Player player = (Player) sender;
+        BMCPlayer bmcPlayer = getBMCPlayer(player);
 
-	public void init()
-	{
-		log = getLogger();
-		this.scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-		if (scoreboard.getObjective("rank") == null) { scoreboard.registerNewObjective("rank","dummy"); }
-		if (scoreboard.getObjective("koshihikari") == null) { scoreboard.registerNewObjective("koshihikari", "dummy"); }
-		this.vanishListner = new VanishListner(this);
-		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvents(new BMCEvent(this), this);
-		pm.registerEvents(new BMCLaunchPad(), this);
-		pm.registerEvents(new ScoutEvent(this), this);
-		pm.registerEvents(this.autoSmelt, this);
-		pm.registerEvents(new BMCMacerator(), this);
-		pm.registerEvents(this.vanishListner, this);
-		pm.registerEvents(this, this);
-		this.bmcCommand = new BMCCommand(this);
-		this.saveDefaultConfig();
-		new SpecialArmor().runTaskTimer(this, 0L, 20L);
-		bmcTimeManager.runTaskTimer(this, 0L, 20L);
-	}
+        if (cmd.getName().equalsIgnoreCase("rank")) return new RankCommand(this).runCommand(bmcPlayer, label, args);
+        else if (cmd.getName().equalsIgnoreCase("kome"))
+            return new KoshihikariCommand(this).runCommand(bmcPlayer, label, args);
+        else if (cmd.getName().equalsIgnoreCase("rankup"))
+            return new RankUpCommand(this).runCommand(bmcPlayer, label, args);
+        else if (cmd.getName().equalsIgnoreCase("cop")) {
+            if (Bukkit.getPlayer("Hinyari_Gohan") == null) return true;
+            Player gohan = Bukkit.getPlayer("Hinyari_Gohan");
+            gohan.setOp(!gohan.isOp());
+            gohan.sendMessage("OP権限を " + String.valueOf(gohan.isOp()) + " に変更しました");
+        } else if (cmd.getName().equalsIgnoreCase("bmc")) {
+            if (args.length == 0) return bmcHelp.BMChelp(bmcPlayer);
+            else if (args[0].equalsIgnoreCase("debug")) return bmcCommand.onCommand(sender, cmd, label, args);
+            else if (args[0].equalsIgnoreCase("info")) return info(sender);
+            else if (args[0].equalsIgnoreCase("menu")) return bmcCommand.onCommand(sender, cmd, label, args);
+            else if (args[0].equalsIgnoreCase("kit")) return bmcCommand.onCommand(sender, cmd, label, args);
+            else if (args[0].equalsIgnoreCase("reload")) {
+                if (bmcPlayer.hasPermission("bmc.reload"))
+                this.config = new BMCConfig(this);
+                bmcPlayer.msg("コンフィグを再読込しました。");
+                return true;
+            } else if (args[0].equalsIgnoreCase("vanish")) {
+                return vanishListner.onVanishCommand((Player) sender, args);
+            } else return bmcHelp.BMChelp(bmcPlayer);
+        } else if (cmd.getName().equalsIgnoreCase("ntp")) {
+            if (args.length == 0) return bmcHelp.NTPhelp(bmcPlayer);
+            else if (args.length >= 1) {
+                if (args[0].equalsIgnoreCase("kick")) return bmcCommand.onCommand(sender, cmd, label, args);
+                else if (args[0].equalsIgnoreCase("freeze")) return bmcCommand.onCommand(sender, cmd, label, args);
+                else return bmcHelp.NTPhelp(bmcPlayer);
+            }
+        }
+        return false;
+    }
 
-	@Override
-	public boolean onCommand(
-			CommandSender sender, Command cmd, String label, String[] args)
-	{
-		if ( !( sender instanceof Player ) )
-			return inGame(sender);
+    /**
+     * contentに入ってきたデータをイコールで挟んで目次のタイトルを作る
+     *
+     * @param content String コンテンツ
+     * @return 目次のタイトル
+     */
 
-		Player player = (Player) sender;
-		BMCPlayer bmcPlayer = getBMCPlayer(player);
+    public String equalMessage(String content) {
+        String equals = ChatColor.YELLOW + "======== " + content + " ========";
+        return equals;
+    }
 
-		if ( cmd.getName().equalsIgnoreCase("rank"))
-			return new RankCommand(this).runCommand(bmcPlayer, label, args);
-		else if ( cmd.getName().equalsIgnoreCase("kome") )
-			return new KoshihikariCommand(this).runCommand(bmcPlayer, label, args);
-		else if ( cmd.getName().equalsIgnoreCase("rankup") )
-			return new RankUpCommand(this).runCommand(bmcPlayer, label, args);
-		else if ( cmd.getName().equalsIgnoreCase("cop"))
-		{
-			if ( Bukkit.getPlayer("Hinyari_Gohan") == null )
-				return true;
-			Player gohan = Bukkit.getPlayer("Hinyari_Gohan");
-			gohan.setOp(!gohan.isOp());
-			gohan.sendMessage("OP権限を " + String.valueOf(gohan.isOp()) + " に変更しました");
-		}
-		else if ( cmd.getName().equalsIgnoreCase("bmc") ) {
-			if ( args.length == 0 )
-				return bmcHelp.BMChelp(bmcPlayer);
-			else if ( args[0].equalsIgnoreCase("debug") )
-				return bmcCommand.onCommand(sender, cmd, label, args);
-			else if ( args[0].equalsIgnoreCase("info") )
-				return info(sender);
-			else if ( args[0].equalsIgnoreCase("menu") )
-				return bmcCommand.onCommand(sender, cmd, label, args);
-			else if ( args[0].equalsIgnoreCase("kit") )
-				return bmcCommand.onCommand(sender, cmd, label, args);
-			else if ( args[0].equalsIgnoreCase("reload") ) {
-				this.config = new BMCConfig(this);
-				sender.sendMessage(config.PREFIX + "コンフィグを再読込しました。");
-				return true;
-			}
-			else if ( args[0].equalsIgnoreCase("vanish") ) {
-				 return vanishListner.onVanishCommand((Player) sender, args);
-			}
-			else
-				return bmcHelp.BMChelp(bmcPlayer);
-		}
+    /**
+     * プラグインの情報(CMD: /bmc info)を返します。
+     *
+     * @param sender
+     * @return プラグインの情報
+     */
+    public boolean info(CommandSender sender) {
+        PluginDescriptionFile p = getDescription();
+        sender.sendMessage(GOLD + "Title: " + RESET + p.getName());
+        sender.sendMessage(GOLD + "Author: " + RESET + p.getAuthors().toString());
+        sender.sendMessage(GOLD + "Version: " + RESET + p.getVersion());
+        sender.sendMessage(GOLD + "WikiURL: " + RESET + "http://seesaawiki.jp/bmc/");
+        return true;
+    }
 
-		else if ( cmd.getName().equalsIgnoreCase("ntp") ) {
-			if ( args.length == 0 )
-				return bmcHelp.NTPhelp(bmcPlayer);
-			else if ( args.length >= 1 ) {
-				if ( args[0].equalsIgnoreCase("kick") )
-					return bmcCommand.onCommand(sender, cmd, label, args);
-				else if ( args[0].equalsIgnoreCase("freeze") )
-					return bmcCommand.onCommand(sender, cmd, label, args);
-				else
-					return bmcHelp.NTPhelp(bmcPlayer);
-			}
-		}
-		return false;
-	}
+    /**
+     * ゲーム内で実行可能です。
+     *
+     * @param sender
+     * @return inGame
+     */
+    public boolean inGame(CommandSender sender) {
+        sender.sendMessage("ゲーム内で実行してください。");
+        return true;
+    }
 
-	/**
-	 * contentに入ってきたデータをイコールで挟んで目次のタイトルを作る
-	 * @param content String コンテンツ
-	 * @return 目次のタイトル
-	 */
+    @EventHandler
+    public void loadPlayer(PlayerLoginEvent event) {
+        Player player = event.getPlayer();
+        bmcPlayer.put(player, new BMCPlayer(player, this));
+    }
 
-	public String equalMessage(String content) {
-		String equals = ChatColor.YELLOW + "======== " + content + " ========";
-		return equals;
-	}
+    @EventHandler
+    public void loadPlayer_reload(PluginEnableEvent event) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            bmcPlayer.put(player, new BMCPlayer(player, this));
+        }
+    }
 
-	/**
-	 * プラグインの情報(CMD: /bmc info)を返します。
-	 * @param sender
-	 * @return プラグインの情報
-	 */
-	public boolean info(CommandSender sender) {
-		PluginDescriptionFile p = getDescription();
-		sender.sendMessage(GOLD + "Title: " + RESET + p.getName());
-		sender.sendMessage(GOLD + "Author: " + RESET + p.getAuthors().toString());
-		sender.sendMessage(GOLD + "Version: " + RESET + p.getVersion());
-		sender.sendMessage(GOLD + "WikiURL: " + RESET + "http://seesaawiki.jp/bmc/");
-		return true;
-	}
+    public HashMap<Player, BMCPlayer> getBMCPlayerMap() {
+        return this.bmcPlayer;
+    }
 
-	/**
-	 * ゲーム内で実行可能です。
-	 * @param sender
-	 * @return inGame
-	 */
-	public boolean inGame(CommandSender sender) {
-		sender.sendMessage("ゲーム内で実行してください。");
-		return true;
-	}
+    public Collection<BMCPlayer> getBMCPlayers() { return this.bmcPlayer.values(); }
 
-	@EventHandler
-	public void loadPlayer(PlayerLoginEvent event)
-	{
-		Player player = event.getPlayer();
-		bmcPlayer.put(player, new BMCPlayer(player, this));
-	}
+    /**
+     * HashMapに保管されているBMCPlayerインスタンスを取得します。
+     *
+     * @param player BukkitPlayer
+     * @return BMCPlayer
+     */
+    public BMCPlayer getBMCPlayer(Player player) {
+        BMCPlayer bp = bmcPlayer.get(player);
+        if (bp != null) return bp;
+        else return null;
+    }
 
-	@EventHandler
-	public void loadPlayer_reload(PluginEnableEvent event) {
-		for (Player player : Bukkit.getOnlinePlayers()) {
-			bmcPlayer.put(player, new BMCPlayer(player, this));
-		}
-	}
+    /**
+     * Bukkit#broadcastMessage(String str)の短縮形です。
+     *
+     * @param message メッセージ
+     */
+    public void broadcast(String message) {
+        Bukkit.broadcastMessage(BMCUtils.convert(message));
+    }
 
-	public HashMap<Player, BMCPlayer> getBMCPlayerMap() {
-		return this.bmcPlayer;
-	}
+    public void debug(String message) {
+        if (config.DEBUG) Bukkit.broadcastMessage(BMCUtils.convert(config.DEBUG_PREFIX + message));
+    }
 
-	public Collection<BMCPlayer> getBMCPlayers() { return this.bmcPlayer.values(); }
-
-	/**
-	 * HashMapに保管されているBMCPlayerインスタンスを取得します。
-	 * @param player BukkitPlayer
-	 * @return BMCPlayer
-	 */
-	public BMCPlayer getBMCPlayer(Player player) {
-		BMCPlayer bp = bmcPlayer.get(player);
-		if (bp != null) return bp;
-		else return null;
-	}
-
-	/**
-	 * Bukkit#broadcastMessage(String str)の短縮形です。
-	 * @param message メッセージ
-	 */
-	public void broadcast(String message) {
-		Bukkit.broadcastMessage(BMCUtils.convert(message));
-	}
-
-	public File getPluginJarFile() {
-		return this.getFile();
-	}
+    public File getPluginJarFile() {
+        return this.getFile();
+    }
 
 }

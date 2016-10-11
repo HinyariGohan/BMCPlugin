@@ -13,12 +13,12 @@ public class BMCPlayer
 {
 	private final BMCPlugin bmc;
 	private final Player player;
-	private final BMCScoreBoard rank;
+	private final BMCScoreBoard bmcScoreBoard;
 
 	public BMCPlayer(Player player, BMCPlugin bmcPlugin) {
 		this.player = player;
 		this.bmc = bmcPlugin;
-		this.rank = new BMCScoreBoard(this);
+		this.bmcScoreBoard = new BMCScoreBoard(this);
 	}
 
 	private void init() {
@@ -33,7 +33,7 @@ public class BMCPlayer
 	}
 
 	public BMCScoreBoard getScoreboard() {
-	    return this.rank;
+	    return this.bmcScoreBoard;
     }
 
     public void msg(String message) { player.sendMessage(BMCUtils.convert((bmc.PREFIX + message))); }
@@ -61,6 +61,8 @@ public class BMCPlayer
     public void barmsg(String message) { new ActionBar(BMCUtils.convert(bmc.PREFIX + message)).sendToPlayer(player);}
 
 	public boolean noperm() { errmsg("権限がありません。"); return true; }
+
+	public void openRankmenu() { player.openInventory(bmc.rankGUIMenu.getMainMenu(this)); }
 
 	/**
 	 * サウンドを再生します。

@@ -1,7 +1,12 @@
 package xyz.hinyari.bmcplugin.original;
 
+import com.earth2me.essentials.Essentials;
+import com.earth2me.essentials.IUser;
+import com.earth2me.essentials.User;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
 import xyz.hinyari.bmcplugin.BMCPlayer;
-import xyz.hinyari.bmcplugin.Utils.ConfigAccessor;
 import xyz.hinyari.bmcplugin.BMCPlugin;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -14,60 +19,39 @@ import java.util.*;
  */
 public class BMCTimeManager extends BukkitRunnable {
 
-    private List<Map<String, Integer>> data_list = new ArrayList<>();
-    private Map<String, Object> data = new HashMap<>();
     private final int KOME_VALUE;
     private final int KOME_MINUTES;
-    private final String FILE_NAME = "database.yml";
     private final BMCPlugin plugin;
-    public ConfigAccessor configAccessor;
+    private final Scoreboard scoreboard;
     private FileConfiguration config;
+    private Objective login_time;
 
     public BMCTimeManager(BMCPlugin plugin) {
         this.plugin = plugin;
         this.KOME_VALUE = plugin.config.KOME_GET_VALUE;
         this.KOME_MINUTES = plugin.config.KOME_GET_MINUTES;
-        loadDatabase();
+        this.scoreboard = plugin.scoreboard;
+        this.login_time = scoreboard.getObjective("login_time");
     }
 
     @Override
     public void run() {
         for (BMCPlayer player : plugin.getBMCPlayers()) {
-            String uuid = player.getUUID().toString();
-            if (data.get(uuid) == null) { data.put(uuid,1); return;}
-            else {
-                int value = data.get(uuid);
+            Score logintime_score = login_time.getScore(player.getName());
+            int value = logintime_score.getScore();
                 if (value == (KOME_MINUTES * 60)) {
-                    data.put(uuid, 0);
+                    logintime_score.setScore(0);
                     player.getScoreboard().addKomePoint();
                     player.msg("コシヒカリポイントを追加しました。");
                     player.msg("あなたのコシヒカリ交換可能ポイントは " +
                     player.getScoreboard().getKomePoint() + " 枚になりました。");
                     return;
                 }
-                data.put(uuid, value + 1);
+                User user = plugin.essentials.getUser(player.getPlayer());
+                if (!user.isAfk()) {
+                    plugin.debug(user.getName() + " : " + String.valueOf(user.isAfk()));
+                    logintime_score.setScore(value++);
+                }
             }
         }
     }
-
-    public void loadDatabase() {
-        configAccessor = new ConfigAccessor(plugin, FILE_NAME, plugin);
-        configAccessor.saveDefaultConfig();
-        config = configAccessor.getConfig();
-        data_list = null;
-        Material.valueOf(config.getString("").toUpperCase());
-
-    }
-
-    public void getDatafromUUID(UUID uuid) {
-        if (config.getConfigurationSection("kome_list").getInt(uuid.toString()) == null)
-    }
-
-    public void saveDatabase() {
-        config.set("kome_time", data);
-        configAccessor.saveConfig();
-    }
-
-
-
-}

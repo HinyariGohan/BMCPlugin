@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
+import xyz.hinyari.bmcplugin.rank.Rank;
 
 /**
  * Created by Shun on 2016/09/03.

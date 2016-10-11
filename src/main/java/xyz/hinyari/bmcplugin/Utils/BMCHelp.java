@@ -28,6 +28,7 @@ public class BMCHelp {
 		String cmdname = g + "/rank ";
 		player.msg(bmc.equalMessage(content));
 		player.msg(cmdname + "stats <プレイヤー名>" + h + "ランクの状況を表示します。");
+		player.msg(cmdname + "menu" + h + "ランクのメニューを表示します。");
 		return false;
 	}
 
@@ -89,7 +90,8 @@ public class BMCHelp {
 		player.msg(g + "/bmc kit" + h + "キットコマンドのヘルプを参照します。");
 		player.msg(g + "/bmc info" + h + "プラグインの情報を参照します。");
 		player.msg(g + "/bmc menu" + h + "メニューを表示します。");
-		player.msg(g + "/bmc debug" + h + "デバッグ操作を行います。&4(管理者専用)&r");
+		player.msg(g + "/bmc debug" + h + "デバッグ操作を行います。&4(管理者)&r");
+		player.msg(g + "/bmc reload" + h + "コンフィグをリロードします。&4(管理者)&r");
 		return false;
 	}
 

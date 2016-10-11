@@ -1,7 +1,8 @@
 package xyz.hinyari.bmcplugin.command;
 
 import xyz.hinyari.bmcplugin.BMCPlugin;
-import xyz.hinyari.bmcplugin.Rank;
+import xyz.hinyari.bmcplugin.BMCScoreBoard;
+import xyz.hinyari.bmcplugin.rank.Rank;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -32,9 +33,10 @@ public class RankUpCommand
 	{
 		
 		//Player player = bmcPlayer.getPlayer();
+		BMCScoreBoard player_board = bmcPlayer.getScoreboard();
 		ItemStack item = bmcPlayer.getItemInMainHand();
-		Rank rank = bmcPlayer.getScoreboard().getRank();
-		String nowRankName = bmcPlayer.getScoreboard().getRank().getName(bmcPlayer.getScoreboard().getRank());
+		Rank rank = player_board.getRank();
+		String nowRankName = player_board.getRank().getName();
 		String name = bmcPlayer.getName();
 		
 		if ( args.length == 0 ) {
@@ -55,9 +57,9 @@ public class RankUpCommand
 							bmcPlayer.msg("&a* " + Rank.getLabelOfName(rank.getInt() + 1) + " ランクに昇格しました！" );
 							plugin.broadcast("【ランクアップ】 " + bmcPlayer.getName() + "さんが " + Rank.getLabelOfName(rank.getInt() + 1)
 									+ "ランクになりました！おめでとうございます！");
-							bmcPlayer.getScoreboard().rankUP();
+							player_board.rankUP();
 						} else {
-							bmcPlayer.msg(plugin.ERROR + "クリアランス違反です。");
+							bmcPlayer.errmsg(plugin.ERROR + "クリアランス違反です。");
 						}
 					}
 				}
@@ -68,8 +70,8 @@ public class RankUpCommand
 			}
 			else
 			{
-				bmcPlayer.msg("手にアイテムを持っていません！");
-				bmcPlayer.msg("ランクアップの方法を確認するには &6/rankup help&r コマンドを使用します。");
+				bmcPlayer.errmsg("手にアイテムを持っていません！");
+				bmcPlayer.errmsg("ランクアップの方法を確認するには &6/rankup help&r コマンドを使用します。");
 			}
 		}
 		else if ( args.length == 1 && args[0].equalsIgnoreCase("help") )

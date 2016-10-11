@@ -24,7 +24,7 @@ public class BMCBoolean {
 		return false;
 	}
 
-	public boolean isTool(Material item) {
+	public boolean isApplyTool(Material item) {
 		if ( item == Material.WOOD_PICKAXE ||
 				item == Material.WOOD_SPADE ||
 				item == Material.WOOD_AXE ||
@@ -44,7 +44,7 @@ public class BMCBoolean {
 		return false;
 	}
 
-	public boolean isBlock(Material block) {
+	public boolean isApplyBlock(Material block) {
 		if ( block == Material.IRON_ORE ||
 				block == Material.GOLD_ORE ||
 				block == Material.SAND ||
@@ -57,4 +57,5 @@ public class BMCBoolean {
 			return true;
 		return false;
 	}
+
 }

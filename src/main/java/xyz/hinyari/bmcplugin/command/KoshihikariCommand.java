@@ -23,21 +23,21 @@ public class KoshihikariCommand {
     public boolean runCommand(BMCPlayer bmcPlayer, String label, String[] args) {
         if (args.length == 0 || args.length >= 3) {
             return bmcHelp.Komehelp(bmcPlayer);
-        } else {
-            if (args[0].equalsIgnoreCase("point")) {
-                BMCPlayer target = bmcPlayer;
-                if (args.length == 2) {
-                    if (getPlayer(args[1]) == null) {
-                        bmcPlayer.errmsg("そのプレイヤーはオンラインではありません。");
-                        return true;
-                    } else {
-                        target = plugin.getBMCPlayer(getPlayer(args[1]));
-                    }
-                }
-                bmcPlayer.msg(target.getName() + "さんのコシヒカリ交換可能ポイントは &6" + target.getScoreboard().getKomePoint() + "ポイント&r です。");
-            } else return bmcHelp.Komehelp(bmcPlayer);
         }
-        return false;
+        if (args[0].equalsIgnoreCase("point")) {
+            BMCPlayer target = bmcPlayer;
+            if (args.length == 2) {
+                if (getPlayer(args[1]) == null) {
+                    bmcPlayer.errmsg("そのプレイヤーはオンラインではありません。");
+                    return true;
+                } else {
+                    target = plugin.getBMCPlayer(getPlayer(args[1]));
+                }
+            }
+            bmcPlayer.msg(target.getName() + "さんのコシヒカリ交換可能ポイントは &6" + target.getScoreboard().getKomePoint() + "ポイント&r です。");
+            return true;
+        }
+        return bmcHelp.Komehelp(bmcPlayer);
     }
 
     private Player getPlayer(String name) {

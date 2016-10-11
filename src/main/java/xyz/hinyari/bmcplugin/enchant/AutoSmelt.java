@@ -42,8 +42,8 @@ public class AutoSmelt implements Listener {
     };
 
     public final Material[] AUTOSMELT_BLOCKS = new Material[]{
-            IRON_ORE, GOLD_ORE, SAND, COBBLESTONE, NETHERRACK, CACTUS, LOG, LOG_2,
-            };
+            IRON_ORE, GOLD_ORE, SAND, COBBLESTONE, NETHERRACK, CACTUS, LOG, LOG_2
+    };
 
     @SuppressWarnings("deprecation")
     @EventHandler
@@ -54,10 +54,10 @@ public class AutoSmelt implements Listener {
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item == null) return;
         ItemMeta meta = item.getItemMeta();
-        if (!(bmcBoolean.isBlock(block.getType()))) return; //ブロックリストに当てはまらない
+        if (!(bmcBoolean.isApplyBlock(block.getType()))) return; //ブロックリストに当てはまらない
         if (!(item.hasItemMeta())) return; //アイテムメタが無い
         if (!(meta.hasLore())) return; // loreがない
-        if (!(bmcBoolean.isTool(item.getType()))) return; //アイテムリストに当てはまらない
+        if (!(bmcBoolean.isApplyTool(item.getType()))) return; //アイテムリストに当てはまらない
         if (player.getGameMode() != GameMode.SURVIVAL) return;
         if (player.getInventory().firstEmpty() == -1) {
             bmcPlayer.errmsg("インベントリに空きが無いためAutoSmeltは実行されません!");
@@ -119,7 +119,7 @@ public class AutoSmelt implements Listener {
         ItemMeta meta = item.getItemMeta();
         Material items = item.getType();
         Map<Enchantment, Integer> ench = event.getEnchantsToAdd();
-        if (bmcBoolean.isTool(items)) {
+        if (bmcBoolean.isApplyTool(items)) {
             if (ench != Enchantment.SILK_TOUCH) {
                 double random = Math.random();
                 if (random < 0.6) return;

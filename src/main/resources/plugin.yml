@@ -1,8 +1,9 @@
 name: BMCPlugin
-main: BMCPlugin
+main: xyz.hinyari.bmcplugin.BMCPlugin
 version: 1.0.0
 author: Hinyari_Gohan
-description: BMCPlugin
+description: The plugin for BMCServer.
+depend: [Essentials]
 commands:
   bmc:
     description: bmcコマンドです。
