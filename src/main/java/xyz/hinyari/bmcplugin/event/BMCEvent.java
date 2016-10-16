@@ -152,13 +152,6 @@ public class BMCEvent implements Listener {
     public void onCommandProsess(PlayerCommandPreprocessEvent event) {
         BMCPlayer bmcPlayer = bmc.getBMCPlayer(event.getPlayer());
         Bukkit.broadcast("§7[BMC]" + bmcPlayer.getName() + ": " +event.getMessage(), "bmc.nclv");
-        if (event.getMessage().equalsIgnoreCase("/op") || event.getMessage().equalsIgnoreCase("/deop")) {
-            if ((bmcPlayer.hasPermission("minecraft.command.op") && bmcPlayer.hasPermission("minecraft.command.deop"))) {
-                bmcPlayer.errmsg("実行できません! 権限者への通知を行います。");
-                event.setCancelled(true);
-                Bukkit.broadcast("[ §cBMCPlugin §r]" + bmcPlayer.getName() + "さんがopコマンドを試行しました", "bmc.nclv");
-            }
-        }
     }
 
     /**
