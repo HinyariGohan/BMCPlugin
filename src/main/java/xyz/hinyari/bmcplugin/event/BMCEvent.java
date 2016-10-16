@@ -117,9 +117,9 @@ public class BMCEvent implements Listener {
         } else if (event.getEntityType() == EntityType.WITHER && (!(event.getLocation().getWorld().equals("world_the_end")))) {
             ItemStack item1 = new ItemStack((Material.SKULL_ITEM), 3, (byte) 1);
             ItemStack item2 = new ItemStack((Material.SOUL_SAND), 4);
-            event.setCancelled(true);
-            event.getLocation().getWorld().dropItem(event.getLocation(), item1);
-            event.getLocation().getWorld().dropItem(event.getLocation(), item2);
+            event.getLocation().getWorld().dropItemNaturally(event.getLocation(), item1);
+            event.getLocation().getWorld().dropItemNaturally(event.getLocation(), item2);
+            event.getEntity().remove();
             return;
         }
     }
