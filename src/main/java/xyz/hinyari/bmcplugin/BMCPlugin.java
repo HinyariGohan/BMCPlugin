@@ -1,9 +1,10 @@
 package xyz.hinyari.bmcplugin;
 
 import com.earth2me.essentials.Essentials;
-import xyz.hinyari.bmcplugin.Utils.BMCBoolean;
-import xyz.hinyari.bmcplugin.Utils.BMCHelp;
-import xyz.hinyari.bmcplugin.Utils.BMCUtils;
+import xyz.hinyari.bmcplugin.original.BMCAnnouncement;
+import xyz.hinyari.bmcplugin.utils.BMCBoolean;
+import xyz.hinyari.bmcplugin.utils.BMCHelp;
+import xyz.hinyari.bmcplugin.utils.BMCUtils;
 import xyz.hinyari.bmcplugin.command.KoshihikariCommand;
 import xyz.hinyari.bmcplugin.command.RankCommand;
 import xyz.hinyari.bmcplugin.command.RankUpCommand;
@@ -34,6 +35,7 @@ import xyz.hinyari.bmcplugin.original.BMCMacerator;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -58,6 +60,7 @@ public class BMCPlugin extends JavaPlugin implements Listener {
     public static BMCPlugin instance;
 
     private BMCCommand bmcCommand;
+    private RankCommand rankCommand;
     private VanishListner vanishListner;
     public static Logger log;
 
@@ -67,21 +70,16 @@ public class BMCPlugin extends JavaPlugin implements Listener {
     public static final String h = RESET + " - ";
     public final Scoreboard scoreboard;
 
-    public final String PREFIX;
-    public final String ERROR;
-
     private final HashMap<Player, BMCPlayer> bmcPlayer = new HashMap<>();
 
     public BMCPlugin() {
         instance = this;
-        this.bmcBoolean = new BMCBoolean();
+        this.config = new BMCConfig(this);
+        this.bmcBoolean = new BMCBoolean(this);
         this.bmcHelp = new BMCHelp(this);
         this.autoSmelt = new AutoSmelt(this);
         this.utils = new BMCUtils(this);
         this.rankGUIMenu = new RankGUIMenu(this);
-        this.config = new BMCConfig(this);
-        this.PREFIX = config.PREFIX;
-        this.ERROR = config.ERROR;
         this.scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
         this.essentials = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
         if (Bukkit.getPluginManager().getPlugin("Essentials") == null) {
@@ -124,21 +122,25 @@ public class BMCPlugin extends JavaPlugin implements Listener {
         pm.registerEvents(this.vanishListner, this);
         pm.registerEvents(this, this);
         pm.registerEvents(rankGUIMenu, this);
-        this.saveDefaultConfig();
         new SpecialArmor().runTaskTimer(this, 0L, 20L);
         bmcTimeManager = new BMCTimeManager(this);
         bmcTimeManager.runTaskTimer(this, 0L, 20L);
+        new BMCAnnouncement(this).runTaskTimer(this, 0L, (config.getAnnouncementInterval()*20));
         this.bmcCommand = new BMCCommand(this);
+        this.rankCommand = new RankCommand(this);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!(sender instanceof Player)) return inGame(sender);
+        if (!(sender instanceof Player)) {
+            sender.sendMessage("ゲーム内で実行してください。");
+            return true;
+        }
 
         Player player = (Player) sender;
         BMCPlayer bmcPlayer = getBMCPlayer(player);
 
-        if (cmd.getName().equalsIgnoreCase("rank")) return new RankCommand(this).runCommand(bmcPlayer, label, args);
+        if (cmd.getName().equalsIgnoreCase("rank")) return rankCommand.runCommand(bmcPlayer, label, args);
         else if (cmd.getName().equalsIgnoreCase("kome"))
             return new KoshihikariCommand(this).runCommand(bmcPlayer, label, args);
         else if (cmd.getName().equalsIgnoreCase("rankup"))
@@ -155,10 +157,9 @@ public class BMCPlugin extends JavaPlugin implements Listener {
             else if (args[0].equalsIgnoreCase("menu")) return bmcCommand.onCommand(sender, cmd, label, args);
             else if (args[0].equalsIgnoreCase("kit")) return bmcCommand.onCommand(sender, cmd, label, args);
             else if (args[0].equalsIgnoreCase("reload")) {
-                if (bmcPlayer.hasPermission("bmc.reload"))
-                this.config = new BMCConfig(this);
-                bmcPlayer.msg("コンフィグを再読込しました。");
-                return true;
+                if (bmcPlayer.hasPermission("bmc.reload")) {
+                    return config.reloadConfig();
+                }
             } else if (args[0].equalsIgnoreCase("vanish")) {
                 return vanishListner.onVanishCommand((Player) sender, args);
             } else return bmcHelp.BMChelp(bmcPlayer);
@@ -173,6 +174,17 @@ public class BMCPlugin extends JavaPlugin implements Listener {
         return false;
     }
 
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        List<String> completeList = null;
+        if (!(sender instanceof Player)) super.onTabComplete(sender, command, alias, args);
+        if (command.getName().equalsIgnoreCase("rank")) {
+            completeList = rankCommand.onTabComplete(sender, command, alias, args);
+        }
+        if (completeList != null) { return completeList; }
+        return super.onTabComplete(sender, command, alias, args);
+    }
+
     /**
      * contentに入ってきたデータをイコールで挟んで目次のタイトルを作る
      *
@@ -181,7 +193,7 @@ public class BMCPlugin extends JavaPlugin implements Listener {
      */
 
     public String equalMessage(String content) {
-        String equals = ChatColor.YELLOW + "======== " + content + " ========";
+        String equals = ChatColor.YELLOW + "====== " + content + " ======";
         return equals;
     }
 
@@ -200,16 +212,6 @@ public class BMCPlugin extends JavaPlugin implements Listener {
         return true;
     }
 
-    /**
-     * ゲーム内で実行可能です。
-     *
-     * @param sender
-     * @return inGame
-     */
-    public boolean inGame(CommandSender sender) {
-        sender.sendMessage("ゲーム内で実行してください。");
-        return true;
-    }
 
     @EventHandler
     public void loadPlayer(PlayerLoginEvent event) {
@@ -252,8 +254,10 @@ public class BMCPlugin extends JavaPlugin implements Listener {
     }
 
     public void debug(String message) {
-        if (config.DEBUG) Bukkit.broadcastMessage(BMCUtils.convert(config.DEBUG_PREFIX + message));
+        if (config.getDebug()) Bukkit.broadcastMessage(BMCUtils.convert(config.getDebugPrefix() + message));
     }
+
+    public void sendPermMessage(String message) { Bukkit.broadcast(message, "bmc.permmsg");}
 
     public File getPluginJarFile() {
         return this.getFile();

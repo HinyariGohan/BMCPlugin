@@ -1,4 +1,4 @@
-package xyz.hinyari.bmcplugin.Utils;
+package xyz.hinyari.bmcplugin.utils;
 
 import net.minecraft.server.v1_10_R1.IChatBaseComponent.ChatSerializer;
 import net.minecraft.server.v1_10_R1.PacketPlayOutChat;

@@ -1,4 +1,4 @@
-package xyz.hinyari.bmcplugin.Utils;
+package xyz.hinyari.bmcplugin.utils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemFlag;
@@ -9,9 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class BMCUtils {
     /*
@@ -23,11 +21,11 @@ public class BMCUtils {
 
     public BMCUtils(BMCPlugin bmc) {
         this.bmc = bmc;
-        this.koshihikari = createSpecialItem(new ItemStack(Material.MUSHROOM_SOUP), "&6コシヒカリ", new String[]{convert("&a***中間素材***")}, Enchantment.DURABILITY, 1, ItemFlag.HIDE_ENCHANTS);
-        this.rankitem = createSpecialItem(new ItemStack(Material.NETHER_BRICK_ITEM), "&aBMCランクメニュー", new String[]{convert("&6右クリックで使用")}, Enchantment.DURABILITY, 1, ItemFlag.HIDE_ENCHANTS);
+        this.koshihikari = new SpecialItem(new ItemStack(Material.MUSHROOM_SOUP), "&6コシヒカリ", new String[]{convert("&a***中間素材***")}, Enchantment.DURABILITY, 1, ItemFlag.HIDE_ENCHANTS).getItem();
+        this.rankitem = new SpecialItem(new ItemStack(Material.NETHER_BRICK_ITEM), "&aBMCランクメニュー", new String[]{convert("&6右クリックで使用")}, Enchantment.DURABILITY, 1, ItemFlag.HIDE_ENCHANTS).getItem();
     }
 
-    /**
+    /*
      * 特殊アイテムを作成するメソッドです。
      *
      * @param item     ItemStack	書き換えるアイテム
@@ -38,6 +36,7 @@ public class BMCUtils {
      * @param itemFlag ItemFlag	アイテムフラグ、特殊設定
      * @return ItemStack            特殊効果が付与されたアイテム
      */
+    /*
     public ItemStack createSpecialItem(@Nonnull ItemStack item, String name, String[] lore, Enchantment ench, int enchlvl, ItemFlag... itemFlag) {
         if (item == null) return null;
         ItemStack apply = item.clone();
@@ -53,6 +52,8 @@ public class BMCUtils {
         if (ench != null & enchlvl != 0) {
             apply.addUnsafeEnchantment(ench, enchlvl);
             bmc.debug("createSpecialItem:enchantment");
+            bmc.debug("enchantment " + ench.getName());
+            bmc.debug("enchantmentlevel " + apply.getEnchantmentLevel(ench));
         }
         if (itemFlag != null) {
             meta.addItemFlags(itemFlag);
@@ -62,6 +63,7 @@ public class BMCUtils {
         bmc.debug("createSpecialItem:finished");
         return apply;
     }
+    */
 
     public ItemStack createByteableItem(Material material, byte value) {
         return new ItemStack(material, 1, (short) 0, (byte) value);

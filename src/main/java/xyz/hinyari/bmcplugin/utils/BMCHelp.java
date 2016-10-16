@@ -1,4 +1,4 @@
-package xyz.hinyari.bmcplugin.Utils;
+package xyz.hinyari.bmcplugin.utils;
 
 import xyz.hinyari.bmcplugin.BMCPlayer;
 import xyz.hinyari.bmcplugin.BMCPlugin;
@@ -29,7 +29,7 @@ public class BMCHelp {
 		player.msg(bmc.equalMessage(content));
 		player.msg(cmdname + "stats <プレイヤー名>" + h + "ランクの状況を表示します。");
 		player.msg(cmdname + "menu" + h + "ランクのメニューを表示します。");
-		return false;
+		return true;
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class BMCHelp {
 		player.msg(bmc.equalMessage(content));
 		player.msg(cmdname + "point <プレイヤー名>" + h +
 				"コシヒカリ交換可能チケット数を表示します。");
-		return false;
+		return true;
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class BMCHelp {
 		player.msg(bmc.equalMessage(content));
 		player.msg(cmdname + h + "ランクアップをします。");
 		player.msg(cmdname + "help" + h + "ランクアップの手順を確認します。");
-		return false;
+		return true;
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class BMCHelp {
 		player.msg(g + cmdname + "ench <fire/fall/smelt>" + h + "エンチャントメントを実行します。");
 		player.msg(g + cmdname + "grapple" + h + "grappleを取得します。");
 		player.msg(g + cmdname + "namereset" + h + "ディスプレイネームをリセットします。");
-		return false;
+		return true;
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class BMCHelp {
 		player.msg(g + "/bmc menu" + h + "メニューを表示します。");
 		player.msg(g + "/bmc debug" + h + "デバッグ操作を行います。&4(管理者)&r");
 		player.msg(g + "/bmc reload" + h + "コンフィグをリロードします。&4(管理者)&r");
-		return false;
+		return true;
 	}
 
 	/**
@@ -106,7 +106,7 @@ public class BMCHelp {
 		player.msg(bmc.equalMessage(content));
 		player.msg(g + cmdname + "list" + h + "キットの一覧を表示します。");
 		player.msg(g + cmdname + "acrobat mode" + h + "Acrobatのモードを切り替えます");
-		return false;
+		return true;
 	}
 
 	public boolean NTPhelp(BMCPlayer player) {
@@ -115,7 +115,7 @@ public class BMCHelp {
 		player.msg(bmc.equalMessage(content));
 		player.msg(cmdname + "kick <on/off>" + h + "NTPキックモードのオンオフを切り替えます。");
 		player.msg(cmdname + "kick status" + h + "NTPキックモードのステータスを確認します。");
-		return false;
+		return true;
 	}
 
 	/**

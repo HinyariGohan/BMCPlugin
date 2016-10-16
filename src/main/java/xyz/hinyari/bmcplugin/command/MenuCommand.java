@@ -35,6 +35,7 @@ public class MenuCommand extends SubCommandAbst implements Listener
 
 	@Override
 	public boolean runCommand(BMCPlayer player, String label, String[] args) {
+		if (player.hasPermission("bmc.rankmenu"))
 		player.getPlayer().openInventory(bmc.rankGUIMenu.getMainMenu(player)); return false;
 	}
 }

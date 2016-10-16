@@ -3,7 +3,7 @@ main: xyz.hinyari.bmcplugin.BMCPlugin
 version: 1.0.0
 author: Hinyari_Gohan
 description: The plugin for BMCServer.
-depend: [Essentials]
+softdepend: [Essentials]
 commands:
   bmc:
     description: bmcコマンドです。
@@ -29,4 +29,12 @@ permissions:
   bmc.vanish:
     default: op
   bmc.vanish.notice:
+    default: op
+  bmc.permmsg:
+    default: op
+  bmc.rankmenu:
+    default: op
+  bmc.rankmenu.get:
+    default: op
+  bmc.rank.set:
     default: op

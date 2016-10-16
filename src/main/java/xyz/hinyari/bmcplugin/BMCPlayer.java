@@ -1,7 +1,7 @@
 package xyz.hinyari.bmcplugin;
 
-import xyz.hinyari.bmcplugin.Utils.BMCUtils;
-import xyz.hinyari.bmcplugin.Utils.ActionBar;
+import xyz.hinyari.bmcplugin.utils.BMCUtils;
+import xyz.hinyari.bmcplugin.utils.ActionBar;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -36,7 +36,7 @@ public class BMCPlayer
 	    return this.bmcScoreBoard;
     }
 
-    public void msg(String message) { player.sendMessage(BMCUtils.convert((bmc.PREFIX + message))); }
+    public void msg(String message) { player.sendMessage(BMCUtils.convert((bmc.config.getPrefix() + message))); }
 
     public void noprefix(String message) { player.sendMessage(BMCUtils.convert(message));}
 
@@ -54,11 +54,11 @@ public class BMCPlayer
 
 	public boolean hasPermission(String permission) { return player.hasPermission(permission); }
 
-	public void errmsg(String message) { player.sendMessage(BMCUtils.convert((bmc.ERROR + message))); }
+	public void errmsg(String message) { player.sendMessage((bmc.config.getErrorPrefix() + message)); }
 
-	public void errbar(String message) { new ActionBar(BMCUtils.convert(bmc.ERROR + message)).sendToPlayer(player);}
+	public void errbar(String message) { new ActionBar(BMCUtils.convert(bmc.config.getErrorPrefix() + message)).sendToPlayer(player);}
 
-    public void barmsg(String message) { new ActionBar(BMCUtils.convert(bmc.PREFIX + message)).sendToPlayer(player);}
+    public void barmsg(String message) { new ActionBar(BMCUtils.convert(bmc.config.getPrefix() + message)).sendToPlayer(player);}
 
 	public boolean noperm() { errmsg("権限がありません。"); return true; }
 

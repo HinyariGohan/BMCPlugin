@@ -3,8 +3,6 @@ package xyz.hinyari.bmcplugin.original;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import xyz.hinyari.bmcplugin.BMCPlugin;
-import xyz.hinyari.bmcplugin.Utils.BMCUtils;
 
 /**
  * Created by Hinyari_Gohan on 2016/10/08.

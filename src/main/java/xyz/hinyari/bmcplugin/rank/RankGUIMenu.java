@@ -13,8 +13,9 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import xyz.hinyari.bmcplugin.BMCPlayer;
 import xyz.hinyari.bmcplugin.BMCPlugin;
-import xyz.hinyari.bmcplugin.Utils.BMCUtils;
+import xyz.hinyari.bmcplugin.utils.BMCUtils;
 import xyz.hinyari.bmcplugin.original.DyeItem;
+import xyz.hinyari.bmcplugin.utils.SpecialItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,18 +40,19 @@ public class RankGUIMenu implements Listener {
     private final List<ItemStack> ITEM_COLOED_LIST = new ArrayList<>();
 
 
+
     public RankGUIMenu(BMCPlugin bmcPlugin) {
         this.bmcPlugin = bmcPlugin;
         this.utils = bmcPlugin.utils;
-        ITEM_RED = utils.createSpecialItem(DyeItem.RED.getItemStack(), Rank.RED.getName(), null, null, 0, null);
-        ITEM_ORAGNE = utils.createSpecialItem(DyeItem.ORANGE.getItemStack(), Rank.ORANGE.getName(), null, null, 0, null);
-        ITEM_YELLOW = utils.createSpecialItem(DyeItem.YELLOW.getItemStack(), Rank.YELLOW.getName(), null, null, 0, null);
-        ITEM_GREEN = utils.createSpecialItem(DyeItem.GREEN.getItemStack(), Rank.GREEN.getName(), null, null, 0, null);
-        ITEM_BLUE = utils.createSpecialItem(DyeItem.LIGHT_BLUE.getItemStack(), Rank.BLUE.getName(), null, null, 0, null);
-        ITEM_INDIGO = utils.createSpecialItem(DyeItem.BLUE.getItemStack(), Rank.INDIGO.getName(), null, null, 0, null);
-        ITEM_VIOLET = utils.createSpecialItem(DyeItem.MAGENDA.getItemStack(), Rank.VIOLET.getName(), null, null, 0, null);
-        ITEM_ULTRAVIOLET = utils.createSpecialItem(DyeItem.WHITE.getItemStack(), Rank.ULTRAVIOLET.getName(), null, null, 0, null);
-        ITEM_NONE = utils.createSpecialItem(DyeItem.GRAY.getItemStack(), Rank.NONE.getName(), null, null, 0, null);
+        ITEM_RED = new SpecialItem(DyeItem.RED.getItemStack(), Rank.RED.getName(), null, null, 0, null).getItem();
+        ITEM_ORAGNE = new SpecialItem(DyeItem.ORANGE.getItemStack(), Rank.ORANGE.getName(), null, null, 0, null).getItem();
+        ITEM_YELLOW = new SpecialItem(DyeItem.YELLOW.getItemStack(), Rank.YELLOW.getName(), null, null, 0, null).getItem();
+        ITEM_GREEN = new SpecialItem(DyeItem.GREEN.getItemStack(), Rank.GREEN.getName(), null, null, 0, null).getItem();
+        ITEM_BLUE = new SpecialItem(DyeItem.LIGHT_BLUE.getItemStack(), Rank.BLUE.getName(), null, null, 0, null).getItem();
+        ITEM_INDIGO = new SpecialItem(DyeItem.BLUE.getItemStack(), Rank.INDIGO.getName(), null, null, 0, null).getItem();
+        ITEM_VIOLET = new SpecialItem(DyeItem.MAGENDA.getItemStack(), Rank.VIOLET.getName(), null, null, 0, null).getItem();
+        ITEM_ULTRAVIOLET = new SpecialItem(DyeItem.WHITE.getItemStack(), Rank.ULTRAVIOLET.getName(), null, null, 0, null).getItem();
+        ITEM_NONE = new SpecialItem(DyeItem.GRAY.getItemStack(), Rank.NONE.getName(), null, null, 0, null).getItem();
         init();
     }
 
@@ -69,11 +71,13 @@ public class RankGUIMenu implements Listener {
     public Inventory getMainMenu(BMCPlayer player) {
         Rank rank = player.getScoreboard().getRank();
         Inventory inventory = Bukkit.createInventory(player.getPlayer(), 9, ("BMCランクメニュー 現在のランク: " + rank.getName()));
+        inventory.setItem(8, new SpecialItem(new ItemStack(Material.BARRIER), "&c- 閉じる -").getItem());
         int i = 0;
         for (Rank ranks : Rank.values()) {
             if (rank.getInt() >= ranks.getInt() ) {
                 if (rank.getInt() == ranks.getInt()) {
-                    inventory.addItem(utils.createSpecialItem(ITEM_COLOED_LIST.get(i), "saishu", null, Enchantment.DURABILITY, 1, ItemFlag.HIDE_ENCHANTS));
+                    ItemStack Final = new SpecialItem(ITEM_COLOED_LIST.get(i), null, null, Enchantment.DURABILITY, 1, ItemFlag.HIDE_ENCHANTS).getItem();
+                    inventory.addItem(Final);
                     break;
                 }
                 inventory.addItem(ITEM_COLOED_LIST.get(i));
@@ -93,7 +97,22 @@ public class RankGUIMenu implements Listener {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) {
             BMCPlayer player = bmcPlugin.getBMCPlayer(event.getPlayer());
             if (player.getItemInMainHand().equals(utils.getRankitem())) {
+                Rank rank = player.getScoreboard().getRank();
+                if (rank == Rank.VISITOR || rank == Rank.INFRARED) {
+                    player.errbar("ランクが不正です。"); return;
+                }
                 player.openRankmenu();
+            }
+            if (bmcPlugin.config.getDebug()) {
+                if (player.getPlayer().isSneaking()) {
+                    ItemStack item = player.getItemInMainHand();
+                    bmcPlugin.debug("Material : " + item.getType().toString());
+                    bmcPlugin.debug("Amount : " + item.getAmount());
+                    for (Enchantment ench : item.getEnchantments().keySet()) {
+                        bmcPlugin.debug("Enchant(" + ench.getName() + ") : " + item.getEnchantmentLevel(ench));
+                    }
+                    event.setCancelled(true);
+                }
             }
         }
     }

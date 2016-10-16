@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import xyz.hinyari.bmcplugin.BMCPlayer;
-import xyz.hinyari.bmcplugin.Utils.BMCHelp;
+import xyz.hinyari.bmcplugin.utils.BMCHelp;
 
 /**
  * BMCサーバー ランクコマンド ランクアップ実装クラス
@@ -59,7 +59,7 @@ public class RankUpCommand
 									+ "ランクになりました！おめでとうございます！");
 							player_board.rankUP();
 						} else {
-							bmcPlayer.errmsg(plugin.ERROR + "クリアランス違反です。");
+							bmcPlayer.errmsg("クリアランス違反です。");
 						}
 					}
 				}

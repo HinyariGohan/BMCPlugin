@@ -1,0 +1,30 @@
+# ======================================
+#
+#        BMCPlugin for BMCServer
+#        Author: Hinyari_Bohan
+#
+# ======================================
+
+
+# サーバープレフィックス( prefix )
+prefix: # String型で入力してください
+  server: "[ &aBMCPlugin &r] "
+  error: "&c[ Error ]&r "
+  debug: "&8[ Debug ]&r "
+
+# コシヒカリに関する設定
+kome:
+  # 何分ごとにコメを配布するか int
+  time_get_minutes: 60
+
+  # 何個ゲット出来るようにするか int
+  time_get_value: 2
+
+# 管理用
+management:
+  admin_pass: ""
+
+# デバッグモードの有効、無効
+debug: false
+
+versions: "1.0"

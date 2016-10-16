@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import xyz.hinyari.bmcplugin.BMCPlayer;
-import xyz.hinyari.bmcplugin.Utils.BMCBoolean;
+import xyz.hinyari.bmcplugin.utils.BMCBoolean;
 import xyz.hinyari.bmcplugin.BMCPlugin;
 import org.bukkit.GameMode;
 import org.bukkit.Material;

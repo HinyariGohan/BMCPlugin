@@ -19,6 +19,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import xyz.hinyari.bmcplugin.utils.SpecialItem;
 
 public class BMCMacerator implements Listener {
 
@@ -91,8 +92,8 @@ public class BMCMacerator implements Listener {
                     result = new ItemStack((Material.GOLD_INGOT), ramount + 2);
                 } else if (slot.getType() == Material.MUSHROOM_SOUP || slot.getType() == Material.GHAST_TEAR) {
                     if (plugin.bmcBoolean.isKoshihikari(slot)) {
-                        result = plugin.utils.createSpecialItem(
-                                new ItemStack((Material.SUGAR), ramount + 9), "&6&n米粉", null, Enchantment.DURABILITY, 1, ItemFlag.HIDE_ENCHANTS);
+                        result = new SpecialItem(
+                                new ItemStack((Material.SUGAR), ramount + 9), "&6&n米粉", null, Enchantment.DURABILITY, 1, ItemFlag.HIDE_ENCHANTS).getItem();
                         if (amount > 1) {
                             slot.setAmount(amount - 1);
                         } else {
@@ -113,12 +114,12 @@ public class BMCMacerator implements Listener {
                     result = new ItemStack((Material.FLINT), ramount + 1);
                 } else if (slot.getType() == Material.DIAMOND) {
                     origin = Material.DIAMOND;
-                    result = plugin.utils.createSpecialItem(
-                            new ItemStack((Material.SUGAR), ramount + 4), "&b&nダイヤモンドの粉", null, Enchantment.DAMAGE_ALL, 6, ItemFlag.HIDE_ENCHANTS);
+                    result = new SpecialItem(
+                            new ItemStack((Material.SUGAR), ramount + 4), "&b&nダイヤモンドの粉", null, Enchantment.DAMAGE_ALL, 6, ItemFlag.HIDE_ENCHANTS).getItem();
                 } else if (slot.getType() == Material.DIAMOND_BLOCK) {
                     origin = Material.DIAMOND_BLOCK;
-                    result = plugin.utils.createSpecialItem(
-                            new ItemStack((Material.COAL), ramount + 4), "§7炭素", null, Enchantment.DURABILITY, 6, ItemFlag.HIDE_ENCHANTS);
+                    result = new SpecialItem(
+                            new ItemStack((Material.COAL), ramount + 4), "§7炭素", null, Enchantment.DURABILITY, 6, ItemFlag.HIDE_ENCHANTS).getItem();
                 } else {
                     bmcPlayer.errmsg("このアイテムを粉砕することは出来ません。");
                     return;

@@ -1,0 +1,32 @@
+name: BMCPlugin
+main: xyz.hinyari.bmcplugin.BMCPlugin
+version: 1.0.0
+author: Hinyari_Gohan
+description: The plugin for BMCServer.
+softdepend: [Essentials]
+commands:
+  bmc:
+    description: bmcコマンドです。
+    aliases: []
+  rank:
+  rankup:
+  kome:
+  cop:
+permissions:
+  bmc.debug:
+    description: デバッグ用のコマンドの使用権限
+    default: op
+    permissions-message: You don''t have permission to access this command!
+  bmc.acrobat:
+    description: アクロバットキットの使用権限
+    default: op
+  bmc.scout.get:
+    description: スカウトキットの使用権限
+    default: op
+  ntp.kick:
+    description: NoTaisukePlusのキックの使用権限
+    default: op
+  bmc.vanish:
+    default: op
+  bmc.vanish.notice:
+    default: op

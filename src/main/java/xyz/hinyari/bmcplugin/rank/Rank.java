@@ -17,7 +17,7 @@ public enum Rank {
     INDIGO(6, "§1Indigo§r", DyeItem.BLUE),
     VIOLET(7, "§5Violet§r", DyeItem.MAGENDA),
     ULTRAVIOLET(8, "§fUltraViolet§r", DyeItem.WHITE),
-    INFRARED(9, "§cInfraRed§rT", null),
+    INFRARED(9, "§cInfraRed§r", null),
     MAXIMUM(10, "§a上限に達しました§r", null),
     NONE(11, "§c未到達ランク§r", DyeItem.GRAY);
 

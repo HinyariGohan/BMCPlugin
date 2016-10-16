@@ -22,8 +22,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import xyz.hinyari.bmcplugin.BMCPlayer;
 import xyz.hinyari.bmcplugin.BMCPlugin;
-import xyz.hinyari.bmcplugin.Utils.BMCBoolean;
+import xyz.hinyari.bmcplugin.utils.BMCBoolean;
 
 /**
  * BMCサーバー メインイベントキャッチクラス
@@ -79,14 +80,16 @@ public class BMCEvent implements Listener {
             player.setFoodLevel(40);
             player.setExhaustion(40);
             player.setHealth(20);
-            Bukkit.broadcastMessage(bmc.PREFIX + playername + " さんが コシヒカリ を食べました。");
+            Bukkit.broadcastMessage(bmc.config.getPrefix() + playername + " さんが コシヒカリ を食べました。");
+            //player.chat("コシヒカリうますギィ！");
             player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 12000, 4));
             player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 12000, 1));
             player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 12000, 1));
             player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 12000, 2));
             world.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 1, 1);
             world.playSound(loc, Sound.BLOCK_PORTAL_TRAVEL, 1, 2);
-            item.setType(Material.AIR);
+            player.getInventory().remove(item);
+            player.getInventory().remove(Material.BOWL);
         }
     }
 
@@ -102,11 +105,11 @@ public class BMCEvent implements Listener {
         String name = entity.getCustomName();
         if (event.getEntityType() == EntityType.ENDER_DRAGON) {
             if (name == null) return;
-            else if (name == "§b中級§rドラゴン") {
+            else if (name.equals("§b中級§rドラゴン")) {
                 entity.setMaxHealth(500);
                 entity.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, LIMIT, 1));
                 entity.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, LIMIT, 2));
-            } else if (name == "§c上級§rドラゴン") {
+            } else if (name.equals("§c上級§rドラゴン")) {
                 entity.setMaxHealth(800);
                 entity.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, LIMIT, 3));
                 entity.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, LIMIT, 3));
@@ -114,9 +117,7 @@ public class BMCEvent implements Listener {
         } else if (event.getEntityType() == EntityType.WITHER && (!(event.getLocation().getWorld().equals("world_the_end")))) {
             ItemStack item1 = new ItemStack((Material.SKULL_ITEM), 3, (byte) 1);
             ItemStack item2 = new ItemStack((Material.SOUL_SAND), 4);
-
             event.setCancelled(true);
-
             event.getLocation().getWorld().dropItem(event.getLocation(), item1);
             event.getLocation().getWorld().dropItem(event.getLocation(), item2);
             return;
@@ -135,9 +136,7 @@ public class BMCEvent implements Listener {
         ItemStack dropItem = new ItemStack((Material.DRAGON_EGG), 1);
         if (entity instanceof EnderDragon) {
             if (name != null) {
-                if (name == "§b中級§rドラゴン") {
-                    entity.getWorld().dropItem(entity.getLocation(), dropItem);
-                } else if (name == "§c上級§rドラゴン") {
+                if (name.equals("§b中級§rドラゴン") || name.equals("§c上級§rドラゴン")) {
                     entity.getWorld().dropItem(entity.getLocation(), dropItem);
                 }
             }
@@ -169,7 +168,8 @@ public class BMCEvent implements Listener {
     @EventHandler
     public void BlockPlaceBlocker(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-        @SuppressWarnings("deprecation") ItemStack item = player.getItemInHand();
+        BMCPlayer bmcPlayer = bmc.getBMCPlayer(player);
+        ItemStack item = bmcPlayer.getItemInMainHand();
 
         if (!(item.hasItemMeta())) return;
 
@@ -182,8 +182,8 @@ public class BMCEvent implements Listener {
 
         if (name.contains("炭素の塊") || name.contains("採掘の結晶") || name.contains("Water") || name.contains("Crushed") || name.contains("Cleaned")) {
             event.setCancelled(true);
-            player.sendMessage("§c[Error] " + "特殊ブロックを設置することは出来ません。");
-            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_SNARE, 10L, 1L);
+            bmcPlayer.errmsg("特殊ブロックを設置することは出来ません。");
+            bmcPlayer.playSound(Sound.BLOCK_NOTE_SNARE, 10L, 1L);
         }
     }
 

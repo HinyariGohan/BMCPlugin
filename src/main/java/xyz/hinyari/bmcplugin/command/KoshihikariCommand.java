@@ -5,7 +5,7 @@ import xyz.hinyari.bmcplugin.BMCPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import xyz.hinyari.bmcplugin.Utils.BMCHelp;
+import xyz.hinyari.bmcplugin.utils.BMCHelp;
 
 /**
  * @author Hinyari_Gohan
@@ -36,6 +36,13 @@ public class KoshihikariCommand {
             }
             bmcPlayer.msg(target.getName() + "さんのコシヒカリ交換可能ポイントは &6" + target.getScoreboard().getKomePoint() + "ポイント&r です。");
             return true;
+        }
+        if (args[0].equalsIgnoreCase("get")) {
+            if (bmcPlayer.hasPermission("bmc.kome.get")) {
+                bmcPlayer.getPlayer().getInventory().addItem(plugin.utils.getKoshihikari());
+                bmcPlayer.msg("コシヒカリをインベントリに追加しました。");
+                return true;
+            }
         }
         return bmcHelp.Komehelp(bmcPlayer);
     }

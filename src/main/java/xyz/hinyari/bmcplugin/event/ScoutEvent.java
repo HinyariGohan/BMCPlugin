@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 
-import xyz.hinyari.bmcplugin.Utils.BMCBoolean;
+import xyz.hinyari.bmcplugin.utils.BMCBoolean;
 
 public class ScoutEvent implements Listener
 {

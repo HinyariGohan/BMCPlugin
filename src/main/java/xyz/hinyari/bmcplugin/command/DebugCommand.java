@@ -1,7 +1,8 @@
 package xyz.hinyari.bmcplugin.command;
 
+import xyz.hinyari.bmcplugin.BMCConfig;
 import xyz.hinyari.bmcplugin.BMCPlayer;
-import xyz.hinyari.bmcplugin.Utils.BMCUtils;
+import xyz.hinyari.bmcplugin.utils.BMCUtils;
 import xyz.hinyari.bmcplugin.BMCPlugin;
 import xyz.hinyari.bmcplugin.rank.Rank;
 import org.bukkit.Material;
@@ -12,8 +13,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import xyz.hinyari.bmcplugin.Utils.BMCBoolean;
-import xyz.hinyari.bmcplugin.Utils.BMCHelp;
+import xyz.hinyari.bmcplugin.utils.BMCBoolean;
+import xyz.hinyari.bmcplugin.utils.BMCHelp;
 import xyz.hinyari.bmcplugin.event.ScoutEvent;
 
 public class DebugCommand extends SubCommandAbst {
@@ -141,6 +142,7 @@ public class DebugCommand extends SubCommandAbst {
                             item.setItemMeta(meta);
                             bmcPlayer.msg("正常にエンチャントメントが実行されました。");
                         }
+                        return true;
                     } else if (args[2].equalsIgnoreCase("unbreaking")) {
                         if (args.length == 3) {
                             bmcPlayer.errmsg("引数指定が間違っています。");
@@ -159,7 +161,14 @@ public class DebugCommand extends SubCommandAbst {
                 ScoutEvent.im.setDisplayName(ScoutEvent.GRAPPLE_NAME);
                 ScoutEvent.grappleItem.setItemMeta(ScoutEvent.im);
                 player.getInventory().addItem(ScoutEvent.grappleItem);
-            } else return bmcHelp.Debughelp(bmcPlayer);
+            } else if (args[1].equalsIgnoreCase("toggle")) {
+                BMCConfig config = plugin.config;
+                boolean b = config.getDebug() ? false : true;
+                config.config.set("debug", b);
+                plugin.config = new BMCConfig(plugin);
+                bmcPlayer.msg("デバッグモードを " + b + " に変更しました");
+            }
+                else return bmcHelp.Debughelp(bmcPlayer);
         }
         return false;
     }
