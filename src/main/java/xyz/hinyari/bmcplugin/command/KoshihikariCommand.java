@@ -43,6 +43,7 @@ public class KoshihikariCommand {
                 bmcPlayer.msg("コシヒカリをインベントリに追加しました。");
                 return true;
             }
+            return bmcPlayer.noperm();
         }
         return bmcHelp.Komehelp(bmcPlayer);
     }

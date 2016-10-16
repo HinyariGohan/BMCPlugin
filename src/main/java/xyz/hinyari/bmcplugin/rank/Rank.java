@@ -9,15 +9,15 @@ import xyz.hinyari.bmcplugin.original.DyeItem;
  */
 public enum Rank {
     VISITOR(0, "§7Visitor§r", DyeItem.SILVER),
-    RED(1, "§4Red§r", DyeItem.RED),
-    ORANGE(2, "§6Orange§r", DyeItem.ORANGE),
-    YELLOW(3, "§eYellow§r", DyeItem.YELLOW),
-    GREEN(4, "§2Green§r", DyeItem.GREEN),
-    BLUE(5, "§9Blue§r", DyeItem.LIGHT_BLUE),
-    INDIGO(6, "§1Indigo§r", DyeItem.BLUE),
-    VIOLET(7, "§5Violet§r", DyeItem.MAGENDA),
-    ULTRAVIOLET(8, "§fUltraViolet§r", DyeItem.WHITE),
-    INFRARED(9, "§cInfraRed§r", null),
+    INFRARED(1, "§cInfraRed§r", null),
+    RED(2, "§4Red§r", DyeItem.RED),
+    ORANGE(3, "§6Orange§r", DyeItem.ORANGE),
+    YELLOW(4, "§eYellow§r", DyeItem.YELLOW),
+    GREEN(5, "§2Green§r", DyeItem.GREEN),
+    BLUE(6, "§9Blue§r", DyeItem.LIGHT_BLUE),
+    INDIGO(7, "§1Indigo§r", DyeItem.BLUE),
+    VIOLET(8, "§5Violet§r", DyeItem.MAGENDA),
+    ULTRAVIOLET(9, "§fUltraViolet§r", DyeItem.WHITE),
     MAXIMUM(10, "§a上限に達しました§r", null),
     NONE(11, "§c未到達ランク§r", DyeItem.GRAY);
 

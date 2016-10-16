@@ -50,7 +50,8 @@ public class BMCTimeManager extends BukkitRunnable {
                 User user = plugin.essentials.getUser(player.getPlayer());
                 if (!user.isAfk()) {
                     //plugin.debug(user.getName() + " : " + String.valueOf(user.isAfk()));
-                    logintime_score.setScore(value++);
+                    int score = value + 1;
+                    logintime_score.setScore(score);
                 }
             }
         }

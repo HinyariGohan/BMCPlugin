@@ -1,6 +1,7 @@
 package xyz.hinyari.bmcplugin;
 
 import com.earth2me.essentials.Essentials;
+import org.bukkit.scoreboard.ScoreboardManager;
 import xyz.hinyari.bmcplugin.original.BMCAnnouncement;
 import xyz.hinyari.bmcplugin.utils.BMCBoolean;
 import xyz.hinyari.bmcplugin.utils.BMCHelp;
@@ -68,6 +69,7 @@ public class BMCPlugin extends JavaPlugin implements Listener {
     public static final ChatColor RESET = ChatColor.RESET;
     public static final ChatColor YELLOW = ChatColor.YELLOW;
     public static final String h = RESET + " - ";
+    public final ScoreboardManager scoreboardManager;
     public final Scoreboard scoreboard;
 
     private final HashMap<Player, BMCPlayer> bmcPlayer = new HashMap<>();
@@ -80,7 +82,8 @@ public class BMCPlugin extends JavaPlugin implements Listener {
         this.autoSmelt = new AutoSmelt(this);
         this.utils = new BMCUtils(this);
         this.rankGUIMenu = new RankGUIMenu(this);
-        this.scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+        this.scoreboardManager = Bukkit.getScoreboardManager();
+        this.scoreboard = scoreboardManager.getMainScoreboard();
         this.essentials = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
         if (Bukkit.getPluginManager().getPlugin("Essentials") == null) {
             getLogger().severe("Essentialsが読み込めませんでした。プラグインを終了します。");

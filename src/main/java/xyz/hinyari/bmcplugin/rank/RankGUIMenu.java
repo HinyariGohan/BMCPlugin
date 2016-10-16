@@ -74,6 +74,7 @@ public class RankGUIMenu implements Listener {
         inventory.setItem(8, new SpecialItem(new ItemStack(Material.BARRIER), "&c- 閉じる -").getItem());
         int i = 0;
         for (Rank ranks : Rank.values()) {
+            if (ranks.equals(Rank.INFRARED)) { continue; }
             if (rank.getInt() >= ranks.getInt() ) {
                 if (rank.getInt() == ranks.getInt()) {
                     ItemStack Final = new SpecialItem(ITEM_COLOED_LIST.get(i), null, null, Enchantment.DURABILITY, 1, ItemFlag.HIDE_ENCHANTS).getItem();
