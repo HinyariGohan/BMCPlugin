@@ -9,7 +9,7 @@
 # サーバープレフィックス( prefix )
 prefix: # String型で入力してください
   server: "[ &aBMCPlugin &r] "
-  error: "&c[ Error ]&r "
+  error: "[ &cBMCPlugin &r] "
   debug: "&8[ Debug ]&r "
 
 # コシヒカリに関する設定
