@@ -63,14 +63,15 @@ public class BMCPlugin extends JavaPlugin implements Listener {
     private BMCCommand bmcCommand;
     private RankCommand rankCommand;
     private VanishListner vanishListner;
+
+    private ScoreboardManager scoreboardManager;
+    private Scoreboard scoreboard;
     public static Logger log;
 
     public static final ChatColor GOLD = ChatColor.GOLD;
     public static final ChatColor RESET = ChatColor.RESET;
     public static final ChatColor YELLOW = ChatColor.YELLOW;
     public static final String h = RESET + " - ";
-    public final ScoreboardManager scoreboardManager;
-    public final Scoreboard scoreboard;
 
     private final HashMap<Player, BMCPlayer> bmcPlayer = new HashMap<>();
 
@@ -82,8 +83,6 @@ public class BMCPlugin extends JavaPlugin implements Listener {
         this.autoSmelt = new AutoSmelt(this);
         this.utils = new BMCUtils(this);
         this.rankGUIMenu = new RankGUIMenu(this);
-        this.scoreboardManager = Bukkit.getScoreboardManager();
-        this.scoreboard = scoreboardManager.getMainScoreboard();
         this.essentials = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
         if (Bukkit.getPluginManager().getPlugin("Essentials") == null) {
             getLogger().severe("Essentialsが読み込めませんでした。プラグインを終了します。");
@@ -106,6 +105,8 @@ public class BMCPlugin extends JavaPlugin implements Listener {
 
     private void init() {
         this.log = getLogger();
+        this.scoreboardManager = Bukkit.getScoreboardManager();
+        this.scoreboard = scoreboardManager.getMainScoreboard();
         if (scoreboard.getObjective("rank") == null) {
             scoreboard.registerNewObjective("rank", "dummy");
         }
@@ -264,6 +265,14 @@ public class BMCPlugin extends JavaPlugin implements Listener {
 
     public File getPluginJarFile() {
         return this.getFile();
+    }
+
+    public ScoreboardManager getScoreboardManager() {
+        return this.scoreboardManager;
+    }
+
+    public Scoreboard getScoreboard() {
+        return this.scoreboard;
     }
 
 }

@@ -33,4 +33,4 @@ announcement:
 # デバッグモードの有効、無効
 debug: false
 
-versions: "1.0"
+versions: 1.2.4

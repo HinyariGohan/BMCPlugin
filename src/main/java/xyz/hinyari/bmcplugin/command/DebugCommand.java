@@ -42,7 +42,7 @@ public class DebugCommand extends SubCommandAbst {
     public boolean runCommand(BMCPlayer bmcPlayer, String label, String[] args) {
         ItemStack item = bmcPlayer.getItemInMainHand();
         Player player = bmcPlayer.getPlayer();
-        if (!(bmcPlayer.hasPermission("plugin.debug"))) {
+        if (!(bmcPlayer.hasPermission("bmc.debug"))) {
             return bmcPlayer.noperm();
         }
 

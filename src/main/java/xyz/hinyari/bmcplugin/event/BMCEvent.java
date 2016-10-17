@@ -22,6 +22,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import xyz.hinyari.bmcplugin.BMCPlayer;
 import xyz.hinyari.bmcplugin.BMCPlugin;
 import xyz.hinyari.bmcplugin.utils.BMCBoolean;
@@ -119,8 +121,13 @@ public class BMCEvent implements Listener {
             ItemStack item2 = new ItemStack((Material.SOUL_SAND), 4);
             event.getLocation().getWorld().dropItemNaturally(event.getLocation(), item1);
             event.getLocation().getWorld().dropItemNaturally(event.getLocation(), item2);
-            event.getEntity().remove();
-            return;
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    event.getEntity().remove();
+                }
+            }.runTaskLater(bmc, 1L);
+
         }
     }
 

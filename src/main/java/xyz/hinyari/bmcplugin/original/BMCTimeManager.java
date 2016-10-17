@@ -30,7 +30,7 @@ public class BMCTimeManager extends BukkitRunnable {
         this.plugin = plugin;
         this.KOME_VALUE = plugin.config.getKomeGetValue();
         this.KOME_MINUTES = plugin.config.getKomeGetMinutes();
-        this.scoreboard = plugin.scoreboard;
+        this.scoreboard = plugin.getScoreboard();
         this.login_time = scoreboard.getObjective("login_time");
     }
 
@@ -48,7 +48,7 @@ public class BMCTimeManager extends BukkitRunnable {
                     return;
                 }
                 User user = plugin.essentials.getUser(player.getPlayer());
-                if (!user.isAfk()) {
+                if (!user.isAfk() && player.getPlayer().isOnline()) {
                     //plugin.debug(user.getName() + " : " + String.valueOf(user.isAfk()));
                     int score = value + 1;
                     logintime_score.setScore(score);

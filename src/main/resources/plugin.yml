@@ -1,6 +1,6 @@
 name: BMCPlugin
 main: xyz.hinyari.bmcplugin.BMCPlugin
-version: 1.2.3
+version: 1.2.4
 author: Hinyari_Gohan
 description: The plugin for BMCServer.
 softdepend: [Essentials, Votifier]

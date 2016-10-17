@@ -26,7 +26,7 @@ public class BMCScoreBoard {
 
     public BMCScoreBoard(BMCPlayer player) {
         this.bmcPlugin = player.getPlugin();
-        this.scoreboard = bmcPlugin.scoreboard;
+        this.scoreboard = bmcPlugin.getScoreboard();
         this.rankObj = scoreboard.getObjective("rank");
         this.komeObj = scoreboard.getObjective("koshihikari");
         this.bmcPlayer = player;
