@@ -36,8 +36,14 @@ public class KoshihikariCommand {
                 }
                 bmcPlayer.msg(target.getName() + "さんのコシヒカリ交換可能ポイントは &6" + target.getScoreboard().getKomePoint() + "ポイント&r です。");
                 return true;
-            } else if (args.length == 4) {
+            } else if (args.length == 4 || args.length == 5) {
                 if (args[2].equalsIgnoreCase("set") || args[2].equalsIgnoreCase("add")) {
+                    if (!bmcPlayer.hasPermission("bmc.kome.admin")) {
+                        if (args.length == 4) return bmcPlayer.noperm();
+                        if (args.length == 5 && !args[4].equals(plugin.config.getAdmin_pass())) {
+                            return bmcPlayer.noperm();
+                        }
+                    }
                     if (!plugin.utils.isNumber(args[3])) { // 数字でなかった
                         bmcPlayer.errmsg("有効な数字を入力してください。");
                         return true;

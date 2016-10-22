@@ -28,10 +28,11 @@ vote:
   commands: # 投票された際に実行されるコマンド
   # %player で投票プレイヤー
   - kome point %player add 1
+  url: https://minecraft.jp/servers/55c5eb074ddda15e5b0041a7
 
 # 管理用
 management:
-  admin_pass: ""
+  admin_pass: sDq3D!S2E#
 
 announcement:
   interval: 60

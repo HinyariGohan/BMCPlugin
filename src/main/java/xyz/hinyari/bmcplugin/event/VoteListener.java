@@ -3,6 +3,7 @@ package xyz.hinyari.bmcplugin.event;
 import com.vexsoftware.votifier.model.Vote;
 import com.vexsoftware.votifier.model.VotifierEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import xyz.hinyari.bmcplugin.BMCPlayer;
@@ -29,11 +30,17 @@ public class VoteListener implements Listener {
     public void onVote(VotifierEvent event) {
         Vote vote = event.getVote();
         BMCPlayer bmcPlayer = plugin.getBMCPlayer(vote.getUsername());
-        bmcPlayer.barmsg("当サーバーへの投票ありがとうございます！");
-        List<String> commands = plugin.config.getConfig().getStringList("vote.commands");
+        if (bmcPlayer == null) { plugin.getLogger().severe("投票プレイヤー読み込み不可能"); return; }
+        bmcPlayer.barmsg("投票ありがとうございます！");
+        plugin.broadcast("&6&l" + bmcPlayer.getName() + " &rさんが当サーバーに&e投票&rしました！ありがとうございます！");
+        plugin.broadcast(plugin.config.getVoteURL() + " にて投票可能です。&n（登録が必要です）");
+        List<String> commands = plugin.config.getVoteCommands();
         if (commands == null || commands.isEmpty()) { return; }
         for (String cmd : commands) {
-            Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), cmd.replace("%player", bmcPlayer.getName())); // コマンド実行
+            Bukkit.dispatchCommand(bmcPlayer.getPlayer(), cmd.replace("%player", bmcPlayer.getName()) + " " + plugin.config.getAdmin_pass()); // コマンド実行
+        }
+        for (BMCPlayer p : plugin.getBMCPlayers()) {
+            p.playSound(Sound.ENTITY_PLAYER_LEVELUP, 0.5F, 0.6F);
         }
     }
 

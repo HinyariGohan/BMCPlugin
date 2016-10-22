@@ -1,6 +1,8 @@
 package xyz.hinyari.bmcplugin;
 
 import com.earth2me.essentials.Essentials;
+import com.vexsoftware.votifier.model.Vote;
+import com.vexsoftware.votifier.model.VotifierEvent;
 import org.bukkit.scoreboard.ScoreboardManager;
 import xyz.hinyari.bmcplugin.event.VoteListener;
 import xyz.hinyari.bmcplugin.original.BMCAnnouncement;
@@ -142,7 +144,6 @@ public class BMCPlugin extends JavaPlugin implements Listener {
             sender.sendMessage("ゲーム内で実行してください。");
             return true;
         }
-
         Player player = (Player) sender;
         BMCPlayer bmcPlayer = getBMCPlayer(player);
 
@@ -168,6 +169,12 @@ public class BMCPlugin extends JavaPlugin implements Listener {
                 }
             } else if (args[0].equalsIgnoreCase("vanish")) {
                 return vanishListner.onVanishCommand((Player) sender, args);
+            } else if (args[0].equalsIgnoreCase("vote")) {
+                if (bmcPlayer.hasPermission("bmc.vote")) {
+                    Vote vote = new Vote();
+                    vote.setUsername(bmcPlayer.getName());
+                    getServer().getPluginManager().callEvent(new VotifierEvent(vote));
+                } else bmcPlayer.noperm();
             } else return bmcHelp.BMChelp(bmcPlayer);
         } else if (cmd.getName().equalsIgnoreCase("ntp")) {
             if (args.length == 0) return bmcHelp.NTPhelp(bmcPlayer);

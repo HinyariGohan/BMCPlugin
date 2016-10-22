@@ -1,5 +1,6 @@
 package xyz.hinyari.bmcplugin;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import xyz.hinyari.bmcplugin.utils.BMCUtils;
@@ -24,6 +25,8 @@ public class BMCConfig {
     private int ANNOUNCEMENT_INTERVAL;
     private List<String> ANNOUNCEMENT_LIST;
     private boolean KOME_GET_ENABLE;
+    private String VOTE_URL;
+    private List<String> VOTE_COMMANDS;
 
     private String ADMIN_PASS;
 
@@ -42,6 +45,9 @@ public class BMCConfig {
         this.ANNOUNCEMENT_LIST = config.getStringList("announcement.messages");
         this.ANNOUNCEMENT_INTERVAL = config.getInt("announcement.interval");
         this.KOME_GET_ENABLE = config.getBoolean("kome.time_get_enable");
+        this.VOTE_URL = config.getString("vote.url");
+        this.VOTE_COMMANDS = config.getStringList("vote.commands");
+
     }
 
     public final String getAdmin_pass() { return this.ADMIN_PASS; }
@@ -56,6 +62,8 @@ public class BMCConfig {
     public final List<String> getAnnouncementList() {return this.ANNOUNCEMENT_LIST;}
     public final int getAnnouncementInterval() {return this.ANNOUNCEMENT_INTERVAL;}
     public final boolean getKomeGetAvailable() {return this.KOME_GET_ENABLE;}
+    public final List<String> getVoteCommands() { return this.VOTE_COMMANDS; }
+    public final String getVoteURL() { return this.VOTE_URL; }
     
     public String replace(String message, BMCPlayer player) {
         String msg = message;
@@ -78,7 +86,9 @@ public class BMCConfig {
         this.ANNOUNCEMENT_LIST = config.getStringList("announcement.messages");
         this.ANNOUNCEMENT_INTERVAL = config.getInt("announcement.interval");
         this.KOME_GET_ENABLE = config.getBoolean("kome.time_get_enable");
-        plugin.sendPermMessage(this.PREFIX + "コンフィグをリロードしました。");
+        this.VOTE_URL = config.getString("vote.url");
+        this.VOTE_COMMANDS = config.getStringList("vote.commands");
+        Bukkit.broadcast(this.PREFIX + "コンフィグをリロードしました。", "bmc.reload");
         return true;
     }
 

@@ -93,6 +93,7 @@ public class BMCHelp {
 		player.msg(g + "/bmc menu" + h + "メニューを表示します。");
 		player.msg(g + "/bmc debug" + h + "デバッグ操作を行います。", "bmc.debug");
 		player.msg(g + "/bmc reload" + h + "コンフィグをリロードします。", "bmc.reload");
+		player.msg(g + "/bmc vote" + h + "投票テストを行います。", "bmc.vote");
 		return true;
 	}
 

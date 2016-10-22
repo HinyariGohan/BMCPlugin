@@ -45,3 +45,7 @@ permissions:
     children:
       bmc.debug: true
       bmc.scout.get: true
+  bmc.vote:
+    default: op
+  bmc.kome.admin:
+    default: op
