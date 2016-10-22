@@ -5,6 +5,7 @@ import xyz.hinyari.bmcplugin.BMCPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import xyz.hinyari.bmcplugin.BMCScoreBoard;
 import xyz.hinyari.bmcplugin.utils.BMCHelp;
 
 /**
@@ -21,21 +22,47 @@ public class KoshihikariCommand {
     }
 
     public boolean runCommand(BMCPlayer bmcPlayer, String label, String[] args) {
-        if (args.length == 0 || args.length >= 3) {
+        if (args.length == 0) {
             return bmcHelp.Komehelp(bmcPlayer);
         }
         if (args[0].equalsIgnoreCase("point")) {
             BMCPlayer target = bmcPlayer;
             if (args.length == 2) {
-                if (getPlayer(args[1]) == null) {
+                if (Bukkit.getPlayer(args[1]) == null) {
                     bmcPlayer.errmsg("そのプレイヤーはオンラインではありません。");
                     return true;
                 } else {
-                    target = plugin.getBMCPlayer(getPlayer(args[1]));
+                    target = plugin.getBMCPlayer(Bukkit.getPlayer(args[1]));
+                }
+                bmcPlayer.msg(target.getName() + "さんのコシヒカリ交換可能ポイントは &6" + target.getScoreboard().getKomePoint() + "ポイント&r です。");
+                return true;
+            } else if (args.length == 4) {
+                if (args[2].equalsIgnoreCase("set") || args[2].equalsIgnoreCase("add")) {
+                    if (!plugin.utils.isNumber(args[3])) { // 数字でなかった
+                        bmcPlayer.errmsg("有効な数字を入力してください。");
+                        return true;
+                    }
+                    int score = Integer.parseInt(args[3]);
+                    target = plugin.getBMCPlayer(Bukkit.getPlayer(args[1]));
+                    if (score <= -1) { // -1以下
+                        bmcPlayer.errmsg("0以上の整数を入力してください。");
+                        return true;
+                    }
+                    if (target == null) {
+                        bmcPlayer.errmsg("そのプレイヤーはオフラインです。");
+                        return true;
+                    }
+                    BMCScoreBoard bmcScoreBoard = target.getScoreboard();
+                    if (args[2].equalsIgnoreCase("set")) {
+                        bmcScoreBoard.setKomePoint(score);
+                    }
+                    if (args[2].equalsIgnoreCase("add")) {
+                        bmcScoreBoard.setKomePoint(bmcScoreBoard.getKomePoint() + score);
+                    }
+                    bmcPlayer.msg(target.getName() + " さんのコシヒカリポイントを &6" + bmcScoreBoard.getKomePoint() + "ポイント&r にしました。");
+                    return true;
                 }
             }
-            bmcPlayer.msg(target.getName() + "さんのコシヒカリ交換可能ポイントは &6" + target.getScoreboard().getKomePoint() + "ポイント&r です。");
-            return true;
         }
         if (args[0].equalsIgnoreCase("get")) {
             if (bmcPlayer.hasPermission("bmc.kome.get")) {
@@ -46,13 +73,6 @@ public class KoshihikariCommand {
             return bmcPlayer.noperm();
         }
         return bmcHelp.Komehelp(bmcPlayer);
-    }
-
-    private Player getPlayer(String name) {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.getName().equals(name)) return player;
-        }
-        return null;
     }
 }
 

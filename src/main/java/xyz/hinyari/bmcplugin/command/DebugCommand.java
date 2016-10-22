@@ -64,19 +64,21 @@ public class DebugCommand extends SubCommandAbst {
                             bmcPlayer.msg(item.getType().toString() + ", " + "0" + ", " + displayname);
                         }
                     }
+                    return true;
                 } else {
-                    bmcPlayer.msg("手に何も持っていません。");
+                    bmcPlayer.errmsg("手に何も持っていません。");
+                    return true;
                 }
             } else if (args[1].equalsIgnoreCase("rank")) {
                 if (args[2].equalsIgnoreCase("reset")) {
                     bmcPlayer.msg("スコアをリセットしました。");
                     bmcPlayer.getScoreboard().setRank(Rank.RED);
-                } else {
-                    return bmcHelp.Debughelp(bmcPlayer);
+                    return true;
                 }
             } else if (args[1].equalsIgnoreCase("kome")) {
                 if (args[2].equalsIgnoreCase("hunger")) {
                     player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 60, 100));
+                    return true;
                 } else if (args[2].equalsIgnoreCase("get")) {
                     player.getInventory().addItem(utils.getKoshihikari());
                     return true;
@@ -107,11 +109,11 @@ public class DebugCommand extends SubCommandAbst {
                             Enchantment ench = Enchantment.PROTECTION_FIRE;
                             if (item.containsEnchantment(ench)) {
                                 bmcPlayer.msg("Already item has " + ench.getName() + " Enchant!");
-                                return false;
+                                return true;
                             }
-
                             item.addUnsafeEnchantment(ench, 10);
                             bmcPlayer.msg("正常にエンチャントメントが実行されました。");
+                            return true;
                         } else {
                             bmcPlayer.msg("ダイヤ・鉄のチェストプレートである必要があります。");
                         }

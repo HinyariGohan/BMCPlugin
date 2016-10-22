@@ -39,12 +39,12 @@ public class BMCTimeManager extends BukkitRunnable {
         for (BMCPlayer player : plugin.getBMCPlayers()) {
             Score logintime_score = login_time.getScore(player.getName());
             int value = logintime_score.getScore();
+            if (plugin.config.getKomeGetAvailable()) {
                 if (value == (KOME_MINUTES * 60)) {
                     logintime_score.setScore(0);
                     player.getScoreboard().addKomePoint();
                     player.msg("コシヒカリポイントを追加しました。");
-                    player.msg("あなたのコシヒカリ交換可能ポイントは " +
-                    player.getScoreboard().getKomePoint() + " 枚になりました。");
+                    player.msg("あなたのコシヒカリ交換可能ポイントは " + player.getScoreboard().getKomePoint() + " 枚になりました。");
                     return;
                 }
                 User user = plugin.essentials.getUser(player.getPlayer());
@@ -56,3 +56,4 @@ public class BMCTimeManager extends BukkitRunnable {
             }
         }
     }
+}

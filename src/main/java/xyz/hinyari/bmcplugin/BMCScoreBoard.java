@@ -55,16 +55,28 @@ public class BMCScoreBoard {
         komeScore.setScore(komePoint++);
     }
 
-    public int getKomePoint() { return komeScore.getScore(); }
+    public int getKomePoint() {
+        return komeScore.getScore();
+    }
 
-    public int getRankPoint() { return rankScore.getScore(); }
+    public int getRankPoint() {
+        return rankScore.getScore();
+    }
 
-    public void setRankPoint(int score) { rankScore.setScore(score);}
+    public void setRankPoint(int score) {
+        rankScore.setScore(score);
+    }
 
-    public Rank getRank() { return Rank.getLabelOfRank(getRankPoint()); }
+    public Rank getRank() {
+        return Rank.getLabelOfRank(getRankPoint());
+    }
 
     public void setRank(Rank rank) {
         rankScore.setScore(rank.getInt());
+    }
+
+    public void setKomePoint(int score) {
+        komeScore.setScore(score);
     }
 
 

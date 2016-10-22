@@ -158,7 +158,7 @@ public class BMCEvent implements Listener {
     @EventHandler
     public void onCommandProsess(PlayerCommandPreprocessEvent event) {
         BMCPlayer bmcPlayer = bmc.getBMCPlayer(event.getPlayer());
-        Bukkit.broadcast("§7[BMC]" + bmcPlayer.getName() + ": " +event.getMessage(), "bmc.nclv");
+        Bukkit.broadcast("§7[BMC] " + bmcPlayer.getName() + ": " +event.getMessage(), "bmc.nclv");
     }
 
     /**

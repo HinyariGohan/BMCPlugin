@@ -77,5 +77,19 @@ public class BMCUtils {
 
     public ItemStack getRankitem() {return this.rankitem; }
 
+    /**
+     * 指定したStringが数字であるかを判定
+     * @param num 判定したいString型
+     * @return boolean
+     */
+    public boolean isNumber(String num) {
+        try {
+            Integer.parseInt(num);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
 
 }

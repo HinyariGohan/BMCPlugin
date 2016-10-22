@@ -1,5 +1,6 @@
 package xyz.hinyari.bmcplugin;
 
+import org.bukkit.inventory.Inventory;
 import xyz.hinyari.bmcplugin.utils.BMCUtils;
 import xyz.hinyari.bmcplugin.utils.ActionBar;
 import org.bukkit.Bukkit;
@@ -14,16 +15,19 @@ public class BMCPlayer
 	private final BMCPlugin bmc;
 	private final Player player;
 	private final BMCScoreBoard bmcScoreBoard;
+	private final Inventory privateGUI;
 
 	public BMCPlayer(Player player, BMCPlugin bmcPlugin) {
 		this.player = player;
 		this.bmc = bmcPlugin;
 		this.bmcScoreBoard = new BMCScoreBoard(this);
+		this.privateGUI = Bukkit.createInventory(player, 54, player.getName()+ "'s GUI");
 	}
 
 	private void init() {
 	}
 
+	//checkPermというメソッドがあってもいいかもしれない。（そのままエラー処理可能）
 	public Player getPlayer() {
 		return this.player;
 	}
@@ -37,6 +41,8 @@ public class BMCPlayer
     }
 
     public void msg(String message) { player.sendMessage(BMCUtils.convert((bmc.config.getPrefix() + message))); }
+
+    public void msg(String message, String permission) { if(hasPermission(permission)) msg(message); }
 
     public void noprefix(String message) { player.sendMessage(BMCUtils.convert(message));}
 
@@ -63,6 +69,8 @@ public class BMCPlayer
 	public boolean noperm() { errmsg("権限がありません。"); return true; }
 
 	public void openRankmenu() { player.openInventory(bmc.rankGUIMenu.getMainMenu(this)); }
+
+	public Inventory getPrivateGUI() { return this.privateGUI; }
 
 	/**
 	 * サウンドを再生します。

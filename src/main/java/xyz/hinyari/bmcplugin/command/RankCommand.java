@@ -42,10 +42,7 @@ public class RankCommand {
         //Player player = bmcPlayer.getPlayer();
         String myname = bmcPlayer.getName();
 
-        if (args.length == 0) {
-            bmcHelp.Rankhelp(bmcPlayer);
-            return true;
-        }
+        if (args.length == 0) return bmcHelp.Rankhelp(bmcPlayer);
         if (args[0].equalsIgnoreCase("stats")) {
             BMCPlayer msgPlayer;
             if (args.length == 1) {
@@ -64,8 +61,7 @@ public class RankCommand {
         } else if (args[0].equalsIgnoreCase("set")) {
             if (bmcPlayer.hasPermission("bmc.rank.set")) {
                 if (args.length <= 2) {
-                    bmcPlayer.msg("/rank set <プレイヤー名> <ランク名>");
-                    return true;
+                    return bmcHelp.Rankhelp(bmcPlayer);
                 } else {
                     if (getBMCPlayer(args[1]) == null) {
                         bmcPlayer.errmsg("そのプレイヤーはオフラインです。");

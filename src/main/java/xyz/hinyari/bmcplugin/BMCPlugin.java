@@ -2,6 +2,7 @@ package xyz.hinyari.bmcplugin;
 
 import com.earth2me.essentials.Essentials;
 import org.bukkit.scoreboard.ScoreboardManager;
+import xyz.hinyari.bmcplugin.event.VoteListener;
 import xyz.hinyari.bmcplugin.original.BMCAnnouncement;
 import xyz.hinyari.bmcplugin.utils.BMCBoolean;
 import xyz.hinyari.bmcplugin.utils.BMCHelp;
@@ -125,6 +126,7 @@ public class BMCPlugin extends JavaPlugin implements Listener {
         pm.registerEvents(new BMCMacerator(this), this);
         pm.registerEvents(this.vanishListner, this);
         pm.registerEvents(this, this);
+        pm.registerEvents(new VoteListener(this), this);
         pm.registerEvents(rankGUIMenu, this);
         new SpecialArmor().runTaskTimer(this, 0L, 20L);
         bmcTimeManager = new BMCTimeManager(this);
@@ -174,6 +176,8 @@ public class BMCPlugin extends JavaPlugin implements Listener {
                 else if (args[0].equalsIgnoreCase("freeze")) return bmcCommand.onCommand(sender, cmd, label, args);
                 else return bmcHelp.NTPhelp(bmcPlayer);
             }
+        } else if (cmd.getName().equalsIgnoreCase("guiedit")) {
+            player.openInventory(bmcPlayer.getPrivateGUI());
         }
         return false;
     }
@@ -243,6 +247,13 @@ public class BMCPlugin extends JavaPlugin implements Listener {
      * @return BMCPlayer
      */
     public BMCPlayer getBMCPlayer(Player player) {
+        BMCPlayer bp = bmcPlayer.get(player);
+        if (bp != null) return bp;
+        else return null;
+    }
+
+    public BMCPlayer getBMCPlayer(String name) {
+        Player player = Bukkit.getPlayer(name);
         BMCPlayer bp = bmcPlayer.get(player);
         if (bp != null) return bp;
         else return null;

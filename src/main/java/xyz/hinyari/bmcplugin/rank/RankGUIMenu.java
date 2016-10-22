@@ -3,6 +3,7 @@ package xyz.hinyari.bmcplugin.rank;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -40,7 +41,6 @@ public class RankGUIMenu implements Listener {
     private final List<ItemStack> ITEM_COLOED_LIST = new ArrayList<>();
 
 
-
     public RankGUIMenu(BMCPlugin bmcPlugin) {
         this.bmcPlugin = bmcPlugin;
         this.utils = bmcPlugin.utils;
@@ -74,15 +74,19 @@ public class RankGUIMenu implements Listener {
         inventory.setItem(8, new SpecialItem(new ItemStack(Material.BARRIER), "&c- 閉じる -").getItem());
         int i = 0;
         for (Rank ranks : Rank.values()) {
-            if (ranks.equals(Rank.INFRARED)) { continue; }
-            if (rank.getInt() >= ranks.getInt() ) {
+            if (ranks.equals(Rank.INFRARED)) {
+                continue;
+            }
+            if (rank.getInt() >= ranks.getInt()) {
                 if (rank.getInt() == ranks.getInt()) {
                     ItemStack Final = new SpecialItem(ITEM_COLOED_LIST.get(i), null, null, Enchantment.DURABILITY, 1, ItemFlag.HIDE_ENCHANTS).getItem();
                     inventory.addItem(Final);
                     break;
                 }
                 inventory.addItem(ITEM_COLOED_LIST.get(i));
-            } else {break;}
+            } else {
+                break;
+            }
             i++;
         }
         return inventory;
@@ -90,7 +94,26 @@ public class RankGUIMenu implements Listener {
 
     @EventHandler
     public void onInventoryClickEvent(InventoryClickEvent event) {
-
+        Inventory inventory = event.getClickedInventory();
+        Player player = (Player) event.getWhoClicked();
+        BMCPlayer bmcPlayer = bmcPlugin.getBMCPlayer(player);
+        ItemStack item = event.getCurrentItem();
+        String itemname = item.getItemMeta().getDisplayName();
+        if (item == null) return;
+        if (inventory.getName().contains("BMCランクメニュー")) {
+            event.setCancelled(true);
+            if (itemname.contains("閉じる")) {
+                player.closeInventory();
+                return;
+            }
+            Rank selectedRank = Rank.getInGameNameOfRank(itemname);
+            if (selectedRank == null) {
+                bmcPlayer.errbar("不明なエラー");
+                return;
+            } else {
+                player.openInventory(getRankOfInventory(selectedRank));
+            }
+        }
     }
 
     @EventHandler
@@ -100,7 +123,8 @@ public class RankGUIMenu implements Listener {
             if (player.getItemInMainHand().equals(utils.getRankitem())) {
                 Rank rank = player.getScoreboard().getRank();
                 if (rank == Rank.VISITOR || rank == Rank.INFRARED) {
-                    player.errbar("ランクが不正です。"); return;
+                    player.errbar("ランクが不正です。");
+                    return;
                 }
                 player.openRankmenu();
             }
@@ -116,6 +140,11 @@ public class RankGUIMenu implements Listener {
                 }
             }
         }
+    }
+
+    public Inventory getRankOfInventory(Rank rank) {
+        Inventory inventory = Bukkit.createInventory(null, 54, (rank.getName() + "ランクメニュー"));
+        return inventory;
     }
 
 }

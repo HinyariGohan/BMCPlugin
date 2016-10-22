@@ -14,11 +14,20 @@ prefix: # String型で入力してください
 
 # コシヒカリに関する設定
 kome:
+  # 自動配布をするか
+  time_get_enable: false
+
   # 何分ごとにコメを配布するか int
   time_get_minutes: 60
 
   # 何個ゲット出来るようにするか int
   time_get_value: 2
+
+# 投票特典に関する設定
+vote:
+  commands: # 投票された際に実行されるコマンド
+  # %player で投票プレイヤー
+  - kome point %player add 1
 
 # 管理用
 management:
@@ -33,4 +42,4 @@ announcement:
 # デバッグモードの有効、無効
 debug: false
 
-versions: 1.2.4
+versions: 1.2.5

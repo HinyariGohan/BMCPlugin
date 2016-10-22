@@ -91,4 +91,13 @@ public enum Rank {
         }
         return null;
     }
+
+    public static Rank getInGameNameOfRank(String name) {
+        for (Rank r : Rank.values()) {
+            if (name.toUpperCase().equalsIgnoreCase(r.getName().toUpperCase())) {
+                return r;
+            }
+        }
+        return null;
+    }
 }
