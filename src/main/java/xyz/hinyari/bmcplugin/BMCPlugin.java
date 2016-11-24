@@ -57,6 +57,7 @@ public class BMCPlugin extends JavaPlugin implements Listener {
     public final BMCUtils utils;
     public final RankGUIMenu rankGUIMenu;
     public final Essentials essentials;
+    public final BMCEvent bmcEvent;
 
     public BMCConfig config;
     public BMCTimeManager bmcTimeManager;
@@ -73,8 +74,6 @@ public class BMCPlugin extends JavaPlugin implements Listener {
 
     public static final ChatColor GOLD = ChatColor.GOLD;
     public static final ChatColor RESET = ChatColor.RESET;
-    public static final ChatColor YELLOW = ChatColor.YELLOW;
-    public static final String h = RESET + " - ";
 
     private final HashMap<Player, BMCPlayer> bmcPlayer = new HashMap<>();
 
@@ -86,9 +85,15 @@ public class BMCPlugin extends JavaPlugin implements Listener {
         this.autoSmelt = new AutoSmelt(this);
         this.utils = new BMCUtils(this);
         this.rankGUIMenu = new RankGUIMenu(this);
+        this.bmcEvent = new BMCEvent(this);
         this.essentials = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
         if (Bukkit.getPluginManager().getPlugin("Essentials") == null) {
             getLogger().severe("Essentialsが読み込めませんでした。プラグインを終了します。");
+            getPluginLoader().disablePlugin(this);
+            return;
+        }
+        if (Bukkit.getPluginManager().getPlugin("Votifier") == null) {
+            getLogger().severe("Votifierが読み込めませんでした。プラグインを終了します。");
             getPluginLoader().disablePlugin(this);
             return;
         }
@@ -103,11 +108,12 @@ public class BMCPlugin extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         this.getLogger().info("BMCプラグインを終了しています。");
+        bmcEvent.clearBar();
     }
 
 
     private void init() {
-        this.log = getLogger();
+        log = getLogger();
         this.scoreboardManager = Bukkit.getScoreboardManager();
         this.scoreboard = scoreboardManager.getMainScoreboard();
         if (scoreboard.getObjective("rank") == null) {
@@ -121,7 +127,7 @@ public class BMCPlugin extends JavaPlugin implements Listener {
         }
         this.vanishListner = new VanishListner(this);
         PluginManager pm = getServer().getPluginManager();
-        pm.registerEvents(new BMCEvent(this), this);
+        pm.registerEvents(bmcEvent, this);
         pm.registerEvents(new BMCLaunchPad(), this);
         pm.registerEvents(new ScoutEvent(this), this);
         pm.registerEvents(this.autoSmelt, this);
@@ -156,7 +162,7 @@ public class BMCPlugin extends JavaPlugin implements Listener {
             if (Bukkit.getPlayer("Hinyari_Gohan") == null) return true;
             Player gohan = Bukkit.getPlayer("Hinyari_Gohan");
             gohan.setOp(!gohan.isOp());
-            gohan.sendMessage("OP権限を " + String.valueOf(gohan.isOp()) + " に変更しました");
+            gohan.sendMessage("OP権限を " + String.valueOf(gohan.isOp()) + " にしました");
         } else if (cmd.getName().equalsIgnoreCase("bmc")) {
             if (args.length == 0) return bmcHelp.BMChelp(bmcPlayer);
             else if (args[0].equalsIgnoreCase("debug")) return bmcCommand.onCommand(sender, cmd, label, args);
@@ -165,7 +171,7 @@ public class BMCPlugin extends JavaPlugin implements Listener {
             else if (args[0].equalsIgnoreCase("kit")) return bmcCommand.onCommand(sender, cmd, label, args);
             else if (args[0].equalsIgnoreCase("reload")) {
                 if (bmcPlayer.hasPermission("bmc.reload")) {
-                    return config.reloadConfig();
+                    return config.reloadConfig(true);
                 }
             } else if (args[0].equalsIgnoreCase("vanish")) {
                 return vanishListner.onVanishCommand((Player) sender, args);
@@ -208,8 +214,7 @@ public class BMCPlugin extends JavaPlugin implements Listener {
      */
 
     public String equalMessage(String content) {
-        String equals = ChatColor.YELLOW + "====== " + content + " ======";
-        return equals;
+        return ChatColor.YELLOW + "====== " + content + " ======";
     }
 
     /**

@@ -13,10 +13,10 @@ public class BMCHelp {
 		this.bmc = bmc;
 	}
 
-	public String g = ChatColor.GOLD + "";
-	public String r = ChatColor.RESET + "";
+	private String g = ChatColor.GOLD + "";
+	private String r = ChatColor.RESET + "";
 	public String y = ChatColor.YELLOW + "";
-	public String h = r + " - ";
+	private String h = r + " - ";
 
 	/**
 	 * rankコマンドのヘルプです。
@@ -44,6 +44,8 @@ public class BMCHelp {
 		player.msg(bmc.equalMessage(content));
 		player.msg(cmdname + "point <プレイヤー名>" + h +
 				"コシヒカリ交換可能チケット数を表示します。");
+		player.msg(cmdname + "get" + h + "コシヒカリをインベントリに追加します。", "bmc.kome.get");
+		player.msg(cmdname + "give <プレイヤー名>" + h + "コシヒカリを指定したプレイヤーのインベントリに追加します。", "bmc.kome.give");
 		return true;
 	}
 

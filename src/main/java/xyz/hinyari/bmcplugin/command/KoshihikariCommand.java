@@ -26,7 +26,7 @@ public class KoshihikariCommand {
             return bmcHelp.Komehelp(bmcPlayer);
         }
         if (args[0].equalsIgnoreCase("point")) {
-            BMCPlayer target = bmcPlayer;
+            BMCPlayer target;
             if (args.length == 2) {
                 if (Bukkit.getPlayer(args[1]) == null) {
                     bmcPlayer.errmsg("そのプレイヤーはオンラインではありません。");
@@ -39,10 +39,7 @@ public class KoshihikariCommand {
             } else if (args.length == 4 || args.length == 5) {
                 if (args[2].equalsIgnoreCase("set") || args[2].equalsIgnoreCase("add")) {
                     if (!bmcPlayer.hasPermission("bmc.kome.admin")) {
-                        if (args.length == 4) return bmcPlayer.noperm();
-                        if (args.length == 5 && !args[4].equals(plugin.config.getAdmin_pass())) {
-                            return bmcPlayer.noperm();
-                        }
+                        if (args.length == 4 || !args[4].equals(plugin.config.getAdmin_pass())) return bmcPlayer.noperm();
                     }
                     if (!plugin.utils.isNumber(args[3])) { // 数字でなかった
                         bmcPlayer.errmsg("有効な数字を入力してください。");
@@ -71,12 +68,27 @@ public class KoshihikariCommand {
             }
         }
         if (args[0].equalsIgnoreCase("get")) {
-            if (bmcPlayer.hasPermission("bmc.kome.get")) {
+            if (bmcPlayer.hasPermission("bmc.kome.get") || (args.length == 2 && args[1].equals(plugin.config.getAdmin_pass()))) {
                 bmcPlayer.getPlayer().getInventory().addItem(plugin.utils.getKoshihikari());
                 bmcPlayer.msg("コシヒカリをインベントリに追加しました。");
                 return true;
             }
             return bmcPlayer.noperm();
+        }
+        if (args[0].equalsIgnoreCase("give")) {
+            if (bmcPlayer.hasPermission("bmc.kome.give")) {
+                if (args.length == 2) {
+                    if (plugin.getBMCPlayer(args[1]) == null) {
+                        bmcPlayer.errmsg("そのプレイヤーはオフラインです。");
+                        return true;
+                    }
+                    plugin.getBMCPlayer(args[1]).getPlayer().getInventory().addItem(plugin.utils.getKoshihikari());
+                    bmcPlayer.msg(plugin.getBMCPlayer(args[1]).getName() + "さんのインベントリにコシヒカリを追加しました。");
+                    return true;
+                }
+            } else {
+                return bmcPlayer.noperm();
+            }
         }
         return bmcHelp.Komehelp(bmcPlayer);
     }

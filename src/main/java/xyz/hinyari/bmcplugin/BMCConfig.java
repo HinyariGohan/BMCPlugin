@@ -27,6 +27,7 @@ public class BMCConfig {
     private boolean KOME_GET_ENABLE;
     private String VOTE_URL;
     private List<String> VOTE_COMMANDS;
+    private int KOME_GODTIME;
 
     private String ADMIN_PASS;
 
@@ -47,7 +48,7 @@ public class BMCConfig {
         this.KOME_GET_ENABLE = config.getBoolean("kome.time_get_enable");
         this.VOTE_URL = config.getString("vote.url");
         this.VOTE_COMMANDS = config.getStringList("vote.commands");
-
+        this.KOME_GODTIME = config.getInt("kome.godtime");
     }
 
     public final String getAdmin_pass() { return this.ADMIN_PASS; }
@@ -64,6 +65,7 @@ public class BMCConfig {
     public final boolean getKomeGetAvailable() {return this.KOME_GET_ENABLE;}
     public final List<String> getVoteCommands() { return this.VOTE_COMMANDS; }
     public final String getVoteURL() { return this.VOTE_URL; }
+    public final int getKomeGodTime() { return this.KOME_GODTIME; }
     
     public String replace(String message, BMCPlayer player) {
         String msg = message;
@@ -71,7 +73,7 @@ public class BMCConfig {
         return msg;
     }
 
-    public boolean reloadConfig() {
+    public boolean reloadConfig(boolean showmessage) {
         this.plugin.reloadConfig();
         this.plugin.saveDefaultConfig();
         this.config = plugin.getConfig();
@@ -88,7 +90,10 @@ public class BMCConfig {
         this.KOME_GET_ENABLE = config.getBoolean("kome.time_get_enable");
         this.VOTE_URL = config.getString("vote.url");
         this.VOTE_COMMANDS = config.getStringList("vote.commands");
-        Bukkit.broadcast(this.PREFIX + "コンフィグをリロードしました。", "bmc.reload");
+        this.KOME_GODTIME = config.getInt("kome.godtime");
+        if (showmessage) {
+            Bukkit.broadcast(this.PREFIX + "コンフィグをリロードしました。", "bmc.reload");
+        }
         return true;
     }
 

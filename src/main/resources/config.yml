@@ -23,12 +23,15 @@ kome:
   # 何個ゲット出来るようにするか int
   time_get_value: 2
 
+  # 無敵時間（特殊効果の有効時間）(s)
+  godtime: 12000
+
 # 投票特典に関する設定
 vote:
   commands: # 投票された際に実行されるコマンド
   # %player で投票プレイヤー
   - kome point %player add 1
-  url: https://minecraft.jp/servers/55c5eb074ddda15e5b0041a7
+  url: https://goo.gl/hEsM01
 
 # 管理用
 management:
@@ -43,4 +46,4 @@ announcement:
 # デバッグモードの有効、無効
 debug: false
 
-versions: 1.2.5
+versions: 1.2.6

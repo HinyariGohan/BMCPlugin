@@ -2,12 +2,15 @@ package xyz.hinyari.bmcplugin.rank;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
@@ -19,6 +22,7 @@ import xyz.hinyari.bmcplugin.original.DyeItem;
 import xyz.hinyari.bmcplugin.utils.SpecialItem;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -77,6 +81,20 @@ public class RankGUIMenu implements Listener {
             if (ranks.equals(Rank.INFRARED)) {
                 continue;
             }
+            /*
+            if (rank.getInt() >= ranks.getInt()) {
+                if (rank.getInt() == ranks.getInt()) {
+                    inventory.addItem(new SpecialItem(ITEM_COLOED_LIST.get(i), null, null, Enchantment.DURABILITY, 1, ItemFlag.HIDE_ENCHANTS).getItem());
+                } else {
+                    inventory.addItem(ITEM_COLOED_LIST.get(i));
+                }
+            }
+
+            if (rank.getInt() < ranks.getInt()) {
+                String ranksname = (ranks.toString()).substring(0, 1).toUpperCase() + (ranks.toString()).substring(1).toLowerCase();
+                inventory.addItem(new SpecialItem(ITEM_COLOED_LIST.get(i), ranksname, null, null, 0, null).getItem());
+            }
+            */
             if (rank.getInt() >= ranks.getInt()) {
                 if (rank.getInt() == ranks.getInt()) {
                     ItemStack Final = new SpecialItem(ITEM_COLOED_LIST.get(i), null, null, Enchantment.DURABILITY, 1, ItemFlag.HIDE_ENCHANTS).getItem();
@@ -84,8 +102,6 @@ public class RankGUIMenu implements Listener {
                     break;
                 }
                 inventory.addItem(ITEM_COLOED_LIST.get(i));
-            } else {
-                break;
             }
             i++;
         }
@@ -98,21 +114,39 @@ public class RankGUIMenu implements Listener {
         Player player = (Player) event.getWhoClicked();
         BMCPlayer bmcPlayer = bmcPlugin.getBMCPlayer(player);
         ItemStack item = event.getCurrentItem();
-        String itemname = item.getItemMeta().getDisplayName();
         if (item == null) return;
+        if (!item.hasItemMeta()) return;
+        String itemname = item.getItemMeta().getDisplayName();
         if (inventory.getName().contains("BMCランクメニュー")) {
             event.setCancelled(true);
             if (itemname.contains("閉じる")) {
                 player.closeInventory();
+                bmcPlayer.playSound(Sound.BLOCK_CHEST_CLOSE, 0.8F, 0.6F);
                 return;
             }
             Rank selectedRank = Rank.getInGameNameOfRank(itemname);
             if (selectedRank == null) {
-                bmcPlayer.errbar("不明なエラー");
-                return;
+                //bmcPlayer.errbar("不明なエラー");
+                bmcPlayer.playSound(Sound.BLOCK_ANVIL_LAND, 1.0F, 0.5F);
             } else {
                 player.openInventory(getRankOfInventory(selectedRank));
             }
+        }
+    }
+
+    @EventHandler
+    public void onInventoryDragEvent(InventoryDragEvent event) {
+        Inventory inventory = event.getInventory();
+        if (inventory.getName().contains("BMCランクメニュー")) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onInventoryInteractEvent(InventoryInteractEvent event) {
+        Inventory inventory = event.getInventory();
+        if (inventory.getName().contains("BMCランクメニュー")) {
+            event.setCancelled(true);
         }
     }
 

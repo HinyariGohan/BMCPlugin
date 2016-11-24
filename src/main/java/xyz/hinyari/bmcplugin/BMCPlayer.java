@@ -1,6 +1,7 @@
 package xyz.hinyari.bmcplugin;
 
 import org.bukkit.inventory.Inventory;
+import org.bukkit.scheduler.BukkitRunnable;
 import xyz.hinyari.bmcplugin.utils.BMCUtils;
 import xyz.hinyari.bmcplugin.utils.ActionBar;
 import org.bukkit.Bukkit;
@@ -71,6 +72,16 @@ public class BMCPlayer
 	public void openRankmenu() { player.openInventory(bmc.rankGUIMenu.getMainMenu(this)); }
 
 	public Inventory getPrivateGUI() { return this.privateGUI; }
+
+	public void playErrSound() {
+		playSound(Sound.BLOCK_NOTE_BASS, 0.8F, 0.6F);
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				playSound(Sound.BLOCK_NOTE_BASS, 0.8F, 0.6F);
+			}
+		}.runTaskLater(bmc, 2L);
+	}
 
 	/**
 	 * サウンドを再生します。

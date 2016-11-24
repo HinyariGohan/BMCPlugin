@@ -12,10 +12,7 @@ import xyz.hinyari.bmcplugin.rank.Rank;
 public class BMCScoreBoard {
 
     private Rank rank;
-    private final BMCPlugin bmcPlugin;
-    private final BMCPlayer bmcPlayer;
     private final Player player;
-    private final Scoreboard scoreboard;
     private final Objective rankObj;
     private final Objective komeObj;
     private int rankPoint = 0;
@@ -25,12 +22,11 @@ public class BMCScoreBoard {
     private Score komeScore;
 
     public BMCScoreBoard(BMCPlayer player) {
-        this.bmcPlugin = player.getPlugin();
-        this.scoreboard = bmcPlugin.getScoreboard();
+        BMCPlugin bmcPlugin = player.getPlugin();
+        Scoreboard scoreboard = bmcPlugin.getScoreboard();
         this.rankObj = scoreboard.getObjective("rank");
         this.komeObj = scoreboard.getObjective("koshihikari");
-        this.bmcPlayer = player;
-        this.player = bmcPlayer.getPlayer();
+        this.player = player.getPlayer();
         init();
     }
 

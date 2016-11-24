@@ -16,6 +16,7 @@ import org.bukkit.potion.PotionEffectType;
 import xyz.hinyari.bmcplugin.utils.BMCBoolean;
 import xyz.hinyari.bmcplugin.utils.BMCHelp;
 import xyz.hinyari.bmcplugin.event.ScoutEvent;
+import xyz.hinyari.bmcplugin.utils.SpecialItem;
 
 public class DebugCommand extends SubCommandAbst {
 
@@ -49,7 +50,7 @@ public class DebugCommand extends SubCommandAbst {
         if (args.length == 1) return bmcHelp.Debughelp(bmcPlayer);
         else if (args.length >= 2) {
             if (args[1].equalsIgnoreCase("itemhand")) {
-                if (item.getType() != null && item.getTypeId() != 0) {
+                if (item.getType() != null && item.getType() != Material.AIR) {
                     if (item.getItemMeta().getDisplayName() == null) {
                         if (!(item.getDurability() == 0)) {
                             bmcPlayer.msg(item.getType().toString() + ", " + item.getDurability());
@@ -134,16 +135,7 @@ public class DebugCommand extends SubCommandAbst {
                             return false;
                         }
 
-                        if (plugin.autoSmelt.lore.isEmpty()) {
-                            plugin.autoSmelt.lore.add(0, "§4Auto Smelt");
-                            meta.setLore(plugin.autoSmelt.lore);
-                            item.setItemMeta(meta);
-                            bmcPlayer.msg("正常にエンチャントメントが実行されました。");
-                        } else {
-                            meta.setLore(plugin.autoSmelt.lore);
-                            item.setItemMeta(meta);
-                            bmcPlayer.msg("正常にエンチャントメントが実行されました。");
-                        }
+                        item.setItemMeta(new SpecialItem(item, null, new String[] {"&cAuto Smelt"}).getItem().getItemMeta());
                         return true;
                     } else if (args[2].equalsIgnoreCase("unbreaking")) {
                         if (args.length == 3) {
@@ -165,9 +157,10 @@ public class DebugCommand extends SubCommandAbst {
                 player.getInventory().addItem(ScoutEvent.grappleItem);
             } else if (args[1].equalsIgnoreCase("toggle")) {
                 BMCConfig config = plugin.config;
-                boolean b = config.getDebug() ? false : true;
+                boolean b = !config.getDebug();
                 config.config.set("debug", b);
-                plugin.config = new BMCConfig(plugin);
+                plugin.saveConfig();
+                config.reloadConfig(false);
                 bmcPlayer.msg("デバッグモードを " + b + " に変更しました");
             }
                 else return bmcHelp.Debughelp(bmcPlayer);
@@ -177,6 +170,6 @@ public class DebugCommand extends SubCommandAbst {
 
     private boolean DebugEnchCommandHelp(BMCPlayer bmcPlayer) {
         bmcPlayer.msg("Useful: " + "/plugin debug ench <fall/fire/smelt>");
-        return false;
+        return true;
     }
 }

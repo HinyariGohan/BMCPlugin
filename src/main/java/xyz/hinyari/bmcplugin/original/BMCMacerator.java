@@ -47,7 +47,7 @@ public class BMCMacerator implements Listener {
 
 
         if (player.getOpenInventory().getTitle().contains("粉砕メニュー")) {
-            if (item != null && item.getType() == Material.FLINT) {
+            if (item.getType() == Material.FLINT) {
                 if (item.hasItemMeta() && item.getItemMeta().getDisplayName().contains("粉砕具")) {
                     event.setCancelled(true);
                     return;

@@ -129,8 +129,7 @@ public class ScoutEvent implements Listener
 		e.teleport(entityLoc);
 
 		double g = -0.08D;
-		double d = loc.distance(entityLoc);
-		double t = d;
+		double t = loc.distance(entityLoc);
 
 		double v_x = (0.9D + 0.10D * t) * (loc.getX() - entityLoc.getX()) / t;
 		double v_y = (1.3D + 0.05D * t) * (loc.getY() - entityLoc.getY()) / t - 0.5D * g * t;

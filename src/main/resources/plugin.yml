@@ -1,6 +1,6 @@
 name: BMCPlugin
 main: xyz.hinyari.bmcplugin.BMCPlugin
-version: 1.2.5
+version: 1.2.6
 author: Hinyari_Gohan
 description: The plugin for BMCServer.
 softdepend: [Essentials, Votifier]
@@ -34,7 +34,7 @@ permissions:
   bmc.permmsg:
     default: op
   bmc.rankmenu:
-    default: op
+    default: true
   bmc.rankmenu.get:
     default: op
   bmc.rank.set:
@@ -48,4 +48,6 @@ permissions:
   bmc.vote:
     default: op
   bmc.kome.admin:
+    default: op
+  bmc.kome.give:
     default: op

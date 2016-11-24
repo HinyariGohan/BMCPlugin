@@ -11,8 +11,7 @@ public class ActionBar {
 	private PacketPlayOutChat packet;
 
 	public ActionBar(String text) {
-		PacketPlayOutChat packet = new PacketPlayOutChat(ChatSerializer.a("{\"text\":\"" + text + "\"}"), (byte) 2);
-		this.packet = packet;
+		this.packet = new PacketPlayOutChat(ChatSerializer.a("{\"text\":\"" + text + "\"}"), (byte) 2);
 	}
 
 	public void sendToPlayer(Player p) {
