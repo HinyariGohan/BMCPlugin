@@ -224,7 +224,7 @@ public class BMCMacerator implements Listener {
     private void init() {
         Inventory macerator = Bukkit.createInventory(null, 54, "粉砕メニュー");
 
-        ItemStack bluepanel = new ItemStack((Material.STAINED_GLASS_PANE), 1, (byte) 3);
+        ItemStack bluepanel = new SpecialItem(new ItemStack((Material.STAINED_GLASS_PANE), 1, (byte) 3), " ").getItem();
         ItemStack okButton = new ItemStack((Material.STAINED_CLAY), 1, (byte) 5);
         ItemStack cancelButton = new ItemStack((Material.STAINED_CLAY), 1, (byte) 14);
         ItemStack yellowpanel = new ItemStack((Material.STAINED_GLASS_PANE), 1, (byte) 4);
@@ -267,7 +267,7 @@ public class BMCMacerator implements Listener {
         macerator.setItem(48, okButton);
 
         macerator.setItem(50, cancelButton);
-        macerator_menu = macerator;
+        this.macerator_menu = macerator;
     }
 
 }
