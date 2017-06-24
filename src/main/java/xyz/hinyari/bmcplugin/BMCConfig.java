@@ -10,7 +10,8 @@ import java.util.List;
 /**
  * Created by Hinyari_Gohan on 2016/09/23.
  */
-public class BMCConfig {
+public class BMCConfig
+{
 
     public FileConfiguration config;
     public final BMCPlugin plugin;
@@ -28,10 +29,12 @@ public class BMCConfig {
     private String VOTE_URL;
     private List<String> VOTE_COMMANDS;
     private int KOME_GODTIME;
+    private String NIKKEI_URL;
 
     private String ADMIN_PASS;
 
-    public BMCConfig(BMCPlugin plugin) {
+    public BMCConfig(BMCPlugin plugin)
+    {
         this.plugin = plugin;
         this.plugin.saveDefaultConfig();
         this.config = plugin.getConfig();
@@ -49,31 +52,100 @@ public class BMCConfig {
         this.VOTE_URL = config.getString("vote.url");
         this.VOTE_COMMANDS = config.getStringList("vote.commands");
         this.KOME_GODTIME = config.getInt("kome.godtime");
+        this.NIKKEI_URL = config.getString("NikkeiURL");
     }
 
-    public final String getAdmin_pass() { return this.ADMIN_PASS; }
-    public final String getConfigVersions() { return this.CONFIG_VERSIONS;}
-    public final FileConfiguration getConfig() { return  this.config; }
-    public final String getPrefix() { return this.PREFIX; }
-    public final String getErrorPrefix() {return this.ERROR; }
-    public final String getDebugPrefix() {return this.DEBUG_PREFIX;}
-    public final boolean getDebug() { return this.DEBUG; }
-    public final int getKomeGetMinutes() {return this.KOME_GET_MINUTES; }
-    public final int getKomeGetValue() {return this.KOME_GET_VALUE; }
-    public final List<String> getAnnouncementList() {return this.ANNOUNCEMENT_LIST;}
-    public final int getAnnouncementInterval() {return this.ANNOUNCEMENT_INTERVAL;}
-    public final boolean getKomeGetAvailable() {return this.KOME_GET_ENABLE;}
-    public final List<String> getVoteCommands() { return this.VOTE_COMMANDS; }
-    public final String getVoteURL() { return this.VOTE_URL; }
-    public final int getKomeGodTime() { return this.KOME_GODTIME; }
-    
-    public String replace(String message, BMCPlayer player) {
+    public final String getAdmin_pass()
+    {
+        return this.ADMIN_PASS;
+    }
+
+    public final String getConfigVersions()
+    {
+        return this.CONFIG_VERSIONS;
+    }
+
+    public final FileConfiguration getConfig()
+    {
+        return this.config;
+    }
+
+    public final String getPrefix()
+    {
+        return this.PREFIX;
+    }
+
+    public final String getErrorPrefix()
+    {
+        return this.ERROR;
+    }
+
+    public final String getDebugPrefix()
+    {
+        return this.DEBUG_PREFIX;
+    }
+
+    public final boolean getDebug()
+    {
+        return this.DEBUG;
+    }
+
+    public final int getKomeGetMinutes()
+    {
+        return this.KOME_GET_MINUTES;
+    }
+
+    public final int getKomeGetValue()
+    {
+        return this.KOME_GET_VALUE;
+    }
+
+    public final List<String> getAnnouncementList()
+    {
+        return this.ANNOUNCEMENT_LIST;
+    }
+
+    public final int getAnnouncementInterval()
+    {
+        return this.ANNOUNCEMENT_INTERVAL;
+    }
+
+    public final boolean getKomeGetAvailable()
+    {
+        return this.KOME_GET_ENABLE;
+    }
+
+    public final List<String> getVoteCommands()
+    {
+        return this.VOTE_COMMANDS;
+    }
+
+    public final String getVoteURL()
+    {
+        return this.VOTE_URL;
+    }
+
+    public final int getKomeGodTime()
+    {
+        return this.KOME_GODTIME;
+    }
+
+    public String getNikkeiURL()
+    {
+        return this.NIKKEI_URL;
+    }
+
+    public String replace(String message, BMCPlayer player)
+    {
         String msg = message;
-        msg = msg.replace("%player", player.getName()).replace("%rank", player.getScoreboard().getRank().getName()).replace('&', '§');
+        msg = msg.replace("%player", player.getName())
+                .replace("%rank", player.getScoreboard().getRank().getName())
+                .replace('&', '§');
         return msg;
     }
 
-    public boolean reloadConfig(boolean showmessage) {
+    public boolean reloadConfig(boolean showmessage)
+    {
         this.plugin.reloadConfig();
         this.plugin.saveDefaultConfig();
         this.config = plugin.getConfig();
@@ -91,12 +163,13 @@ public class BMCConfig {
         this.VOTE_URL = config.getString("vote.url");
         this.VOTE_COMMANDS = config.getStringList("vote.commands");
         this.KOME_GODTIME = config.getInt("kome.godtime");
-        if (showmessage) {
+        this.NIKKEI_URL = config.getString("NikkeiURL");
+        if (showmessage)
+        {
             Bukkit.broadcast(this.PREFIX + "コンフィグをリロードしました。", "bmc.reload");
         }
         return true;
     }
-
 
 
 }

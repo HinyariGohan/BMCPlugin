@@ -1,18 +1,28 @@
 name: BMCPlugin
 main: xyz.hinyari.bmcplugin.BMCPlugin
-version: 1.2.6
+version: 1.2.8
 author: Hinyari_Gohan
-description: The plugin for BMCServer.
-softdepend: [Essentials, Votifier]
+description: Bukkit Plugin for BMCServer.
+softdepend: [Essentials, Votifier. PermissionsEX]
 commands:
   bmc:
-    description: bmcコマンドです。
-    aliases: []
+    description: bmcコマンドです
   rank:
+    description: BMCランクに関する情報を表示します。
   rankup:
+    description: ランクアップを可能にします。
   kome:
+    description: BMC米に関する情報を表示します。
   cop:
+    description: デバッグ用・OP権限の有無を変更します。
   guiedit:
+    description: GUI作成支援GUIを表示します。
+  nikkei:
+    description: 日経平均株価を取得します。
+  spawn:
+    description: スポーン地点へ戻ります。
+  broadcast:
+    description: ブロードキャストします。
 permissions:
   bmc.debug:
     description: デバッグ用のコマンドの使用権限
@@ -43,11 +53,15 @@ permissions:
     default: op
   bmc.admin:
     children:
-      bmc.debug: true
-      bmc.scout.get: true
+      plugin.debug: true
+      plugin.scout.get: true
   bmc.vote:
     default: op
   bmc.kome.admin:
     default: op
   bmc.kome.give:
+    default: op
+  bmc.broadcast:
+    default: op
+  bmc.halfblock:
     default: op

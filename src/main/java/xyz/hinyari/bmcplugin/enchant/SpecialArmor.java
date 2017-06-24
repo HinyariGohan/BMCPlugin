@@ -12,8 +12,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class SpecialArmor extends BukkitRunnable
 {
-	/*
-		int timer;
+    /*
+        int timer;
 		int unbreaking;
 	 */
 
@@ -119,20 +119,26 @@ public class SpecialArmor extends BukkitRunnable
 	}
 	 */
 
-	public void run() {
-		for (Player player : Bukkit.getOnlinePlayers()) {
-			ItemStack[] armor = player.getInventory().getArmorContents();
-			for (ItemStack item : armor) {
-				if (item==null) {
-					continue;
-				}
-				if (item.getType().equals(Material.DIAMOND_CHESTPLATE) &&
-						item.containsEnchantment(Enchantment.PROTECTION_FIRE)) {
-					if (item.getItemMeta().getEnchantLevel(Enchantment.PROTECTION_FIRE)==10) {
-						player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 40, 1), true);
-					}
-				}
-			}
-		}
-	}
+    public void run()
+    {
+        for (Player player : Bukkit.getOnlinePlayers())
+        {
+            ItemStack[] armor = player.getInventory().getArmorContents();
+            for (ItemStack item : armor)
+            {
+                if (item == null)
+                {
+                    continue;
+                }
+                if (item.getType()
+                        .equals(Material.DIAMOND_CHESTPLATE) && item.containsEnchantment(Enchantment.PROTECTION_FIRE))
+                {
+                    if (item.getItemMeta().getEnchantLevel(Enchantment.PROTECTION_FIRE) == 10)
+                    {
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 40, 1), true);
+                    }
+                }
+            }
+        }
+    }
 }

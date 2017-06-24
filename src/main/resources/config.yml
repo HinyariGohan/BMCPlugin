@@ -43,7 +43,26 @@ announcement:
   - あなたの現在のランクは %rank です
   - あなたのプレイヤー名は %player です
 
+#
+# ランクメニューの内容を設定することができます。
+# ランク名の後にList形式で指定してください。
+#
+# ※必ず ,（コンマ）の後に半角空白を挿入してください。（多少の見栄えと一応それでプログラムが組んである為）
+#
+# ポーション [ - Potion, INVISIBILITY, 10, 1 ]
+# コマンド [ - CMD, /aaa bbb ccc, Material, アイテム名前, アイテム説明文...]
+#
+# ポーション対応リスト
+# SPEED(speed), FIRE(fire_resistance), INVISIBILITY(invisibility), NIGHTVISION(night_vision)
+#
+rank_menu:
+  Red:
+    - Potion, SPPED, 10, 1
+    - CMD, /home bed, BED, "ベッド地点へ戻る", "クリックでワープ"
+
 # デバッグモードの有効、無効
 debug: false
 
-versions: 1.2.6
+NikkeiURL: http://k-db.com/indices/I101/5m?download=csv
+
+versions: 1.2.8

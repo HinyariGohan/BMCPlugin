@@ -26,11 +26,13 @@ import xyz.hinyari.bmcplugin.utils.SpecialItem;
 
 import static org.bukkit.Material.*;
 
-public class AutoSmelt implements Listener {
+public class AutoSmelt implements Listener
+{
     private BMCPlugin bmc;
     private BMCBoolean bmcBoolean;
 
-    public AutoSmelt(BMCPlugin bmc) {
+    public AutoSmelt(BMCPlugin bmc)
+    {
         this.bmc = bmc;
         this.bmcBoolean = bmc.bmcBoolean;
     }
@@ -47,33 +49,44 @@ public class AutoSmelt implements Listener {
 
     @SuppressWarnings("deprecation")
     @EventHandler
-    public void onBlockBreak(BlockBreakEvent event) {
+    public void onBlockBreak(BlockBreakEvent event)
+    {
         Player player = event.getPlayer();
         BMCPlayer bmcPlayer = bmc.getBMCPlayer(player);
         Block block = event.getBlock();
         ItemStack item = player.getInventory().getItemInMainHand();
-        if (item == null) return;
+        if (item == null)
+            return;
         ItemMeta meta = item.getItemMeta();
-        if (!(bmcBoolean.isApplyBlock(block.getType()))) return; //ブロックリストに当てはまらない
-        if (!(item.hasItemMeta())) return; //アイテムメタが無い
-        if (!(meta.hasLore())) return; // loreがない
-        if (!(bmcBoolean.isApplyTool(item.getType()))) return; //アイテムリストに当てはまらない
-        if (player.getGameMode() != GameMode.SURVIVAL) return;
-        if (player.getInventory().firstEmpty() == -1) {
+        if (!(bmcBoolean.isApplyBlock(block.getType())))
+            return; //ブロックリストに当てはまらない
+        if (!(item.hasItemMeta()))
+            return; //アイテムメタが無い
+        if (!(meta.hasLore()))
+            return; // loreがない
+        if (!(bmcBoolean.isApplyTool(item.getType())))
+            return; //アイテムリストに当てはまらない
+        if (player.getGameMode() != GameMode.SURVIVAL)
+            return;
+        if (player.getInventory().firstEmpty() == -1)
+        {
             bmcPlayer.errmsg("インベントリに空きが無いためAutoSmeltは実行されません!");
             bmcPlayer.playSound(Sound.BLOCK_ANVIL_LAND, 0.5F, 2);
             return;
         }
         int enchlvl = 0;
-        if (meta.getLore().contains("§4Auto Smelt")) {
+        if (meta.getLore().contains("§4Auto Smelt"))
+        {
             int durability = item.getDurability();
             int maxdurability = item.getType().getMaxDurability();
 
-            if (durability != maxdurability) {
+            if (durability != maxdurability)
+            {
                 int nextdurability = item.getDurability() + 1;
                 item.setDurability((short) nextdurability);
                 bmc.getServer().getPluginManager().callEvent(new PlayerItemDamageEvent(player.getPlayer(), item, 1));
-            } else {
+            } else
+            {
                 item.setType(AIR);
             }
 
@@ -83,10 +96,12 @@ public class AutoSmelt implements Listener {
 
             ItemStack dropitem = null;
             Inventory inventory = player.getInventory();
-            if (item.containsEnchantment(Enchantment.LOOT_BONUS_BLOCKS)) {
+            if (item.containsEnchantment(Enchantment.LOOT_BONUS_BLOCKS))
+            {
                 enchlvl = meta.getEnchantLevel(Enchantment.LOOT_BONUS_BLOCKS) - 1;
             }
-            switch (type) {
+            switch (type)
+            {
                 case IRON_ORE:
                     dropitem = new ItemStack((IRON_INGOT), enchlvl + 1);
                     break;
@@ -119,17 +134,21 @@ public class AutoSmelt implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onEnchantment(EnchantItemEvent event) {
+    public void onEnchantment(EnchantItemEvent event)
+    {
         Player player = event.getEnchanter();
         BMCPlayer bmcPlayer = bmc.getBMCPlayer(player);
         ItemStack item = event.getItem();
         Material items = item.getType();
         Map<Enchantment, Integer> ench = event.getEnchantsToAdd();
-        if (bmcBoolean.isApplyTool(items)) {
-            if (ench != Enchantment.SILK_TOUCH) {
+        if (bmcBoolean.isApplyTool(items))
+        {
+            if (ench != Enchantment.SILK_TOUCH)
+            {
                 int random = (int) (Math.random() * 100);
-                if (random <= 40) { // 40以下(40%)
-                    item.setItemMeta(new SpecialItem(item, null, new String[] {"&cAuto Smelt"}).getItem().getItemMeta());
+                if (random <= 40)
+                { // 40以下(40%)
+                    item.setItemMeta(new SpecialItem(item, null, new String[]{"&cAuto Smelt"}).getItem().getItemMeta());
                 }
             }
         }

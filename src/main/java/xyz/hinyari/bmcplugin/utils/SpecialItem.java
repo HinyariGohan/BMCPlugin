@@ -1,12 +1,15 @@
 package xyz.hinyari.bmcplugin.utils;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Utility;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.MaterialData;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +17,8 @@ import java.util.Map;
 /**
  * Created by Hinyari_Gohan on 2016/10/12.
  */
-public class SpecialItem {
+public class SpecialItem
+{
 
     private final ItemStack itemStack;
     private String name;
@@ -33,7 +37,8 @@ public class SpecialItem {
      * @param itemStack 作成する元となるアイテム
      * @param name      名前
      */
-    public SpecialItem(@Nonnull ItemStack itemStack, String name) {
+    public SpecialItem(@Nonnull ItemStack itemStack, String name)
+    {
         this.itemStack = itemStack;
         this.name = name;
         create();
@@ -46,7 +51,8 @@ public class SpecialItem {
      * @param name      名前
      * @param lore      説明文(LORE)
      */
-    public SpecialItem(@Nonnull ItemStack itemStack, String name, String[] lore) {
+    public SpecialItem(@Nonnull ItemStack itemStack, String name, String[] lore)
+    {
         this.itemStack = itemStack;
         this.name = name;
         this.lore = lore;
@@ -62,7 +68,8 @@ public class SpecialItem {
      * @param enchantment エンチャント
      * @param enchlvl     エンチャントレベル
      */
-    public SpecialItem(@Nonnull ItemStack itemStack, String name, String[] lore, Enchantment enchantment, int enchlvl) {
+    public SpecialItem(@Nonnull ItemStack itemStack, String name, String[] lore, Enchantment enchantment, int enchlvl)
+    {
         this.itemStack = itemStack;
         this.name = name;
         this.lore = lore;
@@ -81,7 +88,8 @@ public class SpecialItem {
      * @param enchlvl     エンチャントレベル
      * @param itemFlags   アイテムフラグ
      */
-    public SpecialItem(@Nonnull ItemStack itemStack, String name, String[] lore, Enchantment enchantment, int enchlvl, ItemFlag... itemFlags) {
+    public SpecialItem(@Nonnull ItemStack itemStack, String name, String[] lore, Enchantment enchantment, int enchlvl, ItemFlag... itemFlags)
+    {
         this.itemStack = itemStack;
         this.name = name;
         this.lore = lore;
@@ -100,7 +108,8 @@ public class SpecialItem {
      * @param enchantments マップ（エンチャント、エンチャントレベル】
      * @param itemFlags    アイテムフラグ
      */
-    public SpecialItem(@Nonnull ItemStack itemStack, String name, String[] lore, Map<Enchantment, Integer> enchantments, ItemFlag... itemFlags) {
+    public SpecialItem(@Nonnull ItemStack itemStack, String name, String[] lore, Map<Enchantment, Integer> enchantments, ItemFlag... itemFlags)
+    {
         this.itemStack = itemStack;
         this.name = name;
         this.lore = lore;
@@ -117,7 +126,8 @@ public class SpecialItem {
      * @param lore      説明文
      * @param b         byte
      */
-    public SpecialItem(@Nonnull ItemStack itemStack, String name, String[] lore, byte b) {
+    public SpecialItem(@Nonnull ItemStack itemStack, String name, String[] lore, byte b)
+    {
         this.itemStack = itemStack;
         this.name = name;
         this.lore = lore;
@@ -125,23 +135,39 @@ public class SpecialItem {
         create();
     }
 
-    private void create() {
+    private void create()
+    {
         resurt = itemStack.clone();
         ItemMeta meta = resurt.getItemMeta();
-        if (name != null) {
-            meta.setDisplayName(name.replace('&', '§'));
+        if (name != null)
+        {
+            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
         }
-        if (lore != null) {
-            meta.setLore(Arrays.asList(lore));
+        if (lore != null)
+        {
+            List<String> listLore = new ArrayList<>();
+
+            for (String st : Arrays.asList(lore))
+            {
+                listLore.add(ChatColor.translateAlternateColorCodes('&', st));
+            }
+            meta.setLore(listLore);
         }
-        if (enchantments != null) {
+        if (enchantments != null)
+        {
             resurt.addUnsafeEnchantments(enchantments);
         }
-        if (itemFlags != null) {
+        if (itemFlags != null)
+        {
             meta.addItemFlags(itemFlags);
         }
+        if (b != 0)
+        {
+            resurt = addMaterialData(resurt, new MaterialData(resurt.getType(), b));
+        }
         resurt.setItemMeta(meta);
-        if (enchantment != null && enchlvl != 0) {
+        if (enchantment != null && enchlvl != 0)
+        {
             resurt = addEnchant(resurt, enchantment, enchlvl);
         }
     }
@@ -152,7 +178,8 @@ public class SpecialItem {
      * @return ItemStack
      */
     @Utility
-    public ItemStack getItem() {
+    public ItemStack getItem()
+    {
         return this.resurt;
     }
 
@@ -162,7 +189,8 @@ public class SpecialItem {
      * @return String          名前
      */
     @Utility
-    public String getName() {
+    public String getName()
+    {
         return this.name;
     }
 
@@ -172,7 +200,8 @@ public class SpecialItem {
      * @return List<String>    説明文
      */
     @Utility
-    public List<String> getLore() {
+    public List<String> getLore()
+    {
         return Arrays.asList(this.lore);
     }
 
@@ -182,7 +211,8 @@ public class SpecialItem {
      * @return Enchantment     エンチャントメント
      */
     @Utility
-    public Enchantment getEnchantment() {
+    public Enchantment getEnchantment()
+    {
         return this.enchantment;
     }
 
@@ -192,7 +222,8 @@ public class SpecialItem {
      * @return int             エンチャントレベル
      */
     @Utility
-    public int getEnchantLevel() {
+    public int getEnchantLevel()
+    {
         return this.enchlvl;
     }
 
@@ -202,7 +233,8 @@ public class SpecialItem {
      * @return Map<Enchantment, Integer>   複数のエンチャントメント
      */
     @Utility
-    public Map<Enchantment, Integer> getEnchantments() {
+    public Map<Enchantment, Integer> getEnchantments()
+    {
         return this.enchantments;
     }
 
@@ -212,13 +244,22 @@ public class SpecialItem {
      * @return ItemFlag[]      複数のアイテムフラグ
      */
     @Utility
-    public ItemFlag[] getItemFlags() {
+    public ItemFlag[] getItemFlags()
+    {
         return this.itemFlags;
     }
 
-    public ItemStack addEnchant(ItemStack itemStack, Enchantment ench, int enchlvl) {
+    private ItemStack addEnchant(ItemStack itemStack, Enchantment ench, int enchlvl)
+    {
         itemStack.addUnsafeEnchantment(ench, enchlvl);
         return itemStack;
     }
+
+    private ItemStack addMaterialData(ItemStack itemStack, MaterialData materialData)
+    {
+        itemStack.setData(materialData);
+        return itemStack;
+    }
+
 
 }
